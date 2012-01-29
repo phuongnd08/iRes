@@ -1,0 +1,17 @@
+#table_selector_page{ "data-role" => "page" }
+  %div{ "data-role" => "header" }
+    %h1= t("waiter.order_table")
+    %div{ "data-role" => "navbar" }
+      %ul
+        - 10.times do |time|
+          %li
+            %a.table{ :href => "#", "data-table-number" => time + 1 }= t("order.table_no", :no => time + 1)
+:javascript
+  $('#table_selector_page').bind('pageinit', function(){
+    $('#table_selector_page [data-role=navbar] .table').click(function(event){
+      event.preventDefault();
+      Waiter.setTableNo($(this).attr("data-table-number"))
+      $.mobile.changePage("#order_page");
+    })
+  })
+

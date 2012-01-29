@@ -1,0 +1,6 @@
+#order_page{ "data-role" => "page" }
+  %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+    %li{"data-role" => "list-divider"}= t("waiter.order")
+    - ["Drink", "Food"].each_with_index do |category, index|
+      %li
+        %a{ :href => "#category_#{index+1}" }= category

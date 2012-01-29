@@ -1,0 +1,7 @@
+vi:
+  waiter:
+    header: Phục vụ
+    order_table: Đặt bàn
+    order: Gọi món
+  order:
+    table_no: Bàn số %{no}
