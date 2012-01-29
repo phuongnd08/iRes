@@ -3,6 +3,10 @@ require 'spork'
 
 Spork.prefork do
   ENV["RAILS_ENV"] ||= 'test'
+
+  require "rails/application"
+  Spork.trap_method(Rails::Application::RoutesReloader, :reload!)
+
   require File.expand_path("../../config/environment", __FILE__)
   require 'rspec/rails'
   #require 'rspec/autorun'
@@ -16,4 +20,6 @@ Spork.each_run do
     config.use_transactional_fixtures = true
     config.infer_base_class_for_anonymous_controllers = false
   end
+
+  I18n.backend.reload!
 end
