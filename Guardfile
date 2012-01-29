@@ -23,6 +23,6 @@ group :drb do
     #watch(%r{^lib/.+validator\.rb$})
     watch(%r{^config/initializers/.+\.rb$})
     watch('spec/spec_helper.rb')
-    watch('feature/support/env.rb')
+    watch('features/support/env.rb')
   end
 end
