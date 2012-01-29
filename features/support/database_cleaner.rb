@@ -1,6 +1,4 @@
-Before(:all) do
-  DatabaseCleaner.clean_with :truncation
-end
+DatabaseCleaner.clean_with :truncation
 
 Before('~@javascript') do
   DatabaseCleaner.strategy = :transaction
