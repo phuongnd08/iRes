@@ -25,7 +25,6 @@ gem 'jquery-rails'
 gem 'haml-rails'
 
 group :test do
-  gem 'rspec-rails'
   gem 'capybara'
   gem 'cucumber-rails'
   gem 'jasminerice', :git => 'git@github.com:phuongnd08/jasminerice.git'
@@ -38,7 +37,8 @@ group :test do
   gem 'guard-bundler', :require => false
 end
 
-group :development do
+group :development, :test do
+  gem 'rspec-rails'
   gem 'ruby-debug19', :require => 'ruby-debug'
 end
 # To use ActiveModel has_secure_password
