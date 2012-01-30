@@ -1,12 +1,41 @@
-#order_page{ "data-role" => "page" }
+#ordering_page{ "data-role" => "page" }
   %div{ "data-role" => "header" }
-    %h1
+    %h1= t("waiter.ordering")
+    %div{ "data-role" => "navbar" }
+      %ul
+        %li
+          %a.ui-btn-active{ :href => "#ordering_page" }= t("waiter.ordering")
+        %li
+          %a{ :href => "#ordered_page" }= t("waiter.ordered")
   %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
-    - ["Drink", "Food"].each_with_index do |category, index|
+    - Category.all.each do |category|
       %li
-        %a{ :href => "#category_#{index+1}" }= category
+        %a{ :href => "#category_#{category.id}", "data-rel" => "dialog" }= category.name
+
+- Category.all.each do |category|
+  %div{ "data-role" => "page", :id => "category_#{category.id}" }
+    %div{ "data-role" => "header", "data-theme" => "d" }
+      %h1= category.name
+    %div{ "data-role" => "content" }
+      %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+        - category.items.each do |item|
+          %li
+            %a{ :href => "#item_#{item.id}" }= item.name
+
 
 :javascript
-  $('#order_page').bind('pageinit', function(){
+  $('#ordering_page').bind('pageinit', function(){
     Waiter.initializeOrderPage($(this));
   })
+
+
+#ordered_page{ "data-role" => "page" }
+  %div{ "data-role" => "header" }
+    %h1= t("waiter.ordered")
+    %div{ "data-role" => "navbar" }
+      %ul
+        %li
+          %a{ :href => "#ordering_page" }= t("waiter.ordering")
+        %li
+          %a.ui-btn-active{ :href => "#ordered_page" }= t("waiter.ordered")
+

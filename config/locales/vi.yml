@@ -2,7 +2,8 @@ vi:
   waiter:
     header: Phục vụ
     order_table: Đặt bàn
-    order: Gọi món
+    ordering: Gọi món
+    ordered: Đã gọi
   order:
     table_no: Bàn số %{no}
     for_table: Đặt món cho bàn số %{no}
