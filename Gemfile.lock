@@ -92,6 +92,8 @@ GEM
       railties (~> 3.0)
     hike (1.2.1)
     i18n (0.6.0)
+    i18n-js (2.1.2)
+      i18n
     journey (1.0.1)
     jquery-rails (2.0.0)
       railties (>= 3.2.0.beta, < 5.0)
@@ -199,6 +201,7 @@ DEPENDENCIES
   guard-rails
   guard-spork
   haml-rails
+  i18n-js
   jasminerice!
   jquery-rails
   machinist (>= 2.0.0.beta2)

@@ -19,6 +19,7 @@ group :assets do
   # gem 'therubyracer'
 
   gem 'uglifier', '>= 1.0.3'
+  gem 'i18n-js'
 end
 
 gem 'jquery-rails'
@@ -27,7 +28,6 @@ gem 'haml-rails'
 group :test do
   gem 'capybara'
   gem 'cucumber-rails'
-  gem 'jasminerice', :git => 'git@github.com:phuongnd08/jasminerice.git'
   gem 'machinist', '>= 2.0.0.beta2'
   gem 'database_cleaner'
   gem 'spork', '~> 0.9.0.rc9', :require  => false
@@ -40,6 +40,7 @@ end
 group :development, :test do
   gem 'rspec-rails'
   gem 'ruby-debug19', :require => 'ruby-debug'
+  gem 'jasminerice', :git => 'git@github.com:phuongnd08/jasminerice.git'
 end
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
