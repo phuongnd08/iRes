@@ -8,7 +8,7 @@ Feature: Order food or drink
   Given I'm on waiter page
   When I choose "Đặt bàn"
   And I choose "Bàn số 4" as table number
-  Then I see "Gọi món cho bàn số 4"
+  Then I see "Đặt món cho bàn số 4"
   When I choose "Đồ uống" category
   And I choose "Cam vắt"
   Then I see "Cam vắt" in ordered list

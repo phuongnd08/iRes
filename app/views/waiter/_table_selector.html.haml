@@ -10,7 +10,7 @@
   $('#table_selector_page').bind('pageinit', function(){
     $('#table_selector_page [data-role=navbar] .table').click(function(event){
       event.preventDefault();
-      Waiter.setTableNo($(this).attr("data-table-number"))
+      Waiter.setCurrentTableNumber($(this).attr("data-table-number"))
       $.mobile.changePage("#order_page");
     })
   })

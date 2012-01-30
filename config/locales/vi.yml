@@ -5,3 +5,4 @@ vi:
     order: Gọi món
   order:
     table_no: Bàn số %{no}
+    for_table: Đặt món cho bàn số %{no}
