@@ -1,6 +1,7 @@
 #ordering_page{ "data-role" => "page" }
   %div{ "data-role" => "header" }
     %h1= t("waiter.ordering")
+    %span.counter.ui-btn-right
     %div{ "data-role" => "navbar" }
       %ul
         %li
@@ -17,6 +18,7 @@
 #ordered_page{ "data-role" => "page" }
   %div{ "data-role" => "header" }
     %h1
+    %span.counter.ui-btn-right
     %div{ "data-role" => "navbar" }
       %ul
         %li
@@ -27,9 +29,9 @@
     %ul.items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
 
 :javascript
-  Waiter.initializeOrderingPage($('#ordering_page'))
+  Waiter.setOrderingPage($('#ordering_page'))
   $('#ordering_page .item').click(function(event){
     event.preventDefault();
     Waiter.addItem($(this).attr('data-item-id'), $(this).text());
   })
-  Waiter.initializeOrderedPage($('#ordered_page'))
+  Waiter.setOrderedPage($('#ordered_page'))

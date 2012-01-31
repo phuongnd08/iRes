@@ -9,9 +9,9 @@ Feature: Order food or drink
   When I choose "Đặt bàn"
   And I choose "Bàn số 4" as table number
   Then I see "Đặt món cho bàn số 4"
-  And I choose "Cam vắt"
+  And I choose item "Cam vắt"
   Then I see "Cam vắt" in ordered list
-  And I see statistics "Đã chọn: 1 món"
-  And I choose "Bún mộc"
-  Then I see "Bún mộc" in ordered list
-  And I see statistics "Đã chọn: 2 món"
+  And I see "1" within ordered statistics
+  And I choose item "Bún bò"
+  Then I see "Bún bò" in ordered list
+  And I see "2" within ordered statistics

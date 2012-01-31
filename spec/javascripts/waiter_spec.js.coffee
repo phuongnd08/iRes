@@ -3,6 +3,7 @@ describe "Waiter", ->
     beforeEach ->
       Waiter.orderingPage = null
       Waiter.orderedPage = null
+      Waiter.orderedItems = []
       loadFixtures("order")
     describe "current table number", ->
       it "is maintained across steps", ->
@@ -24,3 +25,11 @@ describe "Waiter", ->
         Waiter.addItem(1, "Drink1")
         expect($('#ordered_page [data-role=content] li:first')).toExist()
         expect($('#ordered_page [data-role=content] li:first')).toHaveText("Drink1")
+
+      it "reupdates number of items indicator", ->
+        Waiter.addItem(1, "Drink1")
+        expect($('#ordered_page [data-role=header] .counter')).toHaveText('1')
+        expect($('#ordering_page [data-role=header] .counter')).toHaveText('1')
+        Waiter.addItem(2, "Drink2")
+        expect($('#ordered_page [data-role=header] .counter')).toHaveText('2')
+        expect($('#ordering_page [data-role=header] .counter')).toHaveText('2')
