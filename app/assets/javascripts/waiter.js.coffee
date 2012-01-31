@@ -1,13 +1,22 @@
 class @Waiter
   @setCurrentTableNumber = (tableNo) ->
     @currentTableNo = tableNo
-    @refreshOrderPage()
+    @refreshOrderPages()
 
-  @initializeOrderPage = (page) ->
-    @orderPage = page
-    @refreshOrderPage()
+  @initializeOrderingPage = (page) ->
+    @orderingPage = page
+    @refreshOrderPages()
 
-  @refreshOrderPage = ->
-    if @orderPage
-      @orderPage.find("[data-role=header] h1").
-        text(I18n.t("order.for_table", { no: @currentTableNo}))
+  @initializeOrderedPage = (page) ->
+    @orderedPage = page
+    @refreshOrderPages()
+
+  @refreshOrderPages = ->
+    for page in [@orderedPage, @orderingPage]
+      if page
+        page.find("[data-role=header] h1").
+          text(I18n.t("order.for_table", { no: @currentTableNo}))
+
+  @addItem = (id, name) ->
+    @orderedPage.find('ul.items').append("<li data-item-id='#{id}'>#{name}</li>")
+    @orderedPage.find('ul.items').listview("refresh")

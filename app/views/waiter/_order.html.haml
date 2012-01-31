@@ -9,33 +9,27 @@
           %a{ :href => "#ordered_page" }= t("waiter.ordered")
   %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
     - Category.all.each do |category|
-      %li
-        %a{ :href => "#category_#{category.id}", "data-rel" => "dialog" }= category.name
-
-- Category.all.each do |category|
-  %div{ "data-role" => "page", :id => "category_#{category.id}" }
-    %div{ "data-role" => "header", "data-theme" => "d" }
-      %h1= category.name
-    %div{ "data-role" => "content" }
-      %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
-        - category.items.each do |item|
-          %li
-            %a{ :href => "#item_#{item.id}" }= item.name
-
-
-:javascript
-  $('#ordering_page').bind('pageinit', function(){
-    Waiter.initializeOrderPage($(this));
-  })
-
+      %li{ "data-role" => "list-divider" }= category.name
+      - category.items.each do |item|
+        %li.item{ "data-item-id" => item.id }
+          %a{ :href => "#item_#{item.id}" }= item.name
 
 #ordered_page{ "data-role" => "page" }
   %div{ "data-role" => "header" }
-    %h1= t("waiter.ordered")
+    %h1
     %div{ "data-role" => "navbar" }
       %ul
         %li
-          %a{ :href => "#ordering_page" }= t("waiter.ordering")
+          %a{ :href => "#ordering_page", "data-direction" => "reverse" }= t("waiter.ordering")
         %li
           %a.ui-btn-active{ :href => "#ordered_page" }= t("waiter.ordered")
+  %div{ "data-role" => "content" }
+    %ul.items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
 
+:javascript
+  Waiter.initializeOrderingPage($('#ordering_page'))
+  $('#ordering_page .item').click(function(event){
+    event.preventDefault();
+    Waiter.addItem($(this).attr('data-item-id'), $(this).text());
+  })
+  Waiter.initializeOrderedPage($('#ordered_page'))
