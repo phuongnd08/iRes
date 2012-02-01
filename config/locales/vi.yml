@@ -7,3 +7,6 @@ vi:
   order:
     table_no: Bàn số %{no}
     for_table: Đặt món cho bàn số %{no}
+
+  ordered_items:
+    header: Những món đã được gọi

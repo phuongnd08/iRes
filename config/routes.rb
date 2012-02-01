@@ -1,5 +1,6 @@
 IRes::Application.routes.draw do
   get "/waiter" => "home#waiter"
+  get "/chef" => "home#chef"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
