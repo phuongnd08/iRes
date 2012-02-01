@@ -1,5 +1,6 @@
 #default_page{ "data-role" => "page" }
+  %div{ "data-role" => "header" }
+    %h1= t("waiter.header")
   %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
-    %li{"data-role" => "list-divider"}= t("waiter.header")
     %li
       %a{ :href => "#table_selector_page" }= t("waiter.order_table")
