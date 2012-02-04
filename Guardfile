@@ -9,7 +9,7 @@ module ::Guard
       if pid = unmanaged_pid
         stop_pid pid
       end
-      start_command = "/bin/sh -c 'cd #{Dir.pwd}/push_server && push_bundle exec rackup config.ru -s thin -E production -D -P #{pidfile_path}'"
+      start_command = "cd push_server && push_bundle exec thin -C thin/production.yml -R config.ru start"
       puts "Starting Push Server with command #{start_command}"
       `#{start_command}`
       true
@@ -18,6 +18,7 @@ module ::Guard
     def stop
       if current_pid
         stop_pid(current_pid)
+        `rm #{pidfile_path}`
       end
     end
 
@@ -37,7 +38,7 @@ module ::Guard
     private
 
     def pidfile_path
-      "#{Dir.pwd}/push_server/faye.pid"
+      "#{Dir.pwd}/push_server/tmp/thin.pid"
     end
 
     def stop_pid(pid)

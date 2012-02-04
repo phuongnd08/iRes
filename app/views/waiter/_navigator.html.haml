@@ -1,6 +1,30 @@
-#default_page{ "data-role" => "page" }
+- order_template = capture do
+  %li
+    %a{ "data-order-id" => "%{id}", :href => "/orders/%{id}" }
+      Order: #{t("order.table_no", :no => '%{table_number}')}
+#navigator_page{ "data-role" => "page" }
   %div{ "data-role" => "header" }
     %h1= t("waiter.header")
-  %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
-    %li
-      %a{ :href => "#table_selector_page" }= t("waiter.order_table")
+  .content{ "data-role"  => "content" }
+    %a{ :href => "#table_selector_page", "data-role" => "button" }= t("waiter.order_table")
+
+  .content{ "data-role" => "content" }
+    %ul#orders{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+      %li{"data-role" => "list-divider", :role => "heading"}= t("order.pending_header")
+      - Order.pending.each do |order|
+        %li
+          %a{ "data-order-id" => order.id, :href => "/orders/#{order.id}" }
+            Order: #{t("order.table_no", :no => order.table_number)}
+
+:javascript
+  (function(){
+    var ordersChannel = #{Order.channel.to_json};
+    var pubsubClient = new Faye.Client("#{ServicesSettings.pubsub.mount_point}");
+    var orderTemplate = #{order_template.to_json};
+    $(function(){
+      pubsubClient.subscribe(ordersChannel, function(message){
+        $('#orders').append(orderTemplate.gsub(message))
+        $('#orders').listview('refresh')
+      })
+    })
+  })()

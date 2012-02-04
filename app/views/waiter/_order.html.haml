@@ -27,6 +27,8 @@
           %a.ui-btn-active{ :href => "#ordered_page" }= t("waiter.ordered")
   %div{ "data-role" => "content" }
     %ul.items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+  %div{ "data-role" => "content" }
+    %a#commit_btn{ :href => "#", "data-role" => "button" }= t("order.commit")
 
 :javascript
   Waiter.setOrderingPage($('#ordering_page'))
@@ -35,3 +37,7 @@
     Waiter.addItem($(this).attr('data-item-id'), $(this).text());
   })
   Waiter.setOrderedPage($('#ordered_page'))
+  $('#commit_btn').click(function(event){
+    event.preventDefault();
+    Waiter.commitOrder(this);
+  })

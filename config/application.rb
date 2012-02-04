@@ -57,3 +57,13 @@ module IRes
     config.assets.version = '1.0'
   end
 end
+
+module AssetsUrlHelper
+  def url_helpers
+    @url_helpers ||= IRes::Application.routes.url_helpers
+  end
+end
+
+module Sprockets::Helpers::RailsHelper
+  include AssetsUrlHelper
+end

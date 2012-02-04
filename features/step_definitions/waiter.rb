@@ -47,3 +47,9 @@ Then /^I see "([^"]*)" within ordered statistics$/ do |count|
     end
   end
 end
+
+When /^I commit the order$/ do
+  within_ordered_list do
+    click_on I18n.t("order.commit")
+  end
+end

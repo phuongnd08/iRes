@@ -33,3 +33,26 @@ describe "Waiter", ->
         Waiter.addItem(2, "Drink2")
         expect($('#ordered_page [data-role=header] .counter')).toHaveText('2')
         expect($('#ordering_page [data-role=header] .counter')).toHaveText('2')
+
+    describe "commitOrder", ->
+      beforeEach ->
+        loadFixtures("waiter_page")
+        spyOn($, "ajax")
+        spyOn($.mobile, "changePage")
+        spyOn($.fn, "simpledialog")
+        Waiter.commitOrder()
+
+      commitParams = -> $.ajax.mostRecentCall.args[0]
+
+      describe "when successfully", ->
+        beforeEach -> commitParams().success()
+
+        it "returns to waiter page", ->
+          expect($.mobile.changePage).toHaveBeenCalled()
+          expect($.mobile.changePage.mostRecentCall.args[0]).toBeTheSameNodeAs($('#navigator_page'))
+
+      describe "when failed", ->
+        beforeEach -> commitParams().error()
+
+        it "show error message", ->
+          expect($.fn.simpledialog).toHaveBeenCalled()

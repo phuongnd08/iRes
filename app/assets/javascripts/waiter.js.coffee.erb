@@ -1,0 +1,61 @@
+class @Waiter
+  @orderedItems = []
+  @setCurrentTableNumber = (tableNo) ->
+    @currentTableNumber = tableNo
+    @refreshOrderPages()
+
+  @setOrderingPage = (page) ->
+    @orderingPage = page
+    page.page()
+    @refreshOrderPages()
+
+  @setOrderedPage = (page) ->
+    @orderedPage = page
+    page.page()
+    @refreshOrderPages()
+
+  @refreshOrderPages = ->
+    for page in [@orderedPage, @orderingPage]
+      if page
+        page.find("[data-role=header] h1").
+          text(I18n.t("order.for_table", { no: @currentTableNumber}))
+
+  @addItem = (id, name) ->
+    @orderedItems.push
+      id: id
+      name: name
+    @orderedPage.find('ul.items').append("<li data-item-id='#{id}'>#{name}</li>")
+    @orderedPage.find('ul.items').listview("refresh")
+    @updateCounter()
+
+  @updateCounter = ->
+    @orderedPage.find('.counter').text(@orderedItems.length)
+    @orderingPage.find('.counter').text(@orderedItems.length)
+
+  @commitOrder = (onButton) ->
+    counter = new Date().getTime()
+    $.ajax
+      url: <%= url_helpers.orders_path.to_json %>
+      type: 'POST'
+      data:
+        order:
+          table_number: @currentTableNumber
+          order_items_attributes: @orderedItems.inject({}, (hash, orderedItem) ->
+            hash[counter += 1] =
+              item_id: orderedItem.id
+            hash
+          )
+      beforeSend: ->
+        $.mobile.showPageLoadingMsg()
+      complete: ->
+        $.mobile.hidePageLoadingMsg()
+      success: ->
+        $.mobile.changePage($('#navigator_page'))
+      error: =>
+        $(onButton).simpledialog
+          mode : 'bool'
+          prompt : I18n.t("order.confirm_error")
+          useModal: true
+          buttons:
+            OK:
+              click: -> true

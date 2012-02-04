@@ -15,3 +15,9 @@ Feature: Order food or drink
   And I choose item "Bún bò"
   Then I see "Bún bò" in ordered list
   And I see "2" within ordered statistics
+  When I commit the order
+  Then I see "Order: Bàn số 4"
+  When I choose "Order: Bàn số 4"
+  Then I see 2 items being listed
+  And I see "Cam vắt" in the ordered list
+  And I see "Bún bò" in the ordered list

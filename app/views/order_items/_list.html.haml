@@ -1,0 +1,7 @@
+- @order_item_template = capture do
+  %li
+    %span{ "data-order-id" => "%{order_id}", "data-item-id" => "%{item_id}", :href => "#" } %{item_name}
+%ul.order_items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+  - order_items.each do |order_item|
+    %li
+      %span{ "data-order-id" => order_item.order_id, "data-item-id" => order_item.item_id, :href => "#" }= order_item.item_name

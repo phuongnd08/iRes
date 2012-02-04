@@ -1,6 +1,6 @@
 services: &services
   pubsub:
-    mount_point: "http://127.0.0.1:3500/pubsub"
+    mount_point: "http://192.168.0.100:3500/pubsub"
 
 development:
   <<: *services
