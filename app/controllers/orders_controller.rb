@@ -24,7 +24,7 @@ class OrdersController < ApplicationController
   # GET /orders/new
   # GET /orders/new.json
   def new
-    @order = Order.new
+    @order = Order.new(:table_number => params[:table_number])
 
     respond_to do |format|
       format.html # new.html.erb

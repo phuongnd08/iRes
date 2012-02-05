@@ -1,10 +1,50 @@
-= form_for @order do |f|
-  -if @order.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@order.errors.count, "error")} prohibited this order from being saved:"
+#ordering_page{ "data-role" => "page" }
+  %div{ "data-role" => "header" }
+    %h1= t("order.for_table", :no => @order.table_number)
+    %span.counter.ui-btn-right
+    %div{ "data-role" => "navbar" }
       %ul
-        - @order.errors.full_messages.each do |msg|
-          %li= msg
+        %li
+          %a{ :href => "#ordering_page", "data-direction" => "reverse" }= t("waiter.ordering")
+        %li
+          %a.ui-btn-active{ :href => "#ordered_page" }= t("waiter.ordered")
+  %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+    - Category.all.each do |category|
+      %li{ "data-role" => "list-divider" }= category.name
+      - category.items.each do |item|
+        %li.item{ "data-item-id" => item.id }
+          %a{ :href => "#item_#{item.id}" }= item.name
 
-  .actions
-    = f.submit 'Save'
+#ordered_page{ "data-role" => "page" }
+  %div{ "data-role" => "header" }
+    %h1= t("order.for_table", :no => @order.table_number)
+    %span.counter.ui-btn-right
+    %div{ "data-role" => "navbar" }
+      %ul
+        %li
+          %a{ :href => "#ordering_page", "data-direction" => "reverse" }= t("waiter.ordering")
+        %li
+          %a.ui-btn-active{ :href => "#ordered_page" }= t("waiter.ordered")
+  %div{ "data-role" => "content" }
+    %ul.items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+  %div{ "data-role" => "content" }
+    %a#commit_btn{ :href => "#", "data-role" => "button" }= t("order.commit")
+
+:javascript
+  $(function(){
+    $('#ordered_page').page()
+  })
+
+  $('#ordering_page .item').click(function(event){
+    event.preventDefault();
+    Waiter.addItem($(this).attr('data-item-id'), $(this).text());
+  })
+
+  $('#commit_btn').click(function(event){
+    event.preventDefault();
+    Waiter.commitOrder(this);
+  })
+
+  Waiter.setOrderedPage($('#ordered_page'));
+  Waiter.setOrderingPage($('#ordering_page'));
+  Waiter.setCurrentTableNumber(#{@order.table_number.to_json});
