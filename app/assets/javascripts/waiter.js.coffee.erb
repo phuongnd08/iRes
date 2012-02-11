@@ -3,11 +3,11 @@ class @Waiter
   @setCurrentTableNumber = (tableNo) ->
     @currentTableNumber = tableNo
 
-  @setOrderingPage = (page) ->
-    @orderingPage = page
-
   @setOrderedPage = (page) ->
     @orderedPage = page
+
+  @setCounter = (counter) ->
+    @counter = counter
 
   @addItem = (id, name) ->
     @orderedItems.push
@@ -18,8 +18,7 @@ class @Waiter
     @updateCounter()
 
   @updateCounter = ->
-    @orderedPage.find('.counter').text(@orderedItems.length)
-    @orderingPage.find('.counter').text(@orderedItems.length)
+    @counter.text(@orderedItems.length)
 
   @commitOrder = (onButton) ->
     counter = new Date().getTime()

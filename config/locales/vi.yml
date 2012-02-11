@@ -2,14 +2,14 @@ vi:
   waiter:
     header: Phục vụ
     order_table: Đặt bàn
-    ordering: Gọi món
-    ordered: Đã gọi
   order:
     table_no: Bàn số %{no}
     for_table: Đặt món cho bàn số %{no}
     commit: Xác nhận
     pending_header: Những order đang chờ
     header: "Order: Bàn số %{table_no}"
+    ordered: Đã gọi
+    ordering: Gọi món
 
   ordered_items:
     header: Những món đã được gọi

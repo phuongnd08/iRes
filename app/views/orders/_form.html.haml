@@ -1,41 +1,45 @@
-#ordering_page{ "data-role" => "page" }
+#order_page{ "data-role" => "page" }
   %div{ "data-role" => "header" }
     %h1= t("order.for_table", :no => @order.table_number)
     %span.counter.ui-btn-right
     %div{ "data-role" => "navbar" }
       %ul
         %li
-          %a{ :href => "#ordering_page", "data-direction" => "reverse" }= t("waiter.ordering")
+          %a{ :href => "#order_page", "data-nav-to" => "#ordering", "data-direction" => "reverse" }= t("order.ordering")
         %li
-          %a.ui-btn-active{ :href => "#ordered_page" }= t("waiter.ordered")
-  %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
-    - Category.all.each do |category|
-      %li{ "data-role" => "list-divider" }= category.name
-      - category.items.each do |item|
-        %li.item{ "data-item-id" => item.id }
-          %a{ :href => "#item_#{item.id}" }= item.name
+          %a.ui-btn-active{ :href => "#", "data-nav-to" => "#ordered" }= t("order.ordered")
+  #ordering.subpage{ "data-role" => "content" }
+    %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+      - Category.all.each do |category|
+        %li{ "data-role" => "list-divider" }= category.name
+        - category.items.each do |item|
+          %li.item{ "data-item-id" => item.id }
+            %a{ :href => "#" }= item.name
 
-#ordered_page{ "data-role" => "page" }
-  %div{ "data-role" => "header" }
-    %h1= t("order.for_table", :no => @order.table_number)
-    %span.counter.ui-btn-right
-    %div{ "data-role" => "navbar" }
-      %ul
-        %li
-          %a{ :href => "#ordering_page", "data-direction" => "reverse" }= t("waiter.ordering")
-        %li
-          %a.ui-btn-active{ :href => "#ordered_page" }= t("waiter.ordered")
-  %div{ "data-role" => "content" }
-    %ul.items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
-  %div{ "data-role" => "content" }
-    %a#commit_btn{ :href => "#", "data-role" => "button" }= t("order.commit")
+  #ordered.subpage.hidden{ "data-role" => "content" }
+    %div
+      %ul.items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+    %br
+    %div
+      %a#commit_btn{ :href => "#", "data-role" => "button" }= t("order.commit")
 
 :javascript
-  $(function(){
-    $('#ordered_page').page()
+  Waiter.setOrderedPage($('#ordered'));
+  Waiter.setCounter($('#order_page .counter'));
+
+  function showPage(selector) {
+    $('.subpage').hide();
+    $(selector).show();
+    $('#order_page [data-role=navbar] li a').setHeaderInactive()
+    $('#order_page [data-nav-to="' + selector + '}"] li a').setHeaderActive()
+  }
+
+  $('#order_page [data-role=navbar] li a').click(function(event){
+    event.preventDefault();
+    showPage($(this).attr('data-nav-to'))
   })
 
-  $('#ordering_page .item').click(function(event){
+  $('#ordering .item').click(function(event){
     event.preventDefault();
     Waiter.addItem($(this).attr('data-item-id'), $(this).text());
   })
@@ -45,6 +49,4 @@
     Waiter.commitOrder(this);
   })
 
-  Waiter.setOrderedPage($('#ordered_page'));
-  Waiter.setOrderingPage($('#ordering_page'));
   Waiter.setCurrentTableNumber(#{@order.table_number.to_json});
