@@ -1,4 +1,4 @@
-%li
-  %a{ "data-order-id" => "%{id}", "href" => "/orders/%{id}" }
-    Order: %{table}
-
+%li{ "data-item-id" => "%{id}", "data-item-identifier" => "%{identifier}" }
+  %a
+    %span %{name}
+  %a.remove{ "data-role" => "button", "data-icon" => "delete" }

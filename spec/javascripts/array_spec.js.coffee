@@ -53,6 +53,12 @@ describe "array", ->
           arr.remove('d')
         ).toThrow()
 
+  describe "removeIf", ->
+    it "removes all items satisfied the block", ->
+      arr = [1, 2, 3, 4,]
+      arr.removeIf (element) -> element %2 == 0
+      expect(arr).toEqual([1, 3])
+
   describe "inject", ->
     it "returns the aggregated result", ->
       arr = [1, 2, 3]

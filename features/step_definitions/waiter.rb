@@ -1,11 +1,19 @@
 def within_ordered_list
-  page.execute_script("$.mobile.changePage('#ordered_page')")
-  yield
+  within "#order_page" do
+    find("[data-role=header] a[data-nav-to='#ordered']").click
+    within "#ordered" do
+      yield
+    end
+  end
 end
 
 def within_ordering_list
-  page.execute_script("$.mobile.changePage('#ordering_page')")
-  yield
+  within "#order_page" do
+    find("[data-role=header] a[data-nav-to='#ordering']").click
+  end
+  within "#ordering" do
+    yield
+  end
 end
 
 Given /^I'm on waiter page$/ do
@@ -38,11 +46,15 @@ Then /^I see "([^"]*)" in ordered list$/ do |item_name|
   end
 end
 
-Then /^I see "([^"]*)" within ordered statistics$/ do |count|
+Then /^I do not see "([^"]*)" in ordered list$/ do |item_name|
   within_ordered_list do
-    within ".counter" do
-      page.should have_content count
-    end
+    page.should have_no_content item_name
+  end
+end
+
+Then /^I see "([^"]*)" within ordered statistics$/ do |count|
+  within ".counter" do
+    page.should have_content count
   end
 end
 
@@ -52,3 +64,14 @@ When /^I commit the order$/ do
     click_on I18n.t("order.commit")
   end
 end
+
+When /^I remove "([^"]*)" from ordered list$/ do |item_name|
+  within_ordered_list do
+    Item.find_by_name(item_name).tap do |item|
+      within "li[data-item-id='#{item.id}']" do
+        find(".remove").click
+      end
+    end
+  end
+end
+

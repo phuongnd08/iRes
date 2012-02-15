@@ -5,14 +5,10 @@ describe "Waiter", ->
       Waiter.orderedPage = null
       Waiter.orderedItems = []
       loadFixtures("order")
-    describe "current table number", ->
-      it "is maintained across steps", ->
-        Waiter.setCurrentTableNumber(4)
-        expect($('#ordering_page [data-role=header] h1')).
-          toHaveText(I18n.t("order.for_table", { no: 4 }))
+      $('#order_page').page()
 
-        expect($('#ordered_page [data-role=header] h1')).
-          toHaveText(I18n.t("order.for_table", { no: 4 }))
+    afterEach ->
+      $('#order_page').remove()
 
     describe "adding item", ->
       beforeEach ->
@@ -23,16 +19,14 @@ describe "Waiter", ->
 
       it "puts item in ordered list", ->
         Waiter.addItem(1, "Drink1")
-        expect($('#ordered_page [data-role=content] li:first')).toExist()
-        expect($('#ordered_page [data-role=content] li:first')).toHaveText("Drink1")
+        expect($('#ordered li:first')).toExist()
+        expect($('#ordered li:first a span').text()).toEqual("Drink1")
 
       it "reupdates number of items indicator", ->
         Waiter.addItem(1, "Drink1")
-        expect($('#ordered_page [data-role=header] .counter')).toHaveText('1')
-        expect($('#ordering_page [data-role=header] .counter')).toHaveText('1')
+        expect($('#order_page .counter')).toHaveText('1')
         Waiter.addItem(2, "Drink2")
-        expect($('#ordered_page [data-role=header] .counter')).toHaveText('2')
-        expect($('#ordering_page [data-role=header] .counter')).toHaveText('2')
+        expect($('#order_page .counter')).toHaveText('2')
 
     describe "commitOrder", ->
       beforeEach ->
@@ -48,8 +42,7 @@ describe "Waiter", ->
         beforeEach -> commitParams().success()
 
         it "returns to waiter page", ->
-          expect($.mobile.changePage).toHaveBeenCalled()
-          expect($.mobile.changePage.mostRecentCall.args[0]).toBeTheSameNodeAs($('#navigator_page'))
+          expect($.mobile.changePage).toHaveBeenCalledWith("/waiter")
 
       describe "when failed", ->
         beforeEach -> commitParams().error()

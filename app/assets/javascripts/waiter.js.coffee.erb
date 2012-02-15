@@ -1,15 +1,30 @@
 class @Waiter
   @orderedItems = []
-  @selectors = {}
 
-  @setSelectors = (selectors) ->
-    @selectors = selectors
+  @selectors =
+    orderedPage: "#ordered"
+    counter: "#order_page .counter"
+    tableNumber: "#order_table_number"
+
+  @getNextIdentifier = ->
+    @currentIdentifier ||= 0
+    @currentIdentifier += 1
 
   @addItem = (id, name) ->
-    @orderedItems.push
+    id = parseInt(id)
+    item =
       id: id
       name: name
-    $(@selectors.orderedPage).find('ul.items').append("<li data-item-id='#{id}'>#{name}</li>")
+      identifier: @getNextIdentifier()
+    @orderedItems.push item
+    $(@selectors.orderedPage).find('ul.items').append(JST["templates/order_item"]().gsub item)
+    $(@selectors.orderedPage).find('ul.items').listview("refresh")
+    @updateCounter()
+
+  @removeItem = (identifier) ->
+    identifier = parseInt(identifier)
+    @orderedItems.removeIf (item) -> item.identifier == identifier
+    $(@selectors.orderedPage).find("ul.items [data-item-identifier=#{identifier}]").remove()
     $(@selectors.orderedPage).find('ul.items').listview("refresh")
     @updateCounter()
 

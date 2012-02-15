@@ -6,7 +6,7 @@ $(document).delegate '#navigator_page', "pagecreate", ->
         id: order.id
         table: I18n.t("order.table_no", "no": order.table_number)
 
-      $('#orders').append(JST["templates/order_item"]().gsub orderHash)
+      $('#orders').append(JST["templates/order_entry"]().gsub orderHash)
       $('#orders').listview('refresh')
 
 $(document).delegate "#order_page", "pagecreate", ->
@@ -16,11 +16,6 @@ $(document).delegate "#order_page", "pagecreate", ->
     $("#order_page [data-role=navbar] li a").setHeaderInactive()
     $("#order_page [data-nav-to=\"" + selector + "}\"] li a").setHeaderActive()
 
-  Waiter.setSelectors
-    orderedPage: "#ordered"
-    counter: "#order_page .counter"
-    tableNumber: "#order_table_number"
-
   $("#order_page [data-role=navbar] li a").click (event) ->
     event.preventDefault()
     showPage $(this).attr("data-nav-to")
@@ -28,6 +23,9 @@ $(document).delegate "#order_page", "pagecreate", ->
   $("#ordering .item").click (event) ->
     event.preventDefault()
     Waiter.addItem $(this).attr("data-item-id"), $(this).text()
+
+  $('#ordered').on 'click', '.remove', ->
+    Waiter.removeItem $(this).closest('li').attr('data-item-identifier')
 
   $("#commit_btn").click (event) ->
     event.preventDefault()

@@ -17,6 +17,11 @@ Array::remove = (item) ->
   else
     throw "Element #{item} does not exist"
 
+Array::removeIf = (callback) ->
+  element = null
+  while element = @detect(callback)
+    @remove element
+
 Array::map = (callback = reflect) ->
   callback(item) for item in @
 
