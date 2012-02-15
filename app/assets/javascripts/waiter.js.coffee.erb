@@ -1,24 +1,20 @@
 class @Waiter
   @orderedItems = []
-  @setCurrentTableNumber = (tableNo) ->
-    @currentTableNumber = tableNo
+  @selectors = {}
 
-  @setOrderedPage = (page) ->
-    @orderedPage = page
-
-  @setCounter = (counter) ->
-    @counter = counter
+  @setSelectors = (selectors) ->
+    @selectors = selectors
 
   @addItem = (id, name) ->
     @orderedItems.push
       id: id
       name: name
-    @orderedPage.find('ul.items').append("<li data-item-id='#{id}'>#{name}</li>")
-    @orderedPage.find('ul.items').listview("refresh")
+    $(@selectors.orderedPage).find('ul.items').append("<li data-item-id='#{id}'>#{name}</li>")
+    $(@selectors.orderedPage).find('ul.items').listview("refresh")
     @updateCounter()
 
   @updateCounter = ->
-    @counter.text(@orderedItems.length)
+    $(@selectors.counter).text(@orderedItems.length)
 
   @commitOrder = (onButton) ->
     counter = new Date().getTime()
@@ -27,7 +23,7 @@ class @Waiter
       type: 'POST'
       data:
         order:
-          table_number: @currentTableNumber
+          table_number: $(@selectors.tableNumber).val()
           order_items_attributes: @orderedItems.inject({}, (hash, orderedItem) ->
             hash[counter += 1] =
               item_id: orderedItem.id

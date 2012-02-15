@@ -1,7 +1,9 @@
 #order_page{ "data-role" => "page" }
-  %div{ "data-role" => "header" }
-    %h1= t("order.for_table", :no => @order.table_number)
-    %span.counter.ui-btn-right
+  %div{ "data-role" => "header", "data-position" => "inline" }
+    %span.counter.ui-btn-left
+    %h1= t("waiter.order", :no => @order.table_number)
+    %div.ui-btn-right
+      = select("order", "table_number", (1..10).map { |number| [t("order.table_no", :no => number), number] })
     %div{ "data-role" => "navbar" }
       %ul
         %li
@@ -22,31 +24,3 @@
     %br
     %div
       %a#commit_btn{ :href => "#", "data-role" => "button" }= t("order.commit")
-
-:javascript
-  Waiter.setOrderedPage($('#ordered'));
-  Waiter.setCounter($('#order_page .counter'));
-
-  function showPage(selector) {
-    $('.subpage').hide();
-    $(selector).show();
-    $('#order_page [data-role=navbar] li a').setHeaderInactive()
-    $('#order_page [data-nav-to="' + selector + '}"] li a').setHeaderActive()
-  }
-
-  $('#order_page [data-role=navbar] li a').click(function(event){
-    event.preventDefault();
-    showPage($(this).attr('data-nav-to'))
-  })
-
-  $('#ordering .item').click(function(event){
-    event.preventDefault();
-    Waiter.addItem($(this).attr('data-item-id'), $(this).text());
-  })
-
-  $('#commit_btn').click(function(event){
-    event.preventDefault();
-    Waiter.commitOrder(this);
-  })
-
-  Waiter.setCurrentTableNumber(#{@order.table_number.to_json});

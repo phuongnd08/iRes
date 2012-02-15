@@ -23,9 +23,7 @@ When /^I choose item "([^"]*)"$/ do |text|
 end
 
 When /^I choose "([^"]*)" as table number$/ do |table_number|
-  within "#table_selector_page" do
-    click_on table_number
-  end
+  select table_number, :from => 'order_table_number'
 end
 
 Then /^I see "([^"]*)"$/ do |text|

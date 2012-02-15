@@ -1,0 +1,34 @@
+$(document).delegate '#navigator_page', "pagecreate", ->
+    ordersChannel = <%= Order.channel.to_json %>
+    pubsubClient = new Faye.Client(<%= ServicesSettings.pubsub.mount_point.to_json %>)
+    pubsubClient.subscribe ordersChannel, (order) ->
+      orderHash =
+        id: order.id
+        table: I18n.t("order.table_no", "no": order.table_number)
+
+      $('#orders').append(JST["templates/order_item"]().gsub orderHash)
+      $('#orders').listview('refresh')
+
+$(document).delegate "#order_page", "pagecreate", ->
+  showPage = (selector) ->
+    $(".subpage").hide()
+    $(selector).show()
+    $("#order_page [data-role=navbar] li a").setHeaderInactive()
+    $("#order_page [data-nav-to=\"" + selector + "}\"] li a").setHeaderActive()
+
+  Waiter.setSelectors
+    orderedPage: "#ordered"
+    counter: "#order_page .counter"
+    tableNumber: "#order_table_number"
+
+  $("#order_page [data-role=navbar] li a").click (event) ->
+    event.preventDefault()
+    showPage $(this).attr("data-nav-to")
+
+  $("#ordering .item").click (event) ->
+    event.preventDefault()
+    Waiter.addItem $(this).attr("data-item-id"), $(this).text()
+
+  $("#commit_btn").click (event) ->
+    event.preventDefault()
+    Waiter.commitOrder this

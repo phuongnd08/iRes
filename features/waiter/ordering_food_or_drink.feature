@@ -8,7 +8,6 @@ Feature: Order food or drink
   Given I'm on waiter page
   When I choose "Đặt bàn"
   And I choose "Bàn số 4" as table number
-  Then I see "Đặt món cho bàn số 4"
   And I choose item "Cam vắt"
   Then I see "Cam vắt" in ordered list
   And I see "1" within ordered statistics
