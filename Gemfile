@@ -21,6 +21,8 @@ group :assets do
 
   gem 'uglifier', '>= 1.0.3'
   gem 'i18n-js'
+  gem 'haml_assets'
+  gem 'ejs'
 end
 
 gem 'jquery-rails'
@@ -28,7 +30,7 @@ gem 'haml-rails'
 
 group :test do
   gem 'capybara'
-  gem 'cucumber-rails'
+  gem 'cucumber-rails', :require => false
   gem 'machinist', '>= 2.0.0.beta2'
   gem 'database_cleaner'
   gem 'spork', '~> 0.9.0.rc9', :require  => false
