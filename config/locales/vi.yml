@@ -5,6 +5,7 @@ vi:
   order:
     table_no: Bàn số %{no}
     commit: Xác nhận
+    cancel: Hủy
     pending_header: Những order đang chờ
     header: "Order: Bàn số %{table_no}"
     ordered: Đã gọi

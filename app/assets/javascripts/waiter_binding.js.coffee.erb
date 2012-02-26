@@ -1,13 +1,14 @@
 $(document).delegate '#navigator_page', "pagecreate", ->
     ordersChannel = <%= Order.channel.to_json %>
-    pubsubClient = new Faye.Client(<%= ServicesSettings.pubsub.mount_point.to_json %>)
-    pubsubClient.subscribe ordersChannel, (order) ->
-      orderHash =
-        id: order.id
-        table: I18n.t("order.table_no", "no": order.table_number)
+    if window.Faye && Faye.Client
+      pubsubClient = new Faye.Client(<%= ServicesSettings.pubsub.mount_point.to_json %>)
+      pubsubClient.subscribe ordersChannel, (order) ->
+        orderHash =
+          id: order.id
+          table: I18n.t("order.table_no", "no": order.table_number)
 
-      $('#orders').append(JST["templates/order_entry"]().gsub orderHash)
-      $('#orders').listview('refresh')
+        $('#orders').append(JST["templates/order_entry"]().gsub orderHash)
+        $('#orders').listview('refresh')
 
 $(document).delegate "#order_page", "pagecreate", ->
   showPage = (selector) ->

@@ -1,4 +1,4 @@
-def within_ordered_list
+def within_ordered_section
   within "#order_page" do
     find("[data-role=header] a[data-nav-to='#ordered']").click
     within "#ordered" do
@@ -7,7 +7,7 @@ def within_ordered_list
   end
 end
 
-def within_ordering_list
+def within_ordering_section
   within "#order_page" do
     find("[data-role=header] a[data-nav-to='#ordering']").click
   end
@@ -25,7 +25,7 @@ When /^I choose "([^"]*)"$/ do |text|
 end
 
 When /^I choose item "([^"]*)"$/ do |text|
-  within_ordering_list do
+  within_ordering_section do
     click_on text
   end
 end
@@ -41,13 +41,13 @@ Then /^I see "([^"]*)"$/ do |text|
 end
 
 Then /^I see "([^"]*)" in ordered list$/ do |item_name|
-  within_ordered_list do
+  within_ordered_section do
     page.should have_content item_name
   end
 end
 
 Then /^I do not see "([^"]*)" in ordered list$/ do |item_name|
-  within_ordered_list do
+  within_ordered_section do
     page.should have_no_content item_name
   end
 end
@@ -59,19 +59,30 @@ Then /^I see "([^"]*)" within ordered statistics$/ do |count|
 end
 
 When /^I commit the order$/ do
-  click_on I18n.t("order.ordered")
-  within_ordered_list do
+  within_ordered_section do
     click_on I18n.t("order.commit")
   end
 end
 
+When /^I cancel the order$/ do
+  within_ordered_section do
+    click_on I18n.t("order.cancel")
+  end
+end
+
 When /^I remove "([^"]*)" from ordered list$/ do |item_name|
-  within_ordered_list do
+  within_ordered_section do
     Item.find_by_name(item_name).tap do |item|
       within "li[data-item-id='#{item.id}']" do
         find(".remove").click
       end
     end
+  end
+end
+
+Then /^I see no orders$/ do
+  within "#orders" do
+    page.all('li').length.should == 1 #For the list divider
   end
 end
 
