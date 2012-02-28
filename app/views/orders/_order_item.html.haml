@@ -1,0 +1,8 @@
+%li{ "data-item-id" => f.object.item_id }
+  %a
+    %span= f.object.item_name
+  %a.remove{ "data-role" => "button", "data-icon" => "delete" }
+  %div
+    = f.hidden_field :_destroy
+    = f.hidden_field :item_id
+

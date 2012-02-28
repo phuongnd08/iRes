@@ -33,6 +33,12 @@ Array::inject = (init, callback) ->
     result = callback(result, item)
   result
 
+Array::count = (callback) ->
+  @inject 0, ((count, value) ->
+    count += 1 if callback(value)
+    count
+  )
+
 Array::first = ->
   @[0]
 

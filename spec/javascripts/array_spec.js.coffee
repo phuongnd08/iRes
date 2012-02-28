@@ -63,3 +63,9 @@ describe "array", ->
     it "returns the aggregated result", ->
       arr = [1, 2, 3]
       expect(arr.inject(1, (res, element) -> res*element)).toEqual(6)
+
+  describe "count", ->
+    it "returns the number of matched elements", ->
+      arr = [1, 2, 3]
+      expect(arr.count((number) -> number % 2 == 0)).toEqual(1)
+

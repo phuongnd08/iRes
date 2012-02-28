@@ -26,7 +26,7 @@ $(document).delegate "#order_page", "pagecreate", ->
     Waiter.addItem $(this).attr("data-item-id"), $(this).text()
 
   $('#ordered').on 'click', '.remove', ->
-    Waiter.removeItem $(this).closest('li').attr('data-item-identifier')
+    Waiter.removeItem $(this).closest('li')
 
   $("#commit_btn").click (event) ->
     event.preventDefault()

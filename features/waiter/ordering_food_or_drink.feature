@@ -15,11 +15,11 @@ Feature: Order food or drink
     Then I see "Bún bò" in ordered list
     And I see "2" within ordered statistics
     When I remove "Bún bò" from ordered list
-    Then I do not see "Bún bò" in ordered list
+    Then I see "1" within ordered statistics
     When I commit the order
     Then I see "Order: Bàn số 4"
     When I choose "Order: Bàn số 4"
-    Then I see 1 items being listed
+    Then I see 1 items being ordered
     And I see "Cam vắt" in the ordered list
 
   Scenario: Cancel an oder

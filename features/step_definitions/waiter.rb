@@ -46,12 +46,6 @@ Then /^I see "([^"]*)" in ordered list$/ do |item_name|
   end
 end
 
-Then /^I do not see "([^"]*)" in ordered list$/ do |item_name|
-  within_ordered_section do
-    page.should have_no_content item_name
-  end
-end
-
 Then /^I see "([^"]*)" within ordered statistics$/ do |count|
   within ".counter" do
     page.should have_content count

@@ -1,60 +1,29 @@
 class @Waiter
-  @orderedItems = []
-
   @selectors =
     orderedPage: "#ordered"
     counter: "#order_page .counter"
     tableNumber: "#order_table_number"
 
-  @getNextIdentifier = ->
-    @currentIdentifier ||= 0
-    @currentIdentifier += 1
+  @getOrderedList = ->
+    $(@selectors.orderedPage).find('ul.items')
 
   @addItem = (id, name) ->
-    id = parseInt(id)
-    item =
-      id: id
-      name: name
-      identifier: @getNextIdentifier()
-    @orderedItems.push item
-    $(@selectors.orderedPage).find('ul.items').append(JST["templates/order_item"]().gsub item)
-    $(@selectors.orderedPage).find('ul.items').listview("refresh")
+    hash =
+      item_id: id
+      item_name: name
+      child_index: (new Date).getTime()
+    itemLI = $(newOrderItemTemplate.gsub hash)
+    itemLI.find('input[id$=item_id]').val(id)
+    @getOrderedList().append(itemLI)
+    @getOrderedList().listview("refresh")
     @updateCounter()
 
-  @removeItem = (identifier) ->
-    identifier = parseInt(identifier)
-    @orderedItems.removeIf (item) -> item.identifier == identifier
-    $(@selectors.orderedPage).find("ul.items [data-item-identifier=#{identifier}]").remove()
-    $(@selectors.orderedPage).find('ul.items').listview("refresh")
+  @removeItem = (itemLI) ->
+    itemLI.hide()
+    itemLI.find('input[id$=destroy][type=hidden]').val("1")
     @updateCounter()
 
   @updateCounter = ->
-    $(@selectors.counter).text(@orderedItems.length)
-
-  @commitOrder = (onButton) ->
-    counter = new Date().getTime()
-    $.ajax
-      url: <%= url_helpers.orders_path.to_json %>
-      type: 'POST'
-      data:
-        order:
-          table_number: $(@selectors.tableNumber).val()
-          order_items_attributes: @orderedItems.inject({}, (hash, orderedItem) ->
-            hash[counter += 1] =
-              item_id: orderedItem.id
-            hash
-          )
-      beforeSend: ->
-        $.mobile.showPageLoadingMsg()
-      complete: ->
-        $.mobile.hidePageLoadingMsg()
-      success: ->
-        $.mobile.changePage("/waiter")
-      error: =>
-        $(onButton).simpledialog
-          mode : 'bool'
-          prompt : I18n.t("order.confirm_error")
-          useModal: true
-          buttons:
-            OK:
-              click: -> true
+    total = @getOrderedList().find('li').size()
+    deleted = @getOrderedList().find('li input[id$=destroy][type=hidden]').toArray().count((input) -> $(input).val() == "1")
+    $(@selectors.counter).text(total-deleted)
