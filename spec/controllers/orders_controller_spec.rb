@@ -73,15 +73,9 @@ describe OrdersController do
         }.to change(Order, :count).by(1)
       end
 
-      it "assigns a newly created order as @order" do
+      it "redirects to the /waiter" do
         post :create, {:order => valid_attributes}, valid_session
-        assigns(:order).should be_a(Order)
-        assigns(:order).should be_persisted
-      end
-
-      it "redirects to the created order" do
-        post :create, {:order => valid_attributes}, valid_session
-        response.should redirect_to(Order.last)
+        response.should redirect_to("/waiter")
       end
     end
 
