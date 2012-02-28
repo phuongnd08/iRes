@@ -6,10 +6,14 @@ Then /^I see (\d+) items being ordered$/ do |count|
   end
 end
 
-Then /^I see "([^"]*)" in the ordered list$/ do |item_name|
+Then /^I (do not )?see "([^"]*)" in the ordered list$/ do |negate, item_name|
   within_ordered_section do
     within "ul.items" do
-      page.should have_content(item_name)
+      if negate.present?
+        page.should have_no_content(item_name)
+      else
+        page.should have_content(item_name)
+      end
     end
   end
 end

@@ -26,7 +26,7 @@ describe OrdersController do
   def valid_attributes
     {}
   end
-  
+
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # OrdersController. Be sure to keep this updated too.
@@ -108,16 +108,10 @@ describe OrdersController do
         put :update, {:id => order.to_param, :order => {'these' => 'params'}}, valid_session
       end
 
-      it "assigns the requested order as @order" do
+      it "redirects to /waiter" do
         order = Order.create! valid_attributes
         put :update, {:id => order.to_param, :order => valid_attributes}, valid_session
-        assigns(:order).should eq(order)
-      end
-
-      it "redirects to the order" do
-        order = Order.create! valid_attributes
-        put :update, {:id => order.to_param, :order => valid_attributes}, valid_session
-        response.should redirect_to(order)
+        response.should redirect_to("/waiter")
       end
     end
 
