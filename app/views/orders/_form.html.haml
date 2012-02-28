@@ -22,9 +22,8 @@
     #ordered.subpage.hidden{ "data-role" => "content" }
       %div
         %ul.items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
-          - @order.order_items.each_with_index do |order_item, index|
-            = f.fields_for :order_items do |builder|
-              = render "orders/order_item", :f => builder
+          = f.fields_for :order_items do |builder|
+            = render "orders/order_item", :f => builder
       %br
       %div= f.submit t("order.commit"), {"data-role" => "button" }
       %div
