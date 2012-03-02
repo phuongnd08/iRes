@@ -17,8 +17,16 @@ Feature: Seeing ordered items
   Scenario: View list of ordered items live updated
     Given I'm on chef page
     Then I see 0 items in the waiting list
-    When this item is ordered:
+    When these items are ordered:
+      |category|name|
+      |Đò uống|Cà phê|
+      |Đò ăn|Bún bò|
+    Then I see 2 items in the waiting list
+    And I see "Cà phê" in the waiting list
+    And I see "Bún bò" in the waiting list
+    When this item is removed:
       |category|name|
       |Đò uống|Cà phê|
     Then I see 1 items in the waiting list
-    And I see "Cà phê" in the waiting list
+    And I see "Bún bò" in the waiting list
+    But I do not see "Cà phê" in the waiting list

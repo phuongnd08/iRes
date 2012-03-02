@@ -2,15 +2,21 @@
   %div{ "data-role" => "header" }
     %h1= t("ordered_items.header")
   = render "order_items/list", :order_items => OrderItem.all
+- order_item_template = capture do
+  = render "order_items/order_item", :order_item => OrderItem.new
 
 :javascript
   var orderItemsChannel = #{OrderItem.channel.to_json};
   var pubsubClient = new Faye.Client("#{ServicesSettings.pubsub.mount_point}");
-  var orderItemTemplate = #{@order_item_template.to_json};
+  var orderItemTemplate = #{order_item_template.to_json};
   $(function(){
     pubsubClient.subscribe(orderItemsChannel, function(message){
-      $('#ordered_items_page ul.order_items').append(orderItemTemplate.gsub(message))
-      $('#ordered_items_page ul.order_items').listview('refresh')
+      if (message.deleted){
+        $('#ordered_items_page ul.order_items').find('[data-order-item-id=' + message.order_item_id + ']').remove();
+      } else {
+        $('#ordered_items_page ul.order_items').append(orderItemTemplate.gsub(message));
+      }
+      $('#ordered_items_page ul.order_items').listview('refresh');
     })
   })
 

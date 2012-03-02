@@ -5,7 +5,8 @@ class OrderItem < ActiveRecord::Base
   delegate :id, :name, :to => :item, :prefix => true
   delegate :id, :to => :order, :prefix => true
 
-  after_create :notify_new_order_item
+  after_create :notify_order_item_created
+  after_destroy :notify_order_item_destroyed
 
 
   def item_id
@@ -16,12 +17,32 @@ class OrderItem < ActiveRecord::Base
     item.try(:name) || "%{item_name}"
   end
 
+  def order_id
+    order.try(:id) || "%{order_id}"
+  end
+
+  def order_item_id
+    id || "%{order_item_id}"
+  end
+
   def self.channel
     "/order_items"
   end
 
   private
-  def notify_new_order_item
-    PubSub.publish(OrderItem.channel, { :order_id => order_id, :item_id => item_id, :item_name => item_name })
+  def notify_order_item_created
+    PubSub.publish(OrderItem.channel, {
+      :order_item_id => order_item_id,
+      :order_id => order_id,
+      :item_id => item_id,
+      :item_name => item_name
+    })
+  end
+
+  def notify_order_item_destroyed
+    PubSub.publish(OrderItem.channel, {
+      :order_item_id => order_item_id,
+      :deleted => true
+    })
   end
 end
