@@ -1,5 +1,5 @@
 #order_page{ "data-role" => "page" }
-  = form_for(@order) do |f|
+  = form_for(@order, :html => { "data-ajax" => "false" }) do |f|
     %div{ "data-role" => "header", "data-position" => "inline" }
       %span.counter.ui-btn-left= @order.order_items.count
       %h1= t("waiter.order", :no => @order.table_number)
