@@ -17,6 +17,7 @@ end
 
 Spork.each_run do
   ActiveRecord::Base.establish_connection
+  Dir[Rails.root.join("test/support/**/*.rb")].each {|f| require f}
   DatabaseCleaner.clean_with(:truncation)
   I18n.backend.reload!
 end
