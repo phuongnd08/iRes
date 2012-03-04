@@ -1,4 +1,4 @@
-#ordered_items_page{ "data-role" => "page" }
+#chef_orders_page{ "data-role" => "page" }
   %div{ "data-role" => "header" }
     %h1= t("ordered_items.header")
   = render :partial => "orders/viewed_by_chef", :collection => Order.all, :as => :order
@@ -8,27 +8,5 @@
   = render "order_items/order_item", :order_item => OrderItem.new
 
 :javascript
-  var orderItemsChannel = #{OrderItem.channel.to_json};
-  var ordersChannel = #{Order.channel.to_json};
-  var pubsubClient = new Faye.Client("#{ServicesSettings.pubsub.mount_point}");
   var chefOrderItemTemplate = #{chef_order_item_template.to_json};
   var chefOrderTemplate = #{chef_order_template.to_json};
-  $(function(){
-    pubsubClient.subscribe(ordersChannel, function(message){
-      if (message.deleted){
-        $('#ordered_items_page ul.order_items[data-order-id=' + message.order_id + ']').remove()
-      } else {
-        $(chefOrderTemplate.gsub(message)).appendTo('#ordered_items_page').listview();
-      }
-    })
-    pubsubClient.subscribe(orderItemsChannel, function(message){
-      if (message.deleted){
-        $('#ordered_items_page ul.order_items').find('[data-order-item-id=' + message.order_item_id + ']').remove();
-      } else {
-        $('#ordered_items_page ul.order_items[data-order-id=' + message.order_id + ']').
-        append(chefOrderItemTemplate.gsub(message)).
-        listview('refresh');
-      }
-    })
-  })
-

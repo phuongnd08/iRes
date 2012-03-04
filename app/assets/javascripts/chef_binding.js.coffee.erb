@@ -1,0 +1,28 @@
+$(document).delegate "#chef_orders_page", "pagecreate", ->
+  orderItemsChannel = <%= OrderItem.channel.to_json %>
+  ordersChannel = <%= Order.channel.to_json %>
+  pubsubClient = new Faye.Client("<%= ServicesSettings.pubsub.mount_point %>")
+  backlog = {}
+
+  processOrderMessage = (message) ->
+    if message.deleted
+      $("#chef_orders_page ul.order_items[data-order-id=" + message.order_id + "]").remove()
+    else
+      $(chefOrderTemplate.gsub(message)).appendTo("#chef_orders_page").listview()
+      if (backlog[message.order_id])
+        processOrderItemMessage orderItemMessage for orderItemMessage in backlog[message.order_id]
+
+  pubsubClient.subscribe ordersChannel, processOrderMessage
+
+  processOrderItemMessage = (message) ->
+    if message.deleted
+      $("#chef_orders_page ul.order_items").find("[data-order-item-id=" + message.order_item_id + "]").remove()
+    else
+      orderUL = $("#chef_orders_page ul.order_items[data-order-id=" + message.order_id + "]")
+      if orderUL.length
+        orderUL.append(chefOrderItemTemplate.gsub(message)).listview "refresh"
+      else
+        backlog[message.order_id] ||= []
+        backlog[message.order_id].push(message)
+
+  pubsubClient.subscribe orderItemsChannel, processOrderItemMessage

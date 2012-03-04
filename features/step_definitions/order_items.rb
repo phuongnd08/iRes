@@ -5,10 +5,12 @@ def create_order_items(order, item_hashes)
     item = Item.find_by_category_id_and_name(category.id, hash['name'])
     order.order_items << OrderItem.new(:item => item)
   end
+
+  order.save
 end
 
 Given /^(?:these items are|this item is) ordered:$/ do |table|
-  create_order_items(Order.create, table.hashes)
+  create_order_items(Order.new, table.hashes)
 end
 
 When /^(?:these items are|this item is) removed:$/ do |table|
@@ -21,7 +23,7 @@ When /^(?:these items are|this item is) removed:$/ do |table|
 end
 
 Given /^an order of table (\d+) is committed with these items:$/ do |number, table|
-  create_order_items(Order.create(:table_number => number.to_i), table.hashes)
+  create_order_items(Order.new(:table_number => number.to_i), table.hashes)
 end
 
 Then /^I see (\d+) items being ordered$/ do |count|
