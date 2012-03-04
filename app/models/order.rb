@@ -24,9 +24,17 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def ordered_time
+    if persisted?
+      created_at.localtime.strftime("%H:%M")
+    else
+      "%{order_ordered_time}"
+    end
+  end
+
   private
   def notify_order_created
-    PubSub.publish(Order.channel, { :order_id => order_id, :order_name => name })
+    PubSub.publish(Order.channel, { :order_id => order_id, :order_name => name, :order_ordered_time => ordered_time })
   end
 
   def notify_order_destroyed
