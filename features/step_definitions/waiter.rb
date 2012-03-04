@@ -34,12 +34,6 @@ When /^I choose "([^"]*)" as table number$/ do |table_number|
   select table_number, :from => 'order_table_number'
 end
 
-Then /^I see "([^"]*)"$/ do |text|
-  within "[data-role=page]" do
-    page.should have_content(text)
-  end
-end
-
 Then /^I see "([^"]*)" in ordered list$/ do |item_name|
   within_ordered_section do
     page.should have_content item_name
