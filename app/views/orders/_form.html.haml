@@ -27,7 +27,7 @@
       %br
       %div= f.submit t("order.commit"), {"data-role" => "button" }
       %div
-        %a#cancel_btn{ :href => "#", "data-role" => "button", "data-rel" => "back" }= t("order.cancel")
+        %a#cancel_btn{ :href => "#", "data-role" => "button", "data-rel" => "back" }= t("order.back")
     - new_order_item_template = capture do
       = f.fields_for(:order_items, f.object.order_items.new, :child_index => "%{child_index}") do |builder|
         = render "orders/order_item", :f => builder

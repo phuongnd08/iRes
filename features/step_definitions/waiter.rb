@@ -58,6 +58,12 @@ When /^I commit the order$/ do
   end
 end
 
+When /^I stop committing the order$/ do
+  within_ordered_section do
+    click_on I18n.t("order.back")
+  end
+end
+
 When /^I cancel the order$/ do
   within_ordered_section do
     click_on I18n.t("order.cancel")

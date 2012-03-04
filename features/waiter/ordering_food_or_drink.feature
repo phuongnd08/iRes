@@ -22,9 +22,9 @@ Feature: Order food or drink
     Then I see 1 items being ordered
     And I see "Cam vắt" in the ordered list
 
-  Scenario: Cancel an oder
+  Scenario: Not commiting an oder
     Given I'm on waiter page
     When I choose "Đặt bàn"
     Then I'm presented with the new order page
-    And I cancel the order
+    And I stop committing the order
     Then I see no orders
