@@ -2,11 +2,7 @@ require 'spec_helper'
 
 describe OrderItem do
   describe "creation" do
-    before do
-      Order.any_instance.stub(:notify_new_order)
-    end
-
-    let(:order) { Order.make! }
+    let!(:order) { Order.make! }
     let(:item) { Item.make!(:name => "Coffee") }
     it "publish a message to order_items channel" do
       PubSub.should_receive(:publish) do |channel, order_item_info|

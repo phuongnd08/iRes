@@ -1,0 +1,3 @@
+%ul.order_items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b", "data-order-id" => order.order_id }
+  %li{"data-role" => "list-divider", :role => "heading"}= order.name
+  = render order.order_items

@@ -47,7 +47,7 @@ end
 Then /^I see (\d+) items in the waiting list$/ do |count|
   within ".order_items" do
     wait_for count.to_i do
-      page.all("li").count
+      page.all("li[data-order-item-id]").count
     end
   end
 end
