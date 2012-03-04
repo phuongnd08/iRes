@@ -1,6 +1,6 @@
 IRes::Application.routes.draw do
 
-  get "/waiter" => "home#waiter"
+  get "/waiter" => "home#waiter", :as => "waiter"
   get "/chef" => "home#chef"
   resources :orders
   resources :tables, :only => [:index]

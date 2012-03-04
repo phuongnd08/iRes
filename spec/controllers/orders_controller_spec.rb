@@ -142,10 +142,10 @@ describe OrdersController do
       }.to change(Order, :count).by(-1)
     end
 
-    it "redirects to the orders list" do
+    it "redirects to waiter page" do
       order = Order.create! valid_attributes
       delete :destroy, {:id => order.to_param}, valid_session
-      response.should redirect_to(orders_url)
+      response.should redirect_to(waiter_url)
     end
   end
 
