@@ -62,7 +62,8 @@ class Order < ActiveRecord::Base
       :order_id => order_id,
       :order_name => name,
       :order_ordered_time => ordered_time,
-      :order_mark_ready_path => mark_ready_path
+      :order_mark_ready_path => mark_ready_path,
+      :created => true
     })
   end
 

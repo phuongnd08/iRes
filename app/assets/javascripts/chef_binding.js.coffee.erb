@@ -7,7 +7,7 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
   processOrder = (order) ->
     if order.deleted || (order.changed && order.ready)
       $("#chef_orders_page ul.order_items[data-order-id=" + order.order_id + "]").remove()
-    else
+    else if order.created
       $(chefOrderTemplate.gsub(order)).appendTo("#chef_orders_page").listview()
       if (backlog[order.order_id])
         processOrderItem orderItem for orderItem in backlog[order.order_id]

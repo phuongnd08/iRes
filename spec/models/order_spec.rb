@@ -51,6 +51,7 @@ describe Order do
         channel.should == Order.channel
         order_info[:order_id].should == Order.last.id
         order_info[:order_name].should be_ends_with(order.table_number.to_s)
+        order_info[:created].should be_true
       end
       order = Order.create
     end
