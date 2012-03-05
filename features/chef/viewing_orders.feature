@@ -45,3 +45,14 @@ Feature: Viewing orders
     And I see "Order: Bàn số 2"
     But I do not see "Order: Bàn số 1"
 
+  Scenario: View order ordered time
+    Given an order is committed at 9:00
+    And I'm on chef page
+    Then I see 1 orders in the waiting list
+    And I see "9:00"
+
+  Scenario: View live updated order ordered time
+    Given I'm on chef page
+    When an order is committed at 9:00
+    Then I see 1 orders in the waiting list
+    And I see "9:00"
