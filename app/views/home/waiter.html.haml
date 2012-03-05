@@ -7,7 +7,9 @@
   .content{ "data-role" => "content" }
     %ul#orders{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
       %li{"data-role" => "list-divider", :role => "heading"}= t("order.pending_header")
-      - Order.pending.each do |order|
-        %li
-          %a{ "data-order-id" => order.id, :href => edit_order_path(order) }
-            Order: #{t("order.table_no", :no => order.table_number)}
+      = render :partial => "orders/viewed_by_waiter", :collection => Order.pending, :as => :order
+
+- order_template = capture do
+  = render "orders/viewed_by_waiter", :order => Order.new
+:javascript
+  var orderTemplate = #{order_template.to_json};

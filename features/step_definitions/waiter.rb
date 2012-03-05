@@ -16,10 +16,6 @@ def within_ordering_section
   end
 end
 
-Given /^I'm on waiter page$/ do
-  visit '/waiter'
-end
-
 When /^I choose "([^"]*)"$/ do |text|
   click_on text
 end

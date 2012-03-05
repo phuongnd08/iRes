@@ -7,3 +7,8 @@ Then /^I'm presented with the ([\w\s]+) page$/ do |path_name|
   wait_for(expected_path){ current_path }
 end
 
+
+Given /^I'm on waiter page$/ do
+  visit '/waiter'
+  page.should have_content I18n.t("waiter.order")
+end
