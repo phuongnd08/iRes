@@ -5,6 +5,12 @@ describe Order do
   let(:item1) { Item.make! }
   let(:item2) { Item.make! }
 
+  describe "default" do
+    it "has state new" do
+      order.state.should == Order::STATE_NEW
+    end
+  end
+
   describe "updating" do
     before(:each) do
       counter = Time.now.to_i
@@ -21,6 +27,21 @@ describe Order do
       order.order_items.count.should == 2
       order.order_items[0].item.should == item1
       order.order_items[1].item.should == item2
+    end
+
+    context "state changed" do
+      context "to ready" do
+        it "notifys order is ready" do
+          order.save
+          PubSub.should_receive(:publish) do |channel, order_info|
+            channel.should == Order.channel
+            order_info[:order_id].should == order.id
+            order_info[:changed].should be_true
+            order_info[:ready].should be_true
+          end
+          order.update_attributes(:state => Order::STATE_READY)
+        end
+      end
     end
   end
 

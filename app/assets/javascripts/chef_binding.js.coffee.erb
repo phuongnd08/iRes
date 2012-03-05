@@ -4,25 +4,25 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
   pubsubClient = new Faye.Client("<%= ServicesSettings.pubsub.mount_point %>")
   backlog = {}
 
-  processOrderMessage = (message) ->
-    if message.deleted
-      $("#chef_orders_page ul.order_items[data-order-id=" + message.order_id + "]").remove()
+  processOrder = (order) ->
+    if order.deleted || (order.changed && order.ready)
+      $("#chef_orders_page ul.order_items[data-order-id=" + order.order_id + "]").remove()
     else
-      $(chefOrderTemplate.gsub(message)).appendTo("#chef_orders_page").listview()
-      if (backlog[message.order_id])
-        processOrderItemMessage orderItemMessage for orderItemMessage in backlog[message.order_id]
+      $(chefOrderTemplate.gsub(order)).appendTo("#chef_orders_page").listview()
+      if (backlog[order.order_id])
+        processOrderItem orderItem for orderItem in backlog[order.order_id]
 
-  pubsubClient.subscribe ordersChannel, processOrderMessage
+  pubsubClient.subscribe ordersChannel, processOrder
 
-  processOrderItemMessage = (message) ->
-    if message.deleted
-      $("#chef_orders_page ul.order_items").find("[data-order-item-id=" + message.order_item_id + "]").remove()
+  processOrderItem = (orderItem) ->
+    if orderItem.deleted
+      $("#chef_orders_page ul.order_items").find("[data-order-item-id=" + orderItem.order_item_id + "]").remove()
     else
-      orderUL = $("#chef_orders_page ul.order_items[data-order-id=" + message.order_id + "]")
+      orderUL = $("#chef_orders_page ul.order_items[data-order-id=" + orderItem.order_id + "]")
       if orderUL.length
-        orderUL.append(chefOrderItemTemplate.gsub(message)).listview "refresh"
+        orderUL.append(chefOrderItemTemplate.gsub(orderItem)).listview "refresh"
       else
-        backlog[message.order_id] ||= []
-        backlog[message.order_id].push(message)
+        backlog[orderItem.order_id] ||= []
+        backlog[orderItem.order_id].push(orderItem)
 
-  pubsubClient.subscribe orderItemsChannel, processOrderItemMessage
+  pubsubClient.subscribe orderItemsChannel, processOrderItem

@@ -7,6 +7,7 @@ vi:
     commit: Xác nhận
     back: Quay lại
     cancel: Hủy
+    ready: Sẵn sàng
     pending_header: Những order đang chờ
     header: "Order: Bàn số %{table_no}"
     ordered: Đã gọi

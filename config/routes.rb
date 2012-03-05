@@ -2,7 +2,11 @@ IRes::Application.routes.draw do
 
   get "/waiter" => "home#waiter", :as => "waiter"
   get "/chef" => "home#chef"
-  resources :orders
+  resources :orders do
+    member do
+      put :mark_ready
+    end
+  end
   resources :tables, :only => [:index]
 
   # The priority is based upon order of creation:

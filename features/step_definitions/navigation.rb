@@ -12,3 +12,8 @@ Given /^I'm on waiter page$/ do
   visit '/waiter'
   page.should have_content I18n.t("waiter.order")
 end
+
+When /^I'm on chef page$/ do
+  visit "/chef"
+  page.should have_content I18n.t("ordered_items.header")
+end

@@ -31,5 +31,9 @@ describe OrdersController do
       delete("/orders/1").should route_to("orders#destroy", :id => "1")
     end
 
+    it "routes to #mark_ready" do
+      put("/orders/1/mark_ready").should route_to("orders#mark_ready", :id => "1")
+    end
+
   end
 end
