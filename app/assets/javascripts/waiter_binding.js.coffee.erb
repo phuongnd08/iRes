@@ -1,13 +1,27 @@
+formatOrderLI = (li)->
+  $(li).addClass 'ui-button-up-' + $(li).attr('data-theme')
+
 $(document).delegate '#navigator_page', "pagecreate", ->
     ordersChannel = <%= Order.channel.to_json %>
+    formatOrderLI for li in $('#orders li[data-order-id')
     if window.Faye && Faye.Client
+      orderLI = (order)->
+        $('#orders').find('[data-order-id=' + order.order_id + ']')
+
       pubsubClient = new Faye.Client(<%= ServicesSettings.pubsub.mount_point.to_json %>)
       pubsubClient.subscribe ordersChannel, (order) ->
         if order.deleted
-          $('#orders').find('[data-order-id=' + order.order_id + ']').remove()
+          orderLI(order).remove()
+        else if order.changed
+          if order.ready
+            $.toast order.order_name, I18n.t("order.ready")
+            li = orderLI(order).replaceWith(orderTemplate.gsub order)
+            formatOrderLI(li)
         else if order.created
-          $('#orders').append(orderTemplate.gsub order)
-          $('#orders').listview('refresh')
+          li = $(orderTemplate.gsub order).appendTo('#orders')
+          formatOrderLI(li)
+
+        $('#orders').listview('refresh')
 
 $(document).delegate "#order_page", "pagecreate", ->
   showPage = (selector) ->

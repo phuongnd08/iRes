@@ -1,4 +1,5 @@
-%li
-  %a{ "data-order-id" => order.order_id, :href => edit_order_path(order) }
+%li{ "data-order-id" => order.order_id, "data-theme" => order.theme }
+  %a{ :href => edit_order_path(order) }
     = order.name
     %span.ui-li-count= order.ordered_time
+  %img.ui-icon.ui-icon-shadow{ :class => "ui-icon-" + order.icon }

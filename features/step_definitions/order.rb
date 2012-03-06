@@ -1,5 +1,5 @@
 Given /^an order of table (\d+) is committed$/ do |table_number|
-  Order.make!(:table_number => table_number)
+  DataBag.order = Order.make!(:table_number => table_number)
 end
 
 Then /^I see (\d+) orders in the waiting list$/ do |count|
@@ -26,7 +26,7 @@ Given /^an order is committed at (\d+):(\d+)$/ do |hour, minute|
   Order.record_timestamps = false
   now = Time.now
   ordered_time = Time.new(now.year, now.month, now.day, hour.to_i, minute.to_i)
-  Order.create(:created_at => ordered_time, :updated_at => ordered_time)
+  DataBag.order = Order.create(:created_at => ordered_time, :updated_at => ordered_time)
   Order.record_timestamps = true
 end
 
@@ -39,4 +39,13 @@ When /^I mark order of table (\d+) as ready$/ do |table_number|
       end
     end
   end
+end
+
+When /^the order is ready$/ do
+  DataBag.order.update_attribute(:state, Order::STATE_READY)
+end
+
+Then /^I see star icon for order of table (\d+)$/ do |table_number|
+  order = Order.find_by_table_number(table_number)
+  page.find("ul#orders li[data-order-id='#{order.id}']").should have_css(".ui-icon-star")
 end

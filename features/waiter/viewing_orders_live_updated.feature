@@ -23,3 +23,10 @@ Feature: Viewing orders live updated
     Given I'm on waiter page
     When an order is committed at 9:00
     Then I see "9:00"
+
+  Scenario: Know when an order is ready
+    Given I'm on waiter page
+    When an order of table 1 is committed
+    And the order is ready
+    Then I see toast of "Order: Bàn số 1" with text "Sẵn sàng"
+    And I see star icon for order of table 1

@@ -56,15 +56,39 @@ class Order < ActiveRecord::Base
     state == STATE_PAID
   end
 
+  def icon
+    if persisted?
+      ready? ? 'star' : 'arrow-r'
+    else
+      "%{order_icon}"
+    end
+  end
+
+  def theme
+    if persisted?
+      ready? ? 'e' : 'c'
+    else
+      "%{order_theme}"
+    end
+  end
+
   private
-  def notify_order_created
-    PubSub.publish(Order.channel, {
+
+  def push_attributes
+    {
       :order_id => order_id,
       :order_name => name,
       :order_ordered_time => ordered_time,
       :order_mark_ready_path => mark_ready_path,
+      :order_icon => icon,
+      :order_theme => theme
+    }
+  end
+
+  def notify_order_created
+    PubSub.publish(Order.channel, push_attributes.merge({
       :created => true
-    })
+    }))
   end
 
   def notify_order_destroyed
@@ -74,11 +98,10 @@ class Order < ActiveRecord::Base
   def notify_if_state_changed
     if state_changed?
       if ready?
-        PubSub.publish(Order.channel, {
-          :order_id => order_id,
+        PubSub.publish(Order.channel, push_attributes.merge({
           :changed => true,
           :ready => true
-        })
+        }))
       end
     end
   end

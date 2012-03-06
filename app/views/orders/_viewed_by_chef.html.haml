@@ -3,6 +3,6 @@
     %a
       = order.name
       %span.ui-li-count= order.ordered_time
-    %a{ "data-role" => "button", "data-icon" => "check", "data-theme" => "c", "data-remote" => "true", "data-method" => :put, :href => order.mark_ready_path }
+    %a{ "data-role" => "button", "data-icon" => "star", "data-theme" => "c", "data-remote" => "true", "data-method" => :put, :href => order.mark_ready_path }
       = t("order.ready")
   = render order.order_items
