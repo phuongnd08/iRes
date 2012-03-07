@@ -13,11 +13,7 @@
             %a.ui-btn-active{ :href => "#", "data-nav-to" => "#ordered" }= t("order.ordered")
     #ordering.subpage{ "data-role" => "content" }
       %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
-        - Category.all.each do |category|
-          %li{ "data-role" => "list-divider" }= category.name
-          - category.items.each do |item|
-            %li.item{ "data-item-id" => item.id }
-              %a{ :href => "#" }= item.name
+        = render :partial => "categories/viewed_by_waiter", :collection => Category.all, :as => :category
 
     #ordered.subpage.hidden{ "data-role" => "content" }
       %div
