@@ -11,16 +11,18 @@ $(document).delegate '#navigator_page', "pagecreate", ->
       pubsubClient = new Faye.Client(<%= ServicesSettings.pubsub.mount_point.to_json %>)
       pubsubClient.subscribe ordersChannel, (order) ->
         if order.deleted
-          orderLI(order).remove()
+          orderLI(order).fadeOut('slow', ->
+            $(this).remove()
+          )
         else
-          li = null
           if order.changed
             $.toast order.order_name, I18n.t("order.ready") if order.ready
-            li = orderLI(order).replaceWith(orderTemplate.gsub order)
+            orderLI(order).replaceWith(orderTemplate.gsub order)
           if order.created
-            li = $(orderTemplate.gsub order).appendTo('#orders')
+            $(orderTemplate.gsub order).appendTo('#orders')
           $('#orders').listview('refresh')
           formatOrderLI orderLI(order)
+          orderLI(order).fadeOut('fast').fadeIn('slow')
 
 $(document).delegate "#order_page", "pagecreate", ->
   showPage = (selector) ->
