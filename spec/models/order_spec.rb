@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Order do
   let(:order) { Order.new }
-  let(:item1) { Item.make! }
-  let(:item2) { Item.make! }
+  let(:item1) { Item.make!(:price => 10000) }
+  let(:item2) { Item.make!(:price => 25000) }
 
   describe "default" do
     it "has state new" do
@@ -29,18 +29,16 @@ describe Order do
       order.order_items[1].item.should == item2
     end
 
-    context "state changed" do
-      context "to ready" do
-        it "notifys order is ready" do
-          order.save
-          PubSub.should_receive(:publish) do |channel, order_info|
-            channel.should == Order.channel
-            order_info[:order_id].should == order.id
-            order_info[:changed].should be_true
-            order_info[:ready].should be_true
-          end
-          order.update_attributes(:state => Order::STATE_READY)
+    context "changed" do
+      it "notifys order is changed" do
+        order.save
+        PubSub.should_receive(:publish) do |channel, order_info|
+          channel.should == Order.channel
+          order_info[:order_id].should == order.id
+          order_info[:changed].should be_true
+          order_info[:ready].should be_true
         end
+        order.update_attributes(:state => Order::STATE_READY)
       end
     end
   end
@@ -66,6 +64,23 @@ describe Order do
         order_info[:deleted].should be_true
       end
       order.destroy
+    end
+  end
+
+  describe "#total_price" do
+    before do
+      order.order_items << OrderItem.new(:item => item1)
+      order.order_items << OrderItem.new(:item => item2)
+      order.save
+    end
+
+    it "is kept in sync with order items" do
+      order.total_price.should == 35000
+    end
+
+    it "is keep insync when update with nested attributes" do
+      order.update_attributes(:order_items_attributes => { "0" => { :_destroy => 1, :id => order.order_items.first.id } })
+      order.total_price.should == 25000
     end
   end
 end

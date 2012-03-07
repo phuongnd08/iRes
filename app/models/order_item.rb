@@ -7,11 +7,19 @@ class OrderItem < ActiveRecord::Base
 
   after_create :notify_order_item_created
   after_destroy :notify_order_item_destroyed
-  before_save :copy_price_from_item
-
 
   def item_id
-    item.try(:id) || "%{item_id}"
+    super || "%{item_id}"
+  end
+
+  def item=(*arg)
+    super
+    copy_price_from_item
+  end
+
+  def item_id=(*arg)
+    super
+    copy_price_from_item
   end
 
   def item_name
@@ -36,7 +44,7 @@ class OrderItem < ActiveRecord::Base
 
   private
   def copy_price_from_item
-    self.price = item.price
+    self.price = item.try(:price)
   end
 
   def notify_order_item_created

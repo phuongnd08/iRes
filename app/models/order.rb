@@ -7,7 +7,8 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :order_items, :allow_destroy => true
   after_create :notify_order_created
   after_destroy :notify_order_destroyed
-  after_update :notify_if_state_changed
+  after_update :notify_changed
+  before_save :update_total_price
 
   scope :pending, where(:state => STATE_NEW)
 
@@ -72,11 +73,11 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def total_price
-    order_items.sum(:price)
-  end
-
   private
+
+  def update_total_price
+    self.total_price = order_items.reject(&:marked_for_destruction?).map(&:price).sum
+  end
 
   def push_attributes
     {
@@ -99,12 +100,10 @@ class Order < ActiveRecord::Base
     PubSub.publish(Order.channel, { :order_id => order_id, :deleted => true })
   end
 
-  def notify_if_state_changed
-    if state_changed?
-      PubSub.publish(Order.channel, push_attributes.merge({
-        :changed => true,
-        :ready => ready?
-      }))
-    end
+  def notify_changed
+    PubSub.publish(Order.channel, push_attributes.merge({
+      :changed => true,
+      :ready => ready?
+    }))
   end
 end
