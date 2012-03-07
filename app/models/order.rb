@@ -97,12 +97,10 @@ class Order < ActiveRecord::Base
 
   def notify_if_state_changed
     if state_changed?
-      if ready?
-        PubSub.publish(Order.channel, push_attributes.merge({
-          :changed => true,
-          :ready => true
-        }))
-      end
+      PubSub.publish(Order.channel, push_attributes.merge({
+        :changed => true,
+        :ready => ready?
+      }))
     end
   end
 end

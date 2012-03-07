@@ -1,9 +1,9 @@
 formatOrderLI = (li)->
-  $(li).addClass 'ui-button-up-' + $(li).attr('data-theme')
+  $(li).find('.ui-li-count').addClass 'ui-btn-up-' + $(li).attr('data-count-theme')
 
 $(document).delegate '#navigator_page', "pagecreate", ->
     ordersChannel = <%= Order.channel.to_json %>
-    formatOrderLI for li in $('#orders li[data-order-id')
+    formatOrderLI(li) for li in $('#orders li[data-order-id]')
     if window.Faye && Faye.Client
       orderLI = (order)->
         $('#orders').find('[data-order-id=' + order.order_id + ']')
@@ -12,16 +12,15 @@ $(document).delegate '#navigator_page', "pagecreate", ->
       pubsubClient.subscribe ordersChannel, (order) ->
         if order.deleted
           orderLI(order).remove()
-        else if order.changed
-          if order.ready
-            $.toast order.order_name, I18n.t("order.ready")
+        else
+          li = null
+          if order.changed
+            $.toast order.order_name, I18n.t("order.ready") if order.ready
             li = orderLI(order).replaceWith(orderTemplate.gsub order)
-            formatOrderLI(li)
-        else if order.created
-          li = $(orderTemplate.gsub order).appendTo('#orders')
-          formatOrderLI(li)
-
-        $('#orders').listview('refresh')
+          if order.created
+            li = $(orderTemplate.gsub order).appendTo('#orders')
+          $('#orders').listview('refresh')
+          formatOrderLI orderLI(order)
 
 $(document).delegate "#order_page", "pagecreate", ->
   showPage = (selector) ->
