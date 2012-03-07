@@ -3,6 +3,12 @@ reflect = (x) -> x
 Array::any = (callback = falsy) ->
   @.detect(callback) != null
 
+Array::select = (callback) ->
+  ret = []
+  for item in @
+    ret.push(item) if callback(item)
+  ret
+
 Array::detect = (callback = falsy) ->
   for item in @
     return item if callback(item)
@@ -38,6 +44,11 @@ Array::count = (callback) ->
     count += 1 if callback(value)
     count
   )
+
+Array::sum = ->
+  @inject 0, (sum, value) -> sum + value
+
+Array::size = -> @length
 
 Array::first = ->
   @[0]

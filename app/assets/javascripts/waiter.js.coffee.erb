@@ -1,29 +1,36 @@
 class @Waiter
   @selectors =
     orderedPage: "#ordered"
-    counter: "#order_page .counter"
+    itemCounter: "#order_page .item_counter"
+    totalPriceCounter: "#order_page .total_price_counter"
     tableNumber: "#order_table_number"
 
   @getOrderedList = ->
     $(@selectors.orderedPage).find('ul.items')
 
-  @addItem = (id, name) ->
+  @addItem = (id, name, price) ->
     hash =
       item_id: id
       item_name: name
+      order_item_price: price
       child_index: (new Date).getTime()
     itemLI = $(newOrderItemTemplate.gsub hash)
     itemLI.find('input[id$=item_id]').val(id)
     @getOrderedList().append(itemLI)
     @getOrderedList().listview("refresh")
-    @updateCounter()
+    @updateStatistics()
 
   @removeItem = (itemLI) ->
     itemLI.hide()
     itemLI.find('input[id$=destroy][type=hidden]').val("1")
-    @updateCounter()
+    @updateStatistics()
 
-  @updateCounter = ->
-    total = @getOrderedList().find('li').size()
-    deleted = @getOrderedList().find('li input[id$=destroy][type=hidden]').toArray().count((input) -> $(input).val() == "1")
-    $(@selectors.counter).text(total-deleted)
+  @updateStatistics = ->
+    orderedItems = @getOrderedList().find('li').toArray().select (li) ->
+      bool = $(li).find('input[id$=destroy][type=hidden]').toArray().any (input) ->
+        $(input).val() == "1"
+      !bool
+    $(@selectors.itemCounter).text(orderedItems.size())
+    itemPrices = orderedItems.map (li) ->
+      parseInt($(li).attr('data-order-item-price'))
+    $(@selectors.totalPriceCounter).text(itemPrices.sum())

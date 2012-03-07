@@ -1,7 +1,10 @@
 #order_page{ "data-role" => "page" }
   = form_for(@order, :html => { "data-ajax" => "false" }) do |f|
     %div{ "data-role" => "header", "data-position" => "inline" }
-      %span.counter.ui-btn-left= @order.order_items.count
+      %span.ui-btn-left
+        %span.item_counter= @order.order_items.count
+        \-
+        %span.total_price_counter= @order.total_price
       %h1= t("waiter.order", :no => @order.table_number)
       %div.ui-btn-right
         = f.select :table_number, (1..10).map { |number| [t("order.table_no", :no => number), number] }
@@ -19,7 +22,7 @@
       %div
         %ul.items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
           = f.fields_for :order_items do |builder|
-            = render "orders/order_item", :f => builder
+            = render "order_items/viewed_by_waiter", :f => builder
       %br
       %div= f.submit t("order.commit"), {"data-role" => "button" }
       %div
@@ -28,6 +31,6 @@
         %div= link_to t("order.cancel"), order_path(@order), :method => :delete, "data-role" => "button", "data-icon" => "delete"
     - new_order_item_template = capture do
       = f.fields_for(:order_items, f.object.order_items.new, :child_index => "%{child_index}") do |builder|
-        = render "orders/order_item", :f => builder
+        = render "order_items/viewed_by_waiter", :f => builder
     :javascript
       var newOrderItemTemplate = #{new_order_item_template.to_json}

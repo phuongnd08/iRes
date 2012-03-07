@@ -49,3 +49,16 @@ Then /^I see star icon for order of table (\d+)$/ do |table_number|
   order = Order.find_by_table_number(table_number)
   page.find("ul#orders li[data-order-id='#{order.id}']").should have_css(".ui-icon-star")
 end
+
+When /^I see "([^"]*)" as the total price of order$/ do |total_price|
+  within ".total_price_counter" do
+    page.should have_content(total_price)
+  end
+end
+
+Then /^I see "([^"]*)" as number of items of order$/ do |count|
+  within ".item_counter" do
+    page.should have_content count
+  end
+end
+

@@ -69,3 +69,20 @@ describe "array", ->
       arr = [1, 2, 3]
       expect(arr.count((number) -> number % 2 == 0)).toEqual(1)
 
+  describe "select", ->
+    it "returns only elements matched", ->
+      ret = [1, 2, 3, 4].select((num) -> num % 2 == 0 )
+      expect(ret).toEqual([2, 4])
+
+  describe "sum", ->
+    it "returns sum of all element", ->
+      expect([1, 2, 3, 4].sum()).toEqual(10)
+
+  describe "map", ->
+    it "returns transformed elements", ->
+      ret = [1, 2, 3, 4].map (num) -> num * 2
+      expect(ret).toEqual([2, 4, 6, 8])
+
+  describe "size", ->
+    it "returns length of array", ->
+      expect([1, 2, 3, 5].size()).toEqual(4)

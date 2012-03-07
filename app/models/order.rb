@@ -72,6 +72,10 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def total_price
+    order_items.sum(:price)
+  end
+
   private
 
   def push_attributes

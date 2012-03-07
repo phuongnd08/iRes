@@ -36,12 +36,6 @@ Then /^I see "([^"]*)" in ordered list$/ do |item_name|
   end
 end
 
-Then /^I see "([^"]*)" within ordered statistics$/ do |count|
-  within ".counter" do
-    page.should have_content count
-  end
-end
-
 When /^I commit the order$/ do
   within_ordered_section do
     click_on I18n.t("order.commit")

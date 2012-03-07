@@ -18,12 +18,18 @@ describe "Waiter", ->
         $('#ordered_page').remove()
 
       it "puts item in ordered list", ->
-        Waiter.addItem(1, "Drink1")
+        Waiter.addItem(1, "Drink1", 15000)
         expect($('#ordered li:first')).toExist()
         expect($('#ordered li:first a span').text()).toEqual("Drink1")
 
       it "reupdates number of items indicator", ->
-        Waiter.addItem(1, "Drink1")
-        expect($('#order_page .counter')).toHaveText('1')
-        Waiter.addItem(2, "Drink2")
-        expect($('#order_page .counter')).toHaveText('2')
+        Waiter.addItem(1, "Drink1", 15000)
+        expect($('#order_page .item_counter')).toHaveText('1')
+        Waiter.addItem(2, "Drink2", 20000)
+        expect($('#order_page .item_counter')).toHaveText('2')
+
+      it "reupdates total price of items indicator", ->
+        Waiter.addItem(1, "Drink1", 15000)
+        expect($('#order_page .total_price_counter')).toHaveText('15000')
+        Waiter.addItem(2, "Drink2", 20000)
+        expect($('#order_page .total_price_counter')).toHaveText('35000')

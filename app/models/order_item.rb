@@ -7,6 +7,7 @@ class OrderItem < ActiveRecord::Base
 
   after_create :notify_order_item_created
   after_destroy :notify_order_item_destroyed
+  before_save :copy_price_from_item
 
 
   def item_id
@@ -29,7 +30,15 @@ class OrderItem < ActiveRecord::Base
     "/order_items"
   end
 
+  def price
+    super || "%{order_item_price}"
+  end
+
   private
+  def copy_price_from_item
+    self.price = item.price
+  end
+
   def notify_order_item_created
     PubSub.publish(OrderItem.channel, {
       :order_item_id => order_item_id,

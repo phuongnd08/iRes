@@ -1,6 +1,6 @@
 %li{ "data-role" => "list-divider" }= category.name
 - category.items.each do |item|
-  %li.item{ "data-item-id" => item.id }
+  %li.item{ "data-item-id" => item.id, "data-item-price" => item.price }
     %a{ :href => "#" }
       = item.name
       %span.ui-li-count= item.price

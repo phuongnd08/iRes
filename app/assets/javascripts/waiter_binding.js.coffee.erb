@@ -35,7 +35,10 @@ $(document).delegate "#order_page", "pagecreate", ->
 
   $("#ordering .item").click (event) ->
     event.preventDefault()
-    Waiter.addItem $(this).attr("data-item-id"), $(this).text()
+    item_id = $(this).attr("data-item-id")
+    item_name = $(this).find('a').text()
+    item_price = $(this).attr("data-item-price")
+    Waiter.addItem item_id, item_name, item_price
 
   $('#ordered').on 'click', '.remove', ->
     Waiter.removeItem $(this).closest('li')
