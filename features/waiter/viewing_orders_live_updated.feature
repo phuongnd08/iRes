@@ -24,6 +24,18 @@ Feature: Viewing orders live updated
     When an order is committed at 9:00
     Then I see "9:00"
 
+  Scenario: View order price live updated
+    Given an order of table 1 is committed with these items:
+      |category|name|
+      |Đò uống|Cà phê|
+      |Đò ăn|Bún bò|
+    And I'm on waiter page
+    Then I see "30000"
+    When this item is added to the order:
+      |category|name|
+      |Đò uống|Cam vắt|
+    Then I see "45000"
+
   Scenario: Know when an order is ready
     Given I'm on waiter page
     When an order of table 1 is committed

@@ -73,6 +73,14 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def total_price
+    if persisted?
+      super
+    else
+      "%{order_total_price}"
+    end
+  end
+
   private
 
   def update_total_price
@@ -86,7 +94,8 @@ class Order < ActiveRecord::Base
       :order_ordered_time => ordered_time,
       :order_mark_ready_path => mark_ready_path,
       :order_icon => icon,
-      :order_theme => theme
+      :order_theme => theme,
+      :order_total_price => total_price
     }
   end
 

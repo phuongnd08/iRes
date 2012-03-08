@@ -2,6 +2,11 @@ Given /^an order of table (\d+) is committed$/ do |table_number|
   DataBag.order = Order.make!(:table_number => table_number)
 end
 
+Given /^an order of table (\d+) is committed with these items:$/ do |number, table|
+  DataBag.order = Order.new(:table_number => number.to_i)
+  create_order_items(DataBag.order, table.hashes)
+end
+
 Then /^I see (\d+) orders in the waiting list$/ do |count|
   wait_for count.to_i do
     page.all("ul.order_items").size
@@ -60,5 +65,9 @@ Then /^I see "([^"]*)" as number of items of order$/ do |count|
   within ".item_counter" do
     page.should have_content count
   end
+end
+
+When /^(?:this|these) items? is added to the order:$/ do |table|
+  create_order_items(DataBag.order, table.hashes)
 end
 
