@@ -10,6 +10,7 @@
       = render :partial => "orders/viewed_by_waiter", :collection => Order.all, :as => :order
 
 - order_template = capture do
-  = render "orders/viewed_by_waiter", :order => Order.new
+  - Ajaxifier.enable do
+    = render "orders/viewed_by_waiter", :order => Order.new
 :javascript
   var orderTemplate = #{order_template.to_json};

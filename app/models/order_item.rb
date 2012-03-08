@@ -9,7 +9,11 @@ class OrderItem < ActiveRecord::Base
   after_destroy :notify_order_item_destroyed
 
   def item_id
-    super || "%{item_id}"
+    if use_placeholder?
+      "%{item_id}"
+    else
+      super
+    end
   end
 
   def item=(*arg)
@@ -23,15 +27,27 @@ class OrderItem < ActiveRecord::Base
   end
 
   def item_name
-    item.try(:name) || "%{item_name}"
+    if use_placeholder?
+      "%{item_name}"
+    else
+      item.try(:name)
+    end
   end
 
   def order_id
-    order.try(:id) || "%{order_id}"
+    if use_placeholder?
+      "%{order_id}"
+    else
+      order.try(:id)
+    end
   end
 
   def order_item_id
-    id || "%{order_item_id}"
+    if use_placeholder?
+      "%{order_item_id}"
+    else
+      id
+    end
   end
 
   def self.channel

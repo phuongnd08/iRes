@@ -30,7 +30,8 @@
       - if @order.persisted?
         %div= link_to t("order.cancel"), order_path(@order), :method => :delete, "data-role" => "button", "data-icon" => "delete"
     - new_order_item_template = capture do
-      = f.fields_for(:order_items, f.object.order_items.new, :child_index => "%{child_index}") do |builder|
-        = render "order_items/viewed_by_waiter", :f => builder
+      - Ajaxifier.enable do
+        = f.fields_for(:order_items, f.object.order_items.new, :child_index => "%{child_index}") do |builder|
+          = render "order_items/viewed_by_waiter", :f => builder
     :javascript
       var newOrderItemTemplate = #{new_order_item_template.to_json}

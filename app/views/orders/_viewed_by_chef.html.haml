@@ -1,8 +1,9 @@
-%ul.order_items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b", "data-order-id" => order.order_id }
-  %li{"data-role" => "list-divider", :role => "heading", "data-theme" => "b"}
-    %a
-      = order.name
-      %span.ui-li-count= order.ordered_time
-    %a{ "data-role" => "button", "data-icon" => "star", "data-theme" => "c", "data-remote" => "true", "data-method" => :put, :href => order.mark_ready_path }
-      = t("order.ready")
-  = render order.order_items
+- Ajaxifier.enable do
+  %ul.order_items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b", "data-order-id" => order.order_id }
+    %li{"data-role" => "list-divider", :role => "heading", "data-theme" => "b"}
+      %a
+        = order.name
+        %span.ui-li-count= order.ordered_time
+      %a{ "data-role" => "button", "data-icon" => "star", "data-theme" => "c", "data-remote" => "true", "data-method" => :put, :href => mark_ready_order_path(order) }
+        = t("order.ready")
+    = render order.order_items

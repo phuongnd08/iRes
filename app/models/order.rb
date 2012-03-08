@@ -22,30 +22,26 @@ class Order < ActiveRecord::Base
   end
 
   def order_id
-    id || "%{order_id}"
+    if use_placeholder?
+      "%{order_id}"
+    else
+      id
+    end
   end
 
   def name
-    if id
-      "Order: #{I18n.t("order.table_no", :no => table_number)}"
-    else
+    if use_placeholder?
       "%{order_name}"
+    else
+      "Order: #{I18n.t("order.table_no", :no => table_number)}"
     end
   end
 
   def ordered_time
-    if persisted?
-      created_at.localtime.strftime("%H:%M")
-    else
+    if use_placeholder?
       "%{order_ordered_time}"
-    end
-  end
-
-  def mark_ready_path
-    if persisted?
-      Rails.application.routes.url_helpers.mark_ready_order_path(self)
     else
-      "%{order_mark_ready_path}"
+      created_at.localtime.strftime("%H:%M")
     end
   end
 
@@ -58,26 +54,34 @@ class Order < ActiveRecord::Base
   end
 
   def icon
-    if persisted?
-      ready? ? 'star' : 'arrow-r'
-    else
+    if use_placeholder?
       "%{order_icon}"
+    else
+      ready? ? 'star' : 'arrow-r'
     end
   end
 
   def theme
-    if persisted?
-      ready? ? 'e' : 'c'
-    else
+    if use_placeholder?
       "%{order_theme}"
+    else
+      ready? ? 'e' : 'c'
     end
   end
 
   def total_price
-    if persisted?
-      super
-    else
+    if use_placeholder?
       "%{order_total_price}"
+    else
+      super
+    end
+  end
+
+  def to_param
+    if use_placeholder?
+      "%{order_id}"
+    else
+      super
     end
   end
 
@@ -92,7 +96,6 @@ class Order < ActiveRecord::Base
       :order_id => order_id,
       :order_name => name,
       :order_ordered_time => ordered_time,
-      :order_mark_ready_path => mark_ready_path,
       :order_icon => icon,
       :order_theme => theme,
       :order_total_price => total_price
