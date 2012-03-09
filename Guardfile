@@ -75,6 +75,7 @@ group :default do
   guard 'rails', :port => 3000 do
     watch('Gemfile.lock')
     watch(%r{^config/initializers/.+\.rb$})
+    watch(%r{^lib/.+\.rb$})
     watch('config/environments/development.rb')
     watch('config/application.rb')
   end
@@ -90,7 +91,7 @@ group :drb do
     watch('config/environment.rb')
     watch('config/database.yml')
     watch(%r{^config/environments/.+\.rb$})
-    #watch(%r{^lib/.+validator\.rb$})
+    watch(%r{^lib/.+\.rb$})
     watch(%r{^config/initializers/.+\.rb$})
     watch('spec/spec_helper.rb')
     watch('features/support/env.rb')
