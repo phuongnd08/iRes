@@ -4,7 +4,7 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
   pubsubClient = new Faye.Client("<%= ServicesSettings.pubsub.mount_point %>")
   backlog = {}
 
-  formatListItem(li) for li in $('#chef_orders_page ul.order_items li[data-order-item-id]')
+  $(li).formatListItem() for li in $('#chef_orders_page ul.order_items li[data-order-item-id]')
 
   processOrder = (order) ->
     if order.deleted || (order.updated && order.ready)
@@ -33,7 +33,7 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
         else if orderItem.updated
           orderItemLI(orderItem).replaceWith(orderItemLIHtml)
         orderUL.listview "refresh"
-        formatListItem(orderItemLI(orderItem))
+        orderItemLI(orderItem).formatListItem()
       else
         backlog[orderItem.order_id] ||= []
         backlog[orderItem.order_id].push(orderItem)

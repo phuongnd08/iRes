@@ -10,7 +10,7 @@ highlightOrderLI = (li) ->
 
 $(document).delegate '#navigator_page', "pagecreate", ->
     ordersChannel = <%= Order.channel.to_json %>
-    formatListItem(li) for li in $('#orders li[data-order-id]')
+    $(li).formatListItem() for li in $('#orders li[data-order-id]')
     if window.Faye && Faye.Client
       orderLI = (order)->
         $('#orders').find('[data-order-id=' + order.order_id + ']')
@@ -28,7 +28,7 @@ $(document).delegate '#navigator_page', "pagecreate", ->
           if order.created
             $(orderTemplate.gsub order).appendTo('#orders')
           $('#orders').listview('refresh')
-          formatListItem orderLI(order)
+          orderLI(order).formatListItem()
           highlightOrderLI orderLI(order)
           orderLI(order).fadeOut('fast').fadeIn('slow')
 

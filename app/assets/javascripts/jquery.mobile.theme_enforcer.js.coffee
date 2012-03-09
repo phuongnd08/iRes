@@ -1,2 +1,2 @@
-@formatListItem = (li)->
-  $(li).find('.ui-li-count').addClass 'ui-btn-up-' + $(li).attr('data-count-theme')
+$.fn.formatListItem = ->
+  $(this).find('.ui-li-count').addClass 'ui-btn-up-' + $(this).attr('data-count-theme')
