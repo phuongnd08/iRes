@@ -7,6 +7,12 @@ class OrderItem < ActiveRecord::Base
 
   after_create :notify_order_item_created
   after_destroy :notify_order_item_destroyed
+  after_update :notify_order_item_updated
+  after_save :update_order
+
+  def self.channel
+    "/order_items"
+  end
 
   def item_id
     if use_placeholder?
@@ -50,12 +56,21 @@ class OrderItem < ActiveRecord::Base
     end
   end
 
-  def self.channel
-    "/order_items"
+  def price
+    if use_placeholder?
+      "%{order_item_price}"
+    else
+      super
+    end
   end
 
-  def price
-    super || "%{order_item_price}"
+
+  def theme
+    if use_placeholder?
+      "%{order_item_theme}"
+    else
+      ready ? Theme::READY : Theme::NEW
+    end
   end
 
   private
@@ -63,13 +78,22 @@ class OrderItem < ActiveRecord::Base
     self.price = item.try(:price)
   end
 
-  def notify_order_item_created
-    PubSub.publish(OrderItem.channel, {
+  def push_attributes
+    {
       :order_item_id => order_item_id,
       :order_id => order_id,
       :item_id => item_id,
-      :item_name => item_name
-    })
+      :item_name => item_name,
+      :order_item_theme => theme
+    }
+  end
+
+  def notify_order_item_created
+    PubSub.publish(OrderItem.channel, push_attributes.merge(:created => true))
+  end
+
+  def notify_order_item_updated
+    PubSub.publish(OrderItem.channel, push_attributes.merge(:updated => true))
   end
 
   def notify_order_item_destroyed
@@ -77,5 +101,9 @@ class OrderItem < ActiveRecord::Base
       :order_item_id => order_item_id,
       :deleted => true
     })
+  end
+
+  def update_order
+    order.recalculate
   end
 end

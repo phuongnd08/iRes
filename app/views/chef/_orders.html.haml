@@ -7,7 +7,7 @@
     = render "orders/viewed_by_chef", :order => Order.new
 - chef_order_item_template = capture do
   - Ajaxifier.enable do
-    = render "order_items/order_item", :order_item => OrderItem.new
+    = render "order_items/viewed_by_chef", :order_item => OrderItem.new
 
 :javascript
   var chefOrderItemTemplate = #{chef_order_item_template.to_json};

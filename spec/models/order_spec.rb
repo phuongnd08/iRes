@@ -29,13 +29,13 @@ describe Order do
       order.order_items[1].item.should == item2
     end
 
-    context "changed" do
-      it "notifys order is changed" do
+    context "updated" do
+      it "notifys order is updated" do
         order.save
         PubSub.should_receive(:publish) do |channel, order_info|
           channel.should == Order.channel
           order_info[:order_id].should == order.id
-          order_info[:changed].should be_true
+          order_info[:updated].should be_true
           order_info[:ready].should be_true
         end
         order.update_attributes(:state => Order::STATE_READY)

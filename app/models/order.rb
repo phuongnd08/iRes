@@ -7,7 +7,7 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :order_items, :allow_destroy => true
   after_create :notify_order_created
   after_destroy :notify_order_destroyed
-  after_update :notify_changed
+  after_update :notify_order_updated
   before_save :update_total_price
 
   scope :pending, where(:state => STATE_NEW)
@@ -65,7 +65,7 @@ class Order < ActiveRecord::Base
     if use_placeholder?
       "%{order_theme}"
     else
-      ready? ? 'e' : 'c'
+      ready? ? Theme::READY : Theme::NEW
     end
   end
 
@@ -77,11 +77,17 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def to_param
-    if use_placeholder?
-      "%{order_id}"
-    else
-      super
+  def recalculate
+    unless @calculating
+      @calculating = true
+      state = if order_items.reject(&:marked_for_destruction?).all?(&:ready)
+                STATE_READY
+              else
+                STATE_NEW
+              end
+
+      update_attribute(:state, state)
+      @calculating = false
     end
   end
 
@@ -98,7 +104,8 @@ class Order < ActiveRecord::Base
       :order_ordered_time => ordered_time,
       :order_icon => icon,
       :order_theme => theme,
-      :order_total_price => total_price
+      :order_total_price => total_price,
+      :ready => ready?
     }
   end
 
@@ -112,10 +119,7 @@ class Order < ActiveRecord::Base
     PubSub.publish(Order.channel, { :order_id => order_id, :deleted => true })
   end
 
-  def notify_changed
-    PubSub.publish(Order.channel, push_attributes.merge({
-      :changed => true,
-      :ready => ready?
-    }))
+  def notify_order_updated
+    PubSub.publish(Order.channel, push_attributes.merge(:updated => true))
   end
 end

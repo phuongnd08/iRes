@@ -3,6 +3,14 @@ module Ajaxifier
     def use_placeholder?
       !persisted? && Ajaxifier.on?
     end
+
+    def to_param
+      if use_placeholder?
+        "%{#{self.class.name.underscore}_id}"
+      else
+        super
+      end
+    end
   end
 
   class << self

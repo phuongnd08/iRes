@@ -7,7 +7,10 @@ IRes::Application.routes.draw do
       put :mark_ready
     end
   end
-  resources :tables, :only => [:index]
+
+  resources :order_items, :only => [] do
+    put :mark_ready, :on => :member
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

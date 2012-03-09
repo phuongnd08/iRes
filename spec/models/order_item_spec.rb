@@ -12,6 +12,7 @@ describe OrderItem do
         order_item_info[:item_name].should == item.name
       end
 
+      Order.any_instance.stub(:recalculate)
       order_item # trigger creation
     end
 

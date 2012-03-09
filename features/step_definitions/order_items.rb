@@ -48,3 +48,13 @@ Then /^I (do not )?see "([^"]*)" in the waiting list$/ do |negate, item_name|
     end
   end
 end
+
+When /^I mark item "([^"]*)" as ready$/ do |item_name|
+  within_waiting_list do
+    item = Item.find_by_name(item_name)
+    order_item = OrderItem.find_by_item_id(item.id)
+    within "[data-order-item-id='#{order_item.id}']" do
+      click_on I18n.t("buttons.mark_ready")
+    end
+  end
+end

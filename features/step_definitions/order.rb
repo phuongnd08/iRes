@@ -40,7 +40,7 @@ When /^I mark order of table (\d+) as ready$/ do |table_number|
     order = Order.find_by_table_number(table_number)
     within "[data-order-id='#{order.id}']" do
       within "[role='heading']" do
-        click_on I18n.t("order.ready")
+        click_on I18n.t("buttons.mark_ready")
       end
     end
   end

@@ -4,8 +4,10 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
   pubsubClient = new Faye.Client("<%= ServicesSettings.pubsub.mount_point %>")
   backlog = {}
 
+  formatListItem(li) for li in $('#chef_orders_page ul.order_items li[data-order-item-id]')
+
   processOrder = (order) ->
-    if order.deleted || (order.changed && order.ready)
+    if order.deleted || (order.updated && order.ready)
       $("#chef_orders_page ul.order_items[data-order-id=" + order.order_id + "]").fadeOut('slow', ->
         $(this).remove()
       )
@@ -16,13 +18,22 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
 
   pubsubClient.subscribe ordersChannel, processOrder
 
+  orderItemLI = (orderItem) ->
+    $("#chef_orders_page ul.order_items").find("[data-order-item-id=" + orderItem.order_item_id + "]")
+
   processOrderItem = (orderItem) ->
     if orderItem.deleted
-      $("#chef_orders_page ul.order_items").find("[data-order-item-id=" + orderItem.order_item_id + "]").remove()
+      orderItemLI(orderItem).remove()
     else
       orderUL = $("#chef_orders_page ul.order_items[data-order-id=" + orderItem.order_id + "]")
       if orderUL.length
-        orderUL.append(chefOrderItemTemplate.gsub(orderItem)).listview "refresh"
+        orderItemLIHtml = chefOrderItemTemplate.gsub(orderItem)
+        if orderItem.created
+          orderUL.append(orderItemLIHtml)
+        else if orderItem.updated
+          orderItemLI(orderItem).replaceWith(orderItemLIHtml)
+        orderUL.listview "refresh"
+        formatListItem(orderItemLI(orderItem))
       else
         backlog[orderItem.order_id] ||= []
         backlog[orderItem.order_id].push(orderItem)
