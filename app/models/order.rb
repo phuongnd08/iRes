@@ -1,8 +1,4 @@
 class Order < ActiveRecord::Base
-  STATE_READY = "ready"
-  STATE_NEW = "new"
-  STATE_PAID = "paid"
-
   has_many :order_items, :dependent => :destroy
   accepts_nested_attributes_for :order_items, :allow_destroy => true
   after_create :notify_order_created
@@ -10,11 +6,14 @@ class Order < ActiveRecord::Base
   after_update :notify_order_updated
   before_save :update_total_price
 
-  scope :pending, where(:state => STATE_NEW)
+  scope :pending, where(:ready => false)
+
+  def self.calculating
+    @calculating ||= {}
+  end
 
   def initialize(*args)
     super
-    self.state ||= STATE_NEW
   end
 
   def self.channel
@@ -45,10 +44,6 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def ready?
-    state == STATE_READY
-  end
-
   def paid?
     state == STATE_PAID
   end
@@ -57,7 +52,7 @@ class Order < ActiveRecord::Base
     if use_placeholder?
       "%{order_icon}"
     else
-      ready? ? 'star' : 'arrow-r'
+      ready ? 'star' : 'arrow-r'
     end
   end
 
@@ -65,7 +60,7 @@ class Order < ActiveRecord::Base
     if use_placeholder?
       "%{order_theme}"
     else
-      ready? ? Theme::READY : Theme::NEW
+      ready ? Theme::READY : Theme::NEW
     end
   end
 
@@ -77,17 +72,31 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def recalculate
-    unless @calculating
-      @calculating = true
-      state = if order_items.reject(&:marked_for_destruction?).all?(&:ready)
-                STATE_READY
-              else
-                STATE_NEW
-              end
+  def ready=(ready)
+    do_if_not_calculating do
+      order_items.each do |order_item|
+        if order_item.persisted?
+          order_item.update_attribute(:ready, ready)
+        else
+          order_item.ready = ready
+        end
+      end
+    end
+    super
+  end
 
-      update_attribute(:state, state)
-      @calculating = false
+  def do_if_not_calculating
+    begin
+      Order.calculating[id] = true
+      yield
+    ensure
+      Order.calculating[id] = false
+    end unless Order.calculating[id]
+  end
+
+  def recalculate
+    do_if_not_calculating do
+      update_attribute(:ready, order_items.reject(&:marked_for_destruction?).all?(&:ready))
     end
   end
 
@@ -105,7 +114,7 @@ class Order < ActiveRecord::Base
       :order_icon => icon,
       :order_theme => theme,
       :order_total_price => total_price,
-      :ready => ready?
+      :ready => ready
     }
   end
 

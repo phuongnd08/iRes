@@ -59,7 +59,7 @@ class OrdersController < ApplicationController
   end
 
   def mark_ready
-    @order.update_attributes(:state => Order::STATE_READY)
+    @order.update_attribute(:ready, true)
     render :nothing => true
   end
 

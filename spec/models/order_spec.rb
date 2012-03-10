@@ -6,8 +6,8 @@ describe Order do
   let(:item2) { Item.make!(:price => 25000) }
 
   describe "default" do
-    it "has state new" do
-      order.state.should == Order::STATE_NEW
+    it "is not ready" do
+      order.ready.should be_false
     end
   end
 
@@ -32,13 +32,14 @@ describe Order do
     context "updated" do
       it "notifys order is updated" do
         order.save
+        OrderItem.any_instance.stub(:notify_order_item_updated)
         PubSub.should_receive(:publish) do |channel, order_info|
           channel.should == Order.channel
           order_info[:order_id].should == order.id
           order_info[:updated].should be_true
           order_info[:ready].should be_true
         end
-        order.update_attributes(:state => Order::STATE_READY)
+        order.update_attribute(:ready, true)
       end
     end
   end

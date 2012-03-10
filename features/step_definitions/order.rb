@@ -47,7 +47,7 @@ When /^I mark order of table (\d+) as ready$/ do |table_number|
 end
 
 When /^the order is ready$/ do
-  DataBag.order.update_attribute(:state, Order::STATE_READY)
+  DataBag.order.update_attribute(:ready, true)
 end
 
 Then /^I see star icon for order of table (\d+)$/ do |table_number|
