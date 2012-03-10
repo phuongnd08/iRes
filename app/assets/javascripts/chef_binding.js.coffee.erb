@@ -11,10 +11,11 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
       $("#chef_orders_page ul.order_items[data-order-id=" + order.order_id + "]").fadeOut('slow', ->
         $(this).remove()
       )
-    else if order.created
-      $(chefOrderTemplate.gsub(order)).appendTo("#chef_orders_page").listview().fadeOut('fast').fadeIn('slow')
-      if (backlog[order.order_id])
-        processOrderItem orderItem for orderItem in backlog[order.order_id]
+    else
+      if order.created
+        $(chefOrderTemplate.gsub(order)).appendTo("#chef_orders_page").listview().fadeOut('fast').fadeIn('slow')
+        if (backlog[order.order_id])
+          processOrderItem orderItem for orderItem in backlog[order.order_id]
 
   pubsubClient.subscribe ordersChannel, processOrder
 
@@ -30,8 +31,9 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
         orderItemLIHtml = chefOrderItemTemplate.gsub(orderItem)
         if orderItem.created
           orderUL.append(orderItemLIHtml)
-        else if orderItem.updated
-          orderItemLI(orderItem).replaceWith(orderItemLIHtml)
+        else
+          if orderItem.updated
+            orderItemLI(orderItem).replaceWith(orderItemLIHtml)
         orderUL.listview "refresh"
         orderItemLI(orderItem).formatListItem()
       else
