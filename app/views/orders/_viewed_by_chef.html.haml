@@ -1,8 +1,3 @@
 %ul.order_items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b", "data-order-id" => order.order_id }
-  %li{"data-role" => "list-divider", :role => "heading", "data-theme" => "b"}
-    %a
-      = order.name
-      %span.ui-li-count= order.ordered_time
-    %a{ "data-role" => "button", "data-icon" => "star", "data-theme" => "c", "data-remote" => "true", "data-method" => :put, :href => mark_ready_order_path(order) }
-      = t("buttons.mark_ready")
+  = render 'orders/viewed_by_chef_header', :order => order
   = render :partial => "order_items/viewed_by_chef", :collection => order.order_items, :as => :order_item

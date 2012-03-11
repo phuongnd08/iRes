@@ -6,16 +6,27 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
 
   $(li).formatListItem() for li in $('#chef_orders_page ul.order_items li[data-order-item-id]')
 
+  orderUL = (orderId) ->
+    $("#chef_orders_page ul.order_items[data-order-id=" + orderId + "]")
+  orderHeaderLI = (orderId) ->
+    orderUL(orderId).find('[role=heading]')
+
   processOrder = (order) ->
-    if order.deleted || (order.updated && order.ready)
-      $("#chef_orders_page ul.order_items[data-order-id=" + order.order_id + "]").fadeOut('slow', ->
-        $(this).remove()
-      )
+    if order.deleted
+      orderUL(order.order_id).fadeOutAndRemove()
     else
       if order.created
-        $(chefOrderTemplate.gsub(order)).appendTo("#chef_orders_page").listview().fadeOut('fast').fadeIn('slow')
+        $(chefOrderTemplate.gsub(order)).appendTo("#chef_orders_page").listview().blinkAndShow()
         if (backlog[order.order_id])
           processOrderItem orderItem for orderItem in backlog[order.order_id]
+      else
+        if order.updated
+          orderHeaderLI(order.order_id).replaceWith(chefOrderHeaderTemplate.gsub(order))
+          orderUL(order.order_id).listview('refresh')
+          if order.ready
+            orderUL(order.order_id).fadeOutAndRemove()
+          else
+            orderUL(order.order_id).blinkAndShow()
 
   pubsubClient.subscribe ordersChannel, processOrder
 
@@ -26,15 +37,16 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
     if orderItem.deleted
       orderItemLI(orderItem).remove()
     else
-      orderUL = $("#chef_orders_page ul.order_items[data-order-id=" + orderItem.order_id + "]")
-      if orderUL.length
+      ul = orderUL(orderItem.order_id)
+
+      if ul.length
         orderItemLIHtml = chefOrderItemTemplate.gsub(orderItem)
         if orderItem.created
-          orderUL.append(orderItemLIHtml)
+          ul.append(orderItemLIHtml)
         else
           if orderItem.updated
             orderItemLI(orderItem).replaceWith(orderItemLIHtml)
-        orderUL.listview "refresh"
+        ul.listview "refresh"
         orderItemLI(orderItem).formatListItem()
       else
         backlog[orderItem.order_id] ||= []

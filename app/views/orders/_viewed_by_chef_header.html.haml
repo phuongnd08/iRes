@@ -1,0 +1,7 @@
+%li{"data-role" => "list-divider", :role => "heading", "data-theme" => "b"}
+  %a
+    = order.name
+    %span.ui-li-count= order.ordered_time
+  %a{ "data-ajax" => "false", "data-icon" => "star", "data-theme" => "c", "data-remote" => "true", "data-method" => :put, :href => mark_ready_order_path(order) }
+    = t("buttons.mark_ready")
+
