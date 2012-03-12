@@ -15,7 +15,7 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
     if order.deleted
       orderUL(order.order_id).fadeOutAndRemove()
     else
-      if order.created
+      if order.created && !order.ready
         $(chefOrderTemplate.gsub(order)).appendTo("#chef_orders_page").listview().blinkAndShow()
         if (backlog[order.order_id])
           processOrderItem orderItem for orderItem in backlog[order.order_id]
