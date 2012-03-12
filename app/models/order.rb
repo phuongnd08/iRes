@@ -47,7 +47,7 @@ class Order < ActiveRecord::Base
     if use_placeholder?
       "%{order_ordered_time}"
     else
-      created_at.localtime.strftime("%H:%M")
+      updated_at.localtime.strftime("%H:%M")
     end
   end
 
