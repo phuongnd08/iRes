@@ -15,13 +15,17 @@ Feature: Viewing orders live updated
     But I do not see "Order: Bàn số 1"
 
   Scenario: View order ordered time
-    Given an order is committed at 9:00
+    Given an order is committed at 9:00 with these items:
+      |category|name|
+      |Đò uống|Cà phê|
     And I'm on waiter page
     Then I see "9:00"
 
   Scenario: View live updated order ordered time
     Given I'm on waiter page
-    When an order is committed at 9:00
+    When an order is committed at 9:00 with these items:
+      |category|name|
+      |Đò uống|Cà phê|
     Then I see "9:00"
 
   Scenario: View order price live updated
@@ -38,7 +42,9 @@ Feature: Viewing orders live updated
 
   Scenario: Know when an order is ready
     Given I'm on waiter page
-    When an order of table 1 is committed
+    When an order of table 1 is committed with these items:
+      |category|name|
+      |Đò uống|Cà phê|
     And the order is ready
     Then I see toast of "Order: Bàn số 1" with text "Sẵn sàng"
     And I see star icon for order of table 1

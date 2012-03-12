@@ -21,30 +21,37 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
           processOrderItem orderItem for orderItem in backlog[order.order_id]
       else
         if order.updated
-          orderHeaderLI(order.order_id).replaceWith(chefOrderHeaderTemplate.gsub(order))
-          orderUL(order.order_id).listview('refresh')
           if order.ready
             orderUL(order.order_id).fadeOutAndRemove()
           else
-            orderUL(order.order_id).blinkAndShow()
+            if orderUL(order.order_id).exists()
+              orderHeaderLI(order.order_id).replaceWith(chefOrderHeaderTemplate.gsub(order))
+            else
+              $(chefOrderTemplate.gsub(order)).appendTo("#chef_orders_page").listview().blinkAndShow()
+              addOrderItem(orderItem) for orderItem in order.order_items
+            orderUL(order.order_id).listview('refresh').blinkAndShow()
+            $(li).formatListItem() for li in orderUL(order.order_id).find('li[data-order-item-id]')
 
   pubsubClient.subscribe ordersChannel, processOrder
 
   orderItemLI = (orderItem) ->
     $("#chef_orders_page ul.order_items").find("[data-order-item-id=" + orderItem.order_item_id + "]")
 
+  addOrderItem = (orderItem) ->
+    orderItemLIHtml = chefOrderItemTemplate.gsub(orderItem)
+    orderUL(orderItem.order_id).append(orderItemLIHtml)
+
   processOrderItem = (orderItem) ->
     if orderItem.deleted
       orderItemLI(orderItem).remove()
     else
       ul = orderUL(orderItem.order_id)
-
-      if ul.length
-        orderItemLIHtml = chefOrderItemTemplate.gsub(orderItem)
+      if ul.exists()
         if orderItem.created
-          ul.append(orderItemLIHtml)
+          addOrderItem(orderItem)
         else
           if orderItem.updated
+            orderItemLIHtml = chefOrderItemTemplate.gsub(orderItem)
             orderItemLI(orderItem).replaceWith(orderItemLIHtml)
         ul.listview "refresh"
         orderItemLI(orderItem).formatListItem()

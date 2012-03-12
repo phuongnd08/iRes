@@ -46,13 +46,33 @@ Feature: Viewing orders
     But I do not see "Order: Bàn số 1"
 
   Scenario: View order ordered time
-    Given an order is committed at 9:00
+    Given an order is committed at 9:00 with these items:
+      |category|name|
+      |Đồ uống|Cam vắt|
     And I'm on chef page
     Then I see 1 orders in the waiting list
     And I see "9:00"
 
   Scenario: View live updated order ordered time
     Given I'm on chef page
-    When an order is committed at 9:00
+    When an order is committed at 9:00 with these items:
+      |category|name|
+      |Đồ uống|Cam vắt|
     Then I see 1 orders in the waiting list
     And I see "9:00"
+
+  Scenario: View modified order being redisplayed
+    Given an order of table 1 is committed with these items:
+      |category|name|
+      |Đồ uống|Cam vắt|
+      |Đồ ăn|Bún bò|
+    When I'm on chef page
+    And I see "Order: Bàn số 1"
+    When I mark order of table 1 as ready
+    Then I do not see "Order: Bàn số 1"
+    When this items is added to the order:
+      |category|name|
+      |Đồ uống|Cà phê|
+    Then I see "Order: Bàn số 1"
+    And I see 3 items in the waiting list
+    And I see 2 items in the waiting list being marked as ready

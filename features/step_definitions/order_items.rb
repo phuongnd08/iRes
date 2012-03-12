@@ -39,6 +39,14 @@ Then /^I see (\d+) items in the waiting list$/ do |count|
   end
 end
 
+Then /^I see (\d+) items in the waiting list being marked as ready$/ do |count|
+  within ".order_items" do
+    wait_for count.to_i do
+      page.all("li[data-order-item-id] span.ui-btn-up-" + Theme::READY).count
+    end
+  end
+end
+
 Then /^I (do not )?see "([^"]*)" in the waiting list$/ do |negate, item_name|
   within ".order_items" do
     if negate

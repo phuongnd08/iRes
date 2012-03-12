@@ -73,11 +73,6 @@ class OrderItem < ActiveRecord::Base
     end
   end
 
-  private
-  def copy_price_from_item
-    self.price = item.try(:price)
-  end
-
   def push_attributes
     {
       :order_item_id => order_item_id,
@@ -86,6 +81,11 @@ class OrderItem < ActiveRecord::Base
       :item_name => item_name,
       :order_item_theme => theme
     }
+  end
+
+  private
+  def copy_price_from_item
+    self.price = item.try(:price)
   end
 
   def notify_order_item_created

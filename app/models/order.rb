@@ -5,11 +5,18 @@ class Order < ActiveRecord::Base
   after_destroy :notify_order_destroyed
   after_update :notify_order_updated
   before_save :update_total_price
+  before_save :start_calculating
+  before_save :synchronize_ready
+  after_save :stop_calculating
 
   scope :pending, where(:ready => false)
 
-  def self.calculating
-    @calculating ||= {}
+  def self.calculating_order
+    Thread.current[:calculating_order]
+  end
+
+  def self.calculating_order=(order)
+    Thread.current[:calculating_order] = order
   end
 
   def initialize(*args)
@@ -73,34 +80,54 @@ class Order < ActiveRecord::Base
   end
 
   def ready=(ready)
-    do_if_not_calculating do
-      order_items.each do |order_item|
-        if order_item.persisted?
-          order_item.update_attribute(:ready, ready)
-        else
-          order_item.ready = ready
+    if ready != self.ready
+      super
+      do_if_no_calculating_order do
+        order_items.each do |order_item|
+          if order_item.persisted?
+            order_item.update_attribute(:ready, ready)
+          else
+            order_item.ready = ready
+          end
         end
       end
     end
-    super
-  end
-
-  def do_if_not_calculating
-    begin
-      Order.calculating[id] = true
-      yield
-    ensure
-      Order.calculating[id] = false
-    end unless Order.calculating[id]
   end
 
   def recalculate
-    do_if_not_calculating do
-      update_attribute(:ready, order_items.reject(&:marked_for_destruction?).all?(&:ready))
+    unless Order.calculating_order
+      self[:ready] = recalculate_ready
+      self.save
     end
   end
 
   private
+
+  def start_calculating
+    Order.calculating_order = self
+  end
+
+  def synchronize_ready
+    self[:ready] = recalculate_ready
+    nil
+  end
+
+  def stop_calculating
+    Order.calculating_order = nil
+  end
+
+  def do_if_no_calculating_order
+    begin
+      start_calculating
+      yield
+    ensure
+      stop_calculating
+    end unless Order.calculating_order
+  end
+
+  def recalculate_ready
+    order_items.reject(&:marked_for_destruction?).all?(&:ready)
+  end
 
   def update_total_price
     self.total_price = order_items.reject(&:marked_for_destruction?).map(&:price).sum
@@ -129,6 +156,8 @@ class Order < ActiveRecord::Base
   end
 
   def notify_order_updated
-    PubSub.publish(Order.channel, push_attributes.merge(:updated => true))
+    attributes = push_attributes.merge(:updated => true)
+    attributes.merge!(:order_items => order_items.reject(&:marked_for_destruction?).map(&:push_attributes)) if !ready && ready_changed?
+    PubSub.publish(Order.channel, attributes)
   end
 end

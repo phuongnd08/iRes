@@ -8,3 +8,6 @@ $.fn.fadeOutAndRemove = ->
 
 $.fn.blinkAndShow = ->
   $(this).fadeOut('fast').fadeIn('slow')
+
+$.fn.exists = ->
+  this.length > 0

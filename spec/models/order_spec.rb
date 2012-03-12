@@ -4,6 +4,8 @@ describe Order do
   let(:order) { Order.new }
   let(:item1) { Item.make!(:price => 10000) }
   let(:item2) { Item.make!(:price => 25000) }
+  let(:item3) { Item.make!(:price => 15000) }
+  let(:item4) { Item.make!(:price => 20000) }
 
   describe "default" do
     it "is not ready" do
@@ -12,11 +14,10 @@ describe Order do
   end
 
   describe "updating" do
-    before(:each) do
-      counter = Time.now.to_i
+    before do
       order.order_items_attributes = {
-        counter => { :item_id => item1.id },
-        (counter + 1) => { :item_id => item2.id }
+        1 => { :item_id => item1.id },
+        2 => { :item_id => item2.id }
       }
 
       order.save
@@ -31,7 +32,6 @@ describe Order do
 
     context "updated" do
       it "notifys order is updated" do
-        order.save
         OrderItem.any_instance.stub(:notify_order_item_updated)
         PubSub.should_receive(:publish) do |channel, order_info|
           channel.should == Order.channel
@@ -41,10 +41,45 @@ describe Order do
         end
         order.update_attribute(:ready, true)
       end
+
+      context "when ready changed to false" do
+        before do
+          order.reload
+          order.update_attribute(:ready, true)
+          order.order_items_attributes = {
+            1 => { :item_id => item3.id },
+            2 => { :item_id => item4.id }
+          }
+        end
+
+        it "includes order_items info" do
+          OrderItem.any_instance.stub(:notify_order_item_created)
+          PubSub.should_receive(:publish) do |channel, order_info|
+            channel.should == Order.channel
+            order_info[:order_id].should == order.id
+            order_info[:order_items].should have(4).items
+            order_info[:ready].should be_false
+          end
+          order.save
+        end
+
+        it "does not affect ready state of existing item" do
+          order.save
+          order.order_items.map(&:ready).should == [true, true, false, false]
+        end
+      end
     end
   end
 
   describe "when created" do
+    let(:order) { Order.new }
+    before do
+      order.order_items_attributes = {
+        1 => { :item_id => item1.id },
+        2 => { :item_id => item2.id }
+      }
+    end
+
     it "publish a message to order channel" do
       PubSub.should_receive(:publish) do |channel, order_info|
         channel.should == Order.channel
@@ -52,7 +87,8 @@ describe Order do
         order_info[:order_name].should be_ends_with(order.table_number.to_s)
         order_info[:created].should be_true
       end
-      order = Order.create
+      OrderItem.any_instance.stub(:notify_order_item_created)
+      order.save
     end
   end
 
