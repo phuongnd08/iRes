@@ -66,3 +66,29 @@ When /^I mark item "([^"]*)" as ready$/ do |item_name|
     end
   end
 end
+
+Given /^item "([^"]*)" is marked as ready$/ do |item_name|
+  item = Item.find_by_name(item_name)
+  OrderItem.find_by_item_id(item.id).update_attribute(:ready, true)
+end
+
+Then /^I cannot remove "([^"]*)" from ordered list$/ do |item_name|
+  within_ordered_section do
+    Item.find_by_name(item_name).tap do |item|
+      within "li[data-item-id='#{item.id}']" do
+        find(".remove").should_not be_visible
+      end
+    end
+  end
+end
+
+When /^I remove "([^"]*)" from ordered list$/ do |item_name|
+  within_ordered_section do
+    Item.find_by_name(item_name).tap do |item|
+      within "li[data-item-id='#{item.id}']" do
+        find(".remove").click
+      end
+    end
+  end
+end
+

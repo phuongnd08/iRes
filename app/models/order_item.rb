@@ -73,6 +73,22 @@ class OrderItem < ActiveRecord::Base
     end
   end
 
+  def remove_visibility_style
+    if use_placeholder?
+      "%{order_item_remove_visibility_style}"
+    else
+      ready ? CssStyle::HIDDEN : CssStyle::VISIBLE
+    end
+  end
+
+  def ready_visibility_style
+    if use_placeholder?
+      "%{order_item_ready_visibility_style}"
+    else
+      ready ? CssStyle::VISIBLE : CssStyle::HIDDEN
+    end
+  end
+
   def push_attributes
     {
       :order_item_id => order_item_id,

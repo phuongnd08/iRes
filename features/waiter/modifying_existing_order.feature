@@ -36,3 +36,13 @@ Feature: Modifying existing order
     And I see "Hủ tiếu mì" in the ordered list
     And I do not see "Bún bò" in the ordered list
     And I see "25000" as the total price of order
+
+  Scenario: Cannot remove a ready item
+    Given an order of table 1 is committed with these items:
+      |category|name|
+      |Đồ ăn|Bún bò|
+      |Đồ ăn|Hủ tiếu mì|
+    And item "Bún bò" is marked as ready
+    And I'm on waiter page
+    When I choose "Order: Bàn số 1"
+    Then I cannot remove "Bún bò" from ordered list

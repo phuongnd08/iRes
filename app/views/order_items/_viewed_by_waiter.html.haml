@@ -1,8 +1,8 @@
 %li{ "data-item-id" => f.object.item_id, "data-order-item-price" => f.object.price }
   %a
     %span= f.object.item_name
-  %a.remove{ "data-role" => "button", "data-inline" => "true", "data-icon" => "delete" }
+  %a.remove{ "data-role" => "button", "data-inline" => "true", "data-icon" => "delete", :style => f.object.remove_visibility_style }
+  %span.ui-icon.ui-icon-check.ui-icon-shadow{ :style => f.object.ready_visibility_style }
   %div
     = f.hidden_field :_destroy
     = f.hidden_field :item_id
-

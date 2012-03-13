@@ -54,16 +54,6 @@ When /^I cancel the order$/ do
   end
 end
 
-When /^I remove "([^"]*)" from ordered list$/ do |item_name|
-  within_ordered_section do
-    Item.find_by_name(item_name).tap do |item|
-      within "li[data-item-id='#{item.id}']" do
-        find(".remove").click
-      end
-    end
-  end
-end
-
 Then /^I see no orders$/ do
   within "#orders" do
     page.all('li').length.should == 1 #For the list divider
