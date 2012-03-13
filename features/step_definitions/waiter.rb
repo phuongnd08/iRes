@@ -52,6 +52,12 @@ When /^I cancel the order$/ do
   end
 end
 
+Then /^I cannot cancel the order$/ do
+  within_ordered_section do
+    page.should have_no_link(I18n.t("order.cancel"))
+  end
+end
+
 Then /^I see no orders$/ do
   within "#orders" do
     page.all('li').length.should == 1 #For the list divider

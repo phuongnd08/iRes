@@ -101,6 +101,10 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def can_be_removed?
+    persisted? && order_items.none?(&:ready)
+  end
+
   private
 
   def start_calculating

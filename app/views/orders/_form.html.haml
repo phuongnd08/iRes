@@ -25,7 +25,7 @@
             = render "order_items/viewed_by_waiter", :f => builder
       %br
       %div= f.submit t("order.commit"), {"data-role" => "button" }
-      - if @order.persisted?
+      - if @order.can_be_removed?
         %div= link_to t("order.cancel"), order_path(@order), :method => :delete, "data-role" => "button", "data-icon" => "delete"
     - new_order_item_template = capture do
       - Ajaxifier.enable do

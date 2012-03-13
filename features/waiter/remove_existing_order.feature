@@ -12,3 +12,13 @@ Feature: Removing existing order
     And I cancel the order
     Then I see "Order: Bàn số 2"
     But I do not see "Order: Bàn số 1"
+
+  Scenario: Cannot remove existing order with ready items
+    Given an order of table 1 is committed with these items:
+      |category|name|
+      |Đồ ăn|Bún bò|
+      |Đồ ăn|Hủ tiếu mì|
+    And item "Bún bò" is marked as ready
+    When I'm on waiter page
+    And I choose "Order: Bàn số 1"
+    Then I cannot cancel the order
