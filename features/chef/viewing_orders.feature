@@ -35,8 +35,12 @@ Feature: Viewing orders
   Scenario: Viewing list of orders live updated
     Given I'm on chef page
     Then I see 0 orders in the waiting list
-    When an order of table 1 is committed
-    And an order of table 2 is committed
+    When an order of table 1 is committed with these items:
+      |category|name|
+      |Đồ uống|Cam vắt|
+    And an order of table 2 is committed with these items:
+      |category|name|
+      |Đồ uống|Cà phê|
     Then I see 2 orders in the waiting list
     And I see "Order: Bàn số 1"
     And I see "Order: Bàn số 2"
