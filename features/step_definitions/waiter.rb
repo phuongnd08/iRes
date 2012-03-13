@@ -43,9 +43,7 @@ When /^I commit the order$/ do
 end
 
 When /^I stop committing the order$/ do
-  within_ordered_section do
-    click_on I18n.t("order.back")
-  end
+  click_on I18n.t("order.back")
 end
 
 When /^I cancel the order$/ do
