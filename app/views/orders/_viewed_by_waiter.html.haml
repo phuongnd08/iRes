@@ -2,12 +2,11 @@
   %a
     %h3= order.name
     %span.ui-li-count
-      %span.order_time= order.ordered_time
-      \-
-      %span.total_price= order.total_price
-    %p
       %img.ui-icon-ires{ :class => "ui-icon-" + order.serve_icon }
       %img.ui-icon-ires{ :class => "ui-icon-" + order.payment_icon }
+      %span.order_time= order.ordered_time
+      \|
+      %span.total_price= order.total_price
     %p
       - [:served, :paid].each do |state|
         %a{ :class => "mark-as-#{state}-btn", "data-role" => "button", "data-inline" => "true",
