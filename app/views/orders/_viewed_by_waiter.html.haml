@@ -1,8 +1,14 @@
 %li{ "data-order-id" => order.order_id, "data-count-theme" => order.theme }
-  %a{ :href => edit_order_path(order) }
-    = order.name
+  %a
+    %h3= order.name
     %span.ui-li-count
       %span.order_time= order.ordered_time
       \-
       %span.total_price= order.total_price
-  %img.ui-icon.ui-icon-shadow{ :class => "ui-icon-" + order.icon }
+    %p
+      %img.ui-icon-ires{ :class => "ui-icon-" + order.serve_icon }
+      %img.ui-icon-ires{ :class => "ui-icon-" + order.payment_icon }
+    %div{"data-role" => "controlgroup", "data-type" => "horizontal"}
+      -#%a{ "data-role" => "button", :href => mark_served_order_path(order) }= t("buttons.mark_served")
+      %a.mark-as-paid-btn{ "data-role" => "button", "data-ajax" => false, "data-confirm" => t("order.payment_confirmation"), "data-remote" => true, "data-method" => :put, :href => mark_paid_order_path(order), :style => order.mark_as_paid_visibility_style }= t("buttons.mark_paid")
+  %a{ :href => edit_order_path(order) }

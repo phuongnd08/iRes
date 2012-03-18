@@ -69,7 +69,7 @@ class OrderItem < ActiveRecord::Base
     if use_placeholder?
       "%{order_item_theme}"
     else
-      ready ? Theme::READY : Theme::NEW
+      ready ? Css::Theme::READY : Css::Theme::NEW
     end
   end
 
@@ -77,7 +77,7 @@ class OrderItem < ActiveRecord::Base
     if use_placeholder?
       "%{order_item_remove_visibility_style}"
     else
-      ready ? CssStyle::HIDDEN : CssStyle::VISIBLE
+      ready ? Css::Style::HIDDEN : Css::Style::VISIBLE
     end
   end
 

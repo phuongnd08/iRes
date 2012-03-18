@@ -55,11 +55,19 @@ class Order < ActiveRecord::Base
     state == STATE_PAID
   end
 
-  def icon
+  def serve_icon
     if use_placeholder?
-      "%{order_icon}"
+      "%{order_serve_icon}"
     else
-      ready ? 'star' : 'arrow-r'
+      ready ? Css::Icon::READY : Css::Icon::NEW
+    end
+  end
+
+  def payment_icon
+    if use_placeholder?
+      "%{order_payment_icon}"
+    else
+      paid ? Css::Icon::PAID : Css::Icon::UNPAID
     end
   end
 
@@ -67,7 +75,15 @@ class Order < ActiveRecord::Base
     if use_placeholder?
       "%{order_theme}"
     else
-      ready ? Theme::READY : Theme::NEW
+      ready ? Css::Theme::READY : Css::Theme::NEW
+    end
+  end
+
+  def mark_as_paid_visibility_style
+    if use_placeholder?
+      "%{order_mark_as_paid_visibility_style}"
+    else
+      paid ? Css::Style::HIDDEN : Css::Style::VISIBLE
     end
   end
 
@@ -142,8 +158,10 @@ class Order < ActiveRecord::Base
       :order_id => order_id,
       :order_name => name,
       :order_ordered_time => ordered_time,
-      :order_icon => icon,
+      :order_serve_icon => serve_icon,
+      :order_payment_icon => payment_icon,
       :order_theme => theme,
+      :order_mark_as_paid_visibility_style => mark_as_paid_visibility_style,
       :order_total_price => total_price,
       :ready => ready
     }

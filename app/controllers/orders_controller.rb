@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_filter :load_order, :only => [:show, :edit, :update, :mark_ready, :destroy]
+  before_filter :load_order, :except => [:index, :new, :create]
 
   # GET /orders
   # GET /orders.json
@@ -60,6 +60,11 @@ class OrdersController < ApplicationController
 
   def mark_ready
     @order.update_attribute(:ready, true)
+    render :nothing => true
+  end
+
+  def mark_paid
+    @order.update_attribute(:paid, true)
     render :nothing => true
   end
 

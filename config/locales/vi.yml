@@ -6,17 +6,24 @@ vi:
     table_no: Bàn số %{no}
     commit: Xác nhận
     back: Quay lại
+
     cancel: Hủy
     pending_header: Những order đang chờ
     header: "Order: Bàn số %{table_no}"
     ordered: Đã gọi
     ordering: Gọi món
+    payment_confirmation: Đánh dấu đã thu tiền cho order này?
 
   ordered_items:
     header: Những món đã được gọi
 
   buttons:
     mark_ready: Sẵn sàng
+    mark_served: Đã phục vụ
+    mark_paid: Đã thu tiền
+    confirm:
+      "yes": Đúng
+      "no": Không
 
   states:
     ready: Sẵn sàng

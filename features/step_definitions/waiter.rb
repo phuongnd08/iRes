@@ -64,3 +64,8 @@ Then /^I see no orders$/ do
   end
 end
 
+When /^I mark the order as paid$/ do
+  within_ordered_section do
+    click_on I18n.t("order.confirm_payment")
+  end
+end

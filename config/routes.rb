@@ -5,6 +5,7 @@ IRes::Application.routes.draw do
   resources :orders do
     member do
       put :mark_ready
+      put :mark_paid
     end
   end
 
