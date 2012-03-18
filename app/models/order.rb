@@ -109,6 +109,7 @@ class Order < ActiveRecord::Base
           end
         end
       end
+      self.served = false unless ready
     end
   end
 

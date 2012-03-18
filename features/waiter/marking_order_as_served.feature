@@ -14,3 +14,7 @@ Feature: Marking an order as served
     When I try to mark the order as served
     And I confirm the dialog with "Đúng"
     Then I see the order as served
+    When these items is added to the order:
+      |category|name|
+      |Đồ uống|Cà phê|
+    Then I see the order as unserved
