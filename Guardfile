@@ -72,7 +72,7 @@ group :default do
     watch('Gemfile')
   end
 
-  guard 'rails', :port => 3000 do
+  guard 'rails', :port => 3000, :server => :thin do
     watch('Gemfile.lock')
     watch(%r{^config/initializers/.+\.rb$})
     watch(%r{^lib/.+\.rb$})
