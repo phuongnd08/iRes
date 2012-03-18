@@ -46,7 +46,7 @@ When /^I stop committing the order$/ do
   click_on I18n.t("order.back")
 end
 
-When /^I cancel the order$/ do
+When /^I try to cancel the order$/ do
   within_ordered_section do
     click_on I18n.t("order.cancel")
   end

@@ -1,37 +1,38 @@
 #order_page{ "data-role" => "page" }
-  = form_for(@order, :html => { "data-ajax" => "false" }) do |f|
-    %div{ "data-role" => "header", "data-position" => "inline" }
-      %span.ui-btn-left
-        %span.item_counter= @order.order_items.count
-        \-
-        %span.total_price_counter= @order.total_price
-      %h1= t("waiter.order", :no => @order.table_number)
-      %div.ui-btn-right
-        = f.select :table_number, (1..10).map { |number| [t("order.table_no", :no => number), number] }
-      %div{ "data-role" => "navbar" }
-        %ul
-          %li
-            %a{ :href => "#order_page", "data-nav-to" => "#ordering", "data-direction" => "reverse" }= t("order.ordering")
-          %li
-            %a.ui-btn-active{ :href => "#", "data-nav-to" => "#ordered" }= t("order.ordered")
-    #ordering.subpage{ "data-role" => "content" }
-      %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
-        = render :partial => "categories/viewed_by_waiter", :collection => Category.all, :as => :category
+  .nopadding{ "data-role" => "content"}
+    = form_for(@order, :html => { "data-ajax" => "false" }) do |f|
+      %div{ "data-role" => "header", "data-position" => "inline" }
+        %span.ui-btn-left
+          %span.item_counter= @order.order_items.count
+          \-
+          %span.total_price_counter= @order.total_price
+        %h1= t("waiter.order", :no => @order.table_number)
+        %div.ui-btn-right
+          = f.select :table_number, (1..10).map { |number| [t("order.table_no", :no => number), number] }
+        %div{ "data-role" => "navbar" }
+          %ul
+            %li
+              %a{ :href => "#order_page", "data-nav-to" => "#ordering", "data-direction" => "reverse" }= t("order.ordering")
+            %li
+              %a.ui-btn-active{ :href => "#", "data-nav-to" => "#ordered" }= t("order.ordered")
+      #ordering.subpage{ "data-role" => "content" }
+        %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+          = render :partial => "categories/viewed_by_waiter", :collection => Category.all, :as => :category
 
-    #ordered.subpage.hidden{ "data-role" => "content" }
-      %div
-        %ul.items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
-          = f.fields_for :order_items do |builder|
+      #ordered.subpage.hidden{ "data-role" => "content" }
+        %div
+          %ul.items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+            = f.fields_for :order_items do |builder|
+              = render "order_items/viewed_by_waiter", :f => builder
+        %br
+        %div= f.submit t("order.commit"), {"data-role" => "button" }
+        - if @order.can_be_removed?
+          %div= link_to t("order.cancel"), order_path(@order), :method => :delete, :confirm => t("order.cancelled_confirmation"), "data-role" => "button", "data-icon" => "delete"
+      - new_order_item_template = capture do
+        - Ajaxifier.enable do
+          = f.fields_for(:order_items, f.object.order_items.new, :child_index => "%{child_index}") do |builder|
             = render "order_items/viewed_by_waiter", :f => builder
-      %br
-      %div= f.submit t("order.commit"), {"data-role" => "button" }
-      - if @order.can_be_removed?
-        %div= link_to t("order.cancel"), order_path(@order), :method => :delete, "data-role" => "button", "data-icon" => "delete"
-    - new_order_item_template = capture do
-      - Ajaxifier.enable do
-        = f.fields_for(:order_items, f.object.order_items.new, :child_index => "%{child_index}") do |builder|
-          = render "order_items/viewed_by_waiter", :f => builder
-    %div
-      %a#cancel_btn{ :href => "#", "data-role" => "button", "data-rel" => "back" }= t("order.back")
-    :javascript
-      var newOrderItemTemplate = #{new_order_item_template.to_json}
+      %div
+        %a#cancel_btn{ :href => "#", "data-role" => "button", "data-rel" => "back" }= t("order.back")
+      :javascript
+        var newOrderItemTemplate = #{new_order_item_template.to_json}

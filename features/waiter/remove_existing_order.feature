@@ -9,7 +9,8 @@ Feature: Removing existing order
     And an order of table 2 is committed
     And I'm on waiter page
     When I choose order of table 1
-    And I cancel the order
+    And I try to cancel the order
+    And I confirm the dialog with "Đúng"
     Then I see "Order: Bàn số 2"
     But I do not see "Order: Bàn số 1"
 
