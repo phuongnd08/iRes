@@ -85,7 +85,7 @@ class OrderItem < ActiveRecord::Base
     if use_placeholder?
       "%{order_item_ready_visibility_style}"
     else
-      ready ? CssStyle::VISIBLE : CssStyle::HIDDEN
+      ready ? Css::Style::VISIBLE : Css::Style::HIDDEN
     end
   end
 
