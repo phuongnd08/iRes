@@ -1,12 +1,13 @@
 class Order < ActiveRecord::Base
   has_many :order_items, :dependent => :destroy
   accepts_nested_attributes_for :order_items, :allow_destroy => true
-  after_create :notify_order_created
-  after_destroy :notify_order_destroyed
-  after_update :notify_order_updated
   before_save :update_total_price
   before_save :start_calculating
   before_save :synchronize_ready
+  before_save :synchronize_served
+  after_create :notify_order_created
+  after_destroy :notify_order_destroyed
+  after_update :notify_order_updated
   after_save :stop_calculating
 
   scope :pending, where(:ready => false)
@@ -79,13 +80,19 @@ class Order < ActiveRecord::Base
     end
   end
 
-  [:served, :paid].each do |state|
-    define_method :"mark_as_#{state}_visibility_style" do
-      if use_placeholder?
-        "%{order_mark_as_#{state}_visibility_style}"
-      else
-        self[state] ? Css::Style::HIDDEN : Css::Style::VISIBLE
-      end
+  def mark_as_paid_visibility_style
+    if use_placeholder?
+      "%{order_mark_as_paid_visibility_style}"
+    else
+      paid ? Css::Style::HIDDEN : Css::Style::VISIBLE
+    end
+  end
+
+  def mark_as_served_visibility_style
+    if use_placeholder?
+      "%{order_mark_as_served_visibility_style}"
+    else
+      ready && !served ? Css::Style::VISIBLE : Css::Style::HIDDEN
     end
   end
 
@@ -109,7 +116,6 @@ class Order < ActiveRecord::Base
           end
         end
       end
-      self.served = false unless ready
     end
   end
 
@@ -126,14 +132,26 @@ class Order < ActiveRecord::Base
 
   private
 
-  def start_calculating
-    Order.calculating_order = self
-  end
-
+  # before save callbacks, must never return false
   def synchronize_ready
     self[:ready] = recalculate_ready
     nil
   end
+
+  def synchronize_served
+    self.served = false unless ready
+    nil
+  end
+
+  def start_calculating
+    Order.calculating_order = self
+  end
+
+  def update_total_price
+    self.total_price = order_items.reject(&:marked_for_destruction?).map(&:price).sum
+  end
+
+  # helper
 
   def stop_calculating
     Order.calculating_order = nil
@@ -150,10 +168,6 @@ class Order < ActiveRecord::Base
 
   def recalculate_ready
     order_items.reject(&:marked_for_destruction?).all?(&:ready)
-  end
-
-  def update_total_price
-    self.total_price = order_items.reject(&:marked_for_destruction?).map(&:price).sum
   end
 
   def push_attributes

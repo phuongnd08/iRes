@@ -64,6 +64,6 @@ Then /^I see "([^"]*)" as number of items of order$/ do |count|
 end
 
 When /^(?:this|these) items? is added to the order:$/ do |table|
-  create_order_items(DataBag.order, table.hashes)
+  create_order_items(DataBag.order.reload, table.hashes)
 end
 
