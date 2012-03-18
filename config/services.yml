@@ -1,12 +1,14 @@
-services: &services
-  pubsub:
-    mount_point: "http://192.168.0.100:3500/pubsub"
+pubsub: &pubsub
+  mount_point: "http://<%= NetworkHelper.ip_on_interface('wlan0') %>:3500/pubsub"
 
 development:
-  <<: *services
+  pubsub:
+    <<: *pubsub
 
 test:
-  <<: *services
+  pubsub:
+    <<: *pubsub
 
 production:
-  <<: *services
+  pubsub:
+    mount_point: "http://<%= NetworkHelper.ip_on_interface('eth0') %>:3500/pubsub"
