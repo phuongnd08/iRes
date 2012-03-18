@@ -12,8 +12,8 @@ vi:
     header: "Order: Bàn số %{table_no}"
     ordered: Đã gọi
     ordering: Gọi món
-    paid_confirmation: Đánh dấu đã thu tiền cho order này?
-    served_confirmation: Đánh dấu đã phục vụ cho order này?
+    paid_confirmation: Đã thu tiền order này?
+    served_confirmation: Đã phục vụ order này?
 
   ordered_items:
     header: Những món đã được gọi
