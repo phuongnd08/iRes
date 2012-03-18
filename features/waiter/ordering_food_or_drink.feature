@@ -20,7 +20,7 @@ Feature: Order food or drink
     And I see "15000" as the total price of order
     When I commit the order
     Then I see "Order: Bàn số 4"
-    When I choose "Order: Bàn số 4"
+    When I choose order of table 4
     Then I see 1 items being ordered
     And I see "Cam vắt" in the ordered list
 

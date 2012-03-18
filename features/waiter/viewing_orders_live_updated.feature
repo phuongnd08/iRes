@@ -47,4 +47,4 @@ Feature: Viewing orders live updated
       |Đò uống|Cà phê|
     And the order is ready
     Then I see toast of "Order: Bàn số 1" with text "Sẵn sàng"
-    And I see star icon for order of table 1
+    And I see the order as ready

@@ -8,7 +8,7 @@ Feature: Removing existing order
     Given an order of table 1 is committed
     And an order of table 2 is committed
     And I'm on waiter page
-    When I choose "Order: Bàn số 1"
+    When I choose order of table 1
     And I cancel the order
     Then I see "Order: Bàn số 2"
     But I do not see "Order: Bàn số 1"
@@ -20,5 +20,5 @@ Feature: Removing existing order
       |Đồ ăn|Hủ tiếu mì|
     And item "Bún bò" is marked as ready
     When I'm on waiter page
-    And I choose "Order: Bàn số 1"
+    And I choose order of table 1
     Then I cannot cancel the order
