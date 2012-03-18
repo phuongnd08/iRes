@@ -3,6 +3,10 @@ class ApplicationController < ActionController::Base
 
   before_filter :set_layout
 
+  if Rails.env.development?
+    prepend_before_filter lambda { I18n.reload! }
+  end
+
   private
   def set_layout
     if request.get? && request.xhr?
@@ -11,4 +15,5 @@ class ApplicationController < ActionController::Base
       self.class.layout 'application'
     end
   end
+
 end
