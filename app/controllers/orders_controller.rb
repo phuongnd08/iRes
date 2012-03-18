@@ -68,6 +68,11 @@ class OrdersController < ApplicationController
     render :nothing => true
   end
 
+  def mark_served
+    @order.update_attribute(:served, true)
+    render :nothing => true
+  end
+
   private
   def load_order
     @order = Order.find params[:id]

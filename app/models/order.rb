@@ -59,7 +59,7 @@ class Order < ActiveRecord::Base
     if use_placeholder?
       "%{order_serve_icon}"
     else
-      ready ? Css::Icon::READY : Css::Icon::NEW
+      served ? Css::Icon::SERVED : (ready ? Css::Icon::READY : Css::Icon::NEW)
     end
   end
 
@@ -79,11 +79,13 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def mark_as_paid_visibility_style
-    if use_placeholder?
-      "%{order_mark_as_paid_visibility_style}"
-    else
-      paid ? Css::Style::HIDDEN : Css::Style::VISIBLE
+  [:served, :paid].each do |state|
+    define_method :"mark_as_#{state}_visibility_style" do
+      if use_placeholder?
+        "%{order_mark_as_#{state}_visibility_style}"
+      else
+        self[state] ? Css::Style::HIDDEN : Css::Style::VISIBLE
+      end
     end
   end
 
@@ -162,6 +164,7 @@ class Order < ActiveRecord::Base
       :order_payment_icon => payment_icon,
       :order_theme => theme,
       :order_mark_as_paid_visibility_style => mark_as_paid_visibility_style,
+      :order_mark_as_served_visibility_style => mark_as_served_visibility_style,
       :order_total_price => total_price,
       :ready => ready
     }

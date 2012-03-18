@@ -39,5 +39,9 @@ describe OrdersController do
       put("/orders/1/mark_paid").should route_to("orders#mark_paid", :id => "1")
     end
 
+    it "routes to #mark_served" do
+      put("/orders/1/mark_served").should route_to("orders#mark_served", :id => "1")
+    end
+
   end
 end

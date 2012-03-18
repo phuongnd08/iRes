@@ -6,6 +6,7 @@ IRes::Application.routes.draw do
     member do
       put :mark_ready
       put :mark_paid
+      put :mark_served
     end
   end
 

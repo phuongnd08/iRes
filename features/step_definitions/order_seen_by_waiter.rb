@@ -12,10 +12,11 @@ def within_an_order_as_seen_by_waiter order
   end
 end
 
-Then /^I see the order as (un)?paid$/ do |negate|
+Then /^I see the order as (un)?(paid|served)$/ do |negate, state|
   within_orders_as_seen_by_waiter do
-    paid_icon_css = "[data-order-id='#{DataBag.order.id}'] .ui-icon-paid"
-    paid_button_css = "[data-order-id='#{DataBag.order.id}'] .mark-as-paid-btn"
+    order_css = "[data-order-id='#{DataBag.order.id}']"
+    paid_icon_css =  order_css + " .ui-icon-#{state}"
+    paid_button_css = order_css + " .mark-as-#{state}-btn"
     if negate
       page.should have_no_css paid_icon_css
       page.find(paid_button_css).should be_visible
@@ -26,9 +27,9 @@ Then /^I see the order as (un)?paid$/ do |negate|
   end
 end
 
-When /^I try to mark the order as paid$/ do
+When /^I try to mark the order as (paid|served)$/ do |state|
   within_an_order_as_seen_by_waiter DataBag.order do
-    click_on I18n.t("buttons.mark_paid")
+    click_on I18n.t("buttons.mark_#{state}")
   end
 end
 
