@@ -8,7 +8,10 @@
     %p
       %img.ui-icon-ires{ :class => "ui-icon-" + order.serve_icon }
       %img.ui-icon-ires{ :class => "ui-icon-" + order.payment_icon }
-    %div{"data-role" => "controlgroup", "data-type" => "horizontal"}
+    %p
       - [:served, :paid].each do |state|
-        %a{ :class => "mark-as-#{state}-btn", "data-role" => "button", "data-ajax" => false, "data-confirm" => t("order.#{state}_confirmation"), "data-remote" => true, "data-method" => :put, :href => send(:"mark_#{state}_order_path", order), :style => order.send(:"mark_as_#{state}_visibility_style") }= t("buttons.mark_#{state}")
+        %a{ :class => "mark-as-#{state}-btn", "data-role" => "button", "data-inline" => "true",
+          "data-ajax" => false, "data-confirm" => t("order.#{state}_confirmation"), 
+          "data-remote" => true, "data-method" => :put, :href => send(:"mark_#{state}_order_path", order), 
+          :style => order.send(:"mark_as_#{state}_visibility_style") }= t("buttons.mark_#{state}")
   %a{ :href => edit_order_path(order) }

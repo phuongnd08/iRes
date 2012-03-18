@@ -29,7 +29,7 @@ $(document).delegate '#navigator_page', "pagecreate", ->
             $(orderTemplate.gsub order).appendTo('#orders')
           $('#orders').listview('refresh')
           orderLI(order).formatListItem()
-          orderLI(order).find('[data-role=controlgroup]').controlgroup().find('[data-role]'). buttonMarkup()
+          orderLI(order).find('[data-role]'). button()
           highlightOrderLI orderLI(order)
           orderLI(order).fadeOut('fast').fadeIn('slow')
 
