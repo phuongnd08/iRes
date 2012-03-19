@@ -8,29 +8,35 @@ highlightOrderLI = (li) ->
   $(li).attr('style', 'border: 2px solid yellow')
   highlightedOrderLI = li
 
-$(document).delegate '#navigator_page', "pagecreate", ->
-    ordersChannel = <%= Order.channel.to_json %>
-    $(li).formatListItem() for li in $('#orders li[data-order-id]')
-    if window.Faye && Faye.Client
-      orderLI = (order)->
-        $('#orders').find('[data-order-id=' + order.order_id + ']')
+ordersChannel = <%= Order.channel.to_json %>
 
-      pubsubClient = new Faye.Client(<%= ServicesSettings.pubsub.mount_point.to_json %>)
-      pubsubClient.subscribe ordersChannel, (order) ->
-        if order.deleted
-          orderLI(order).fadeOut('slow', ->
-            $(this).remove()
-          )
-        else
-          if order.updated
-            $.toast order.order_name, I18n.t("states.ready") if order.ready
-            orderLI(order).replaceWith(orderTemplate.gsub order)
-          if order.created
-            $(orderTemplate.gsub order).appendTo('#orders')
-          $('#orders').listview('refresh').trigger('create')
-          orderLI(order).formatListItem()
-          highlightOrderLI orderLI(order)
-          orderLI(order).fadeOut('fast').fadeIn('slow')
+$(document).delegate '#navigator_page', "pagecreate", ->
+  $(li).formatListItem() for li in $('#orders li[data-order-id]')
+
+$(document).delegate '#navigator_page', "pageshow", ->
+  if window.Faye && Faye.Client
+    orderLI = (order)->
+      $('#orders').find('[data-order-id=' + order.order_id + ']')
+
+    window.waiterPubSubClient = new Faye.Client(<%= ServicesSettings.pubsub.mount_point.to_json %>)
+    window.waiterPubSubClient.subscribe ordersChannel, (order) ->
+      if order.deleted
+        orderLI(order).fadeOut('slow', ->
+          $(this).remove()
+        )
+      else
+        if order.updated
+          $.toast order.order_name, I18n.t("states.ready") if order.ready
+          orderLI(order).replaceWith(orderTemplate.gsub order)
+        if order.created
+          $(orderTemplate.gsub order).appendTo('#orders')
+        $('#orders').listview('refresh').trigger('create')
+        orderLI(order).formatListItem()
+        highlightOrderLI orderLI(order)
+        orderLI(order).fadeOut('fast').fadeIn('slow')
+$(document).delegate '#navigator_page', "pagehide", ->
+  if window.waiterPubSubClient
+    window.waiterPubSubClient.unsubscribe ordersChannel
 
 $(document).delegate "#order_page", "pagecreate", ->
   showPage = (selector) ->
