@@ -1,0 +1,5 @@
+<% if Rails.env.test? %>
+  $(document).bind("mobileinit", ->
+    $.mobile.defaultPageTransition = 'none'
+  )
+<% end %>
