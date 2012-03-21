@@ -1,0 +1,55 @@
+highlightedOrderLI = null
+
+unhighlightOrder = (li) ->
+  $(li).attr('style', '')
+
+highlightOrderLI = (li) ->
+  unhighlightOrder(highlightedOrderLI) if highlightedOrderLI
+  $(li).attr('style', 'border: 2px solid yellow')
+  highlightedOrderLI = li
+
+ordersChannel = <%= Order.channel.to_json %>
+
+$(document).delegate '.navigator_page', "pagecreate", ->
+  $(li).formatListItem() for li in $(this).find('#orders li[data-order-id]')
+
+roleVars = (role) ->
+  window["$#{role}Vars"] ||= {}
+
+$(document).delegate '.navigator_page', "pageshow", ->
+  role = $(this).attr("data-viewer-role")
+
+  orderUL = =>
+    $(this).find('#orders')
+
+  orderLI = (order)->
+    orderUL().find('[data-order-id=' + order.order_id + ']')
+
+  addOrUpdate = (order) ->
+    if order.shown_to[role]
+      $.toast order.order_name, I18n.t("states.ready") if order.ready && !order.served
+      if (orderLI(order).exists())
+        orderLI(order).replaceWith(orderTemplate.gsub order)
+      else
+        $(orderTemplate.gsub order).appendTo(orderUL())
+      orderUL().listview('refresh').trigger('create')
+      repaintOrder(order)
+    else
+      orderLI(order).fadeOutAndRemove()
+
+  repaintOrder = (order) ->
+    orderLI(order).formatListItem()
+    highlightOrderLI orderLI(order)
+    orderLI(order).fadeOut('fast').fadeIn('slow')
+
+  if window.Faye && Faye.Client
+    roleVars(role).pubSubClient = new Faye.Client(<%= ServicesSettings.pubsub.mount_point.to_json %>)
+    roleVars(role).pubSubClient.subscribe ordersChannel, (order) ->
+      if order.deleted
+        orderLI(order).fadeOutAndRemove()
+      else
+        addOrUpdate(order)
+
+$(document).delegate '#navigator_page', "pagehide", ->
+  roleVars(role).pubSubClient.unsubscribe(ordersChannel) if roleVars(role).pubSubClient
+

@@ -1,7 +1,9 @@
 IRes::Application.routes.draw do
 
-  get "/waiter" => "home#waiter", :as => "waiter"
-  get "/chef" => "home#chef"
+  [:waiter, :chef, :manager].each do |role|
+    get "/#{role}" => "home#" + role.to_s, :as => role
+  end
+
   resources :orders do
     member do
       put :mark_ready

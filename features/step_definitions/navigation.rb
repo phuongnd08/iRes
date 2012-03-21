@@ -7,18 +7,16 @@ Then /^I'm presented with the ([\w\s]+) page$/ do |path_name|
   wait_for(expected_path){ current_path }
 end
 
-Given /^I'm on waiter page$/ do
-  visit '/waiter'
-  page.should have_content I18n.t("waiter.order")
+Given /^I'm on (waiter|chef|manager) page$/ do |role|
+  visit '/' + role
+  page.should have_content I18n.t("#{role}.header")
 end
 
-When /^I'm on chef page$/ do
-  visit "/chef"
-  page.should have_content I18n.t("ordered_items.header")
-end
 
 When /^I confirm the dialog with "([^"]*)"$/ do |choice|
-  within ".ui-simpledialog-container" do
-    click_on choice
-  end
+  begin
+    within ".ui-simpledialog-container" do
+      click_on choice
+    end
+  end while !page.has_no_css?(".ui-simpledialog-container")
 end

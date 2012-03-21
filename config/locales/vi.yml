@@ -2,6 +2,11 @@ vi:
   waiter:
     header: Phục vụ
     order: Đặt bàn
+  chef:
+    header: Đầu bếp
+  manager:
+    header: Quản lí
+
   order:
     table_no: Bàn số %{no}
     commit: Xác nhận

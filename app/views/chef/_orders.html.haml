@@ -1,7 +1,7 @@
 #chef_orders_page{ "data-role" => "page" }
   %div{ "data-role" => "header" }
-    %h1= t("ordered_items.header")
-  = render :partial => "orders/viewed_by_chef", :collection => Order.pending, :as => :order
+    %h1= t("chef.header")
+  = render :partial => "orders/viewed_by_chef", :collection => Order.shown_to("chef".to_inquirer), :as => :order
 - chef_order_template = capture do
   - Ajaxifier.enable do
     = render "orders/viewed_by_chef", :order => Order.new

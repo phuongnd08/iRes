@@ -1,0 +1,16 @@
+.navigator_page{ :id => role + "_page", "data-role" => "page", :"data-viewer-role" => role }
+  %div{ "data-role" => "header" }
+    %h1= t(role + ".header")
+  - if role.waiter?
+    .content{ "data-role"  => "content" }
+      %a{ :href => new_order_path, "data-role" => "button" }= t("waiter.order")
+  .content{ "data-role" => "content" }
+    %ul#orders{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+      %li{"data-role" => "list-divider", :role => "heading"}= t("order.pending_header")
+      = render :partial => "orders/readonly_details", :collection => Order.shown_to(role), :as => :order, :locals => { :role => role }
+
+- order_template = capture do
+  - Ajaxifier.enable do
+    = render "orders/readonly_details", :order => Order.new, :role => role
+:javascript
+  var orderTemplate = #{order_template.to_json};

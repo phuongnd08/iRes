@@ -1,0 +1,24 @@
+$(document).delegate "#order_page", "pagecreate", ->
+  showPage = (selector) ->
+    $(".subpage").hide()
+    $(selector).show()
+    $("#order_page [data-role=navbar] li a").setHeaderInactive()
+    $("#order_page [data-nav-to=\"" + selector + "}\"] li a").setHeaderActive()
+
+  $("#order_page [data-role=navbar] li a").click (event) ->
+    event.preventDefault()
+    showPage $(this).attr("data-nav-to")
+
+  $("#ordering .item").click (event) ->
+    event.preventDefault()
+    item_id = $(this).attr("data-item-id")
+    item_name = $(this).find('a .name').text()
+    item_price = $(this).attr("data-item-price")
+    Waiter.addItem item_id, item_name, item_price
+
+  $('#ordered').on 'click', '.remove', ->
+    Waiter.removeItem $(this).closest('li')
+
+  $("#commit_btn").click (event) ->
+    event.preventDefault()
+    Waiter.commitOrder this

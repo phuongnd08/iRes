@@ -6,4 +6,8 @@ describe HomeController do
   it "routes to #chef" do
     get("/chef").should route_to("home#chef")
   end
+
+  it "routes to #manager" do
+    get("/manager").should route_to('home#manager')
+  end
 end

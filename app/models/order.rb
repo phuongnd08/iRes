@@ -11,13 +11,27 @@ class Order < ActiveRecord::Base
   after_save :stop_calculating
 
   scope :pending, where { (served != true) | (paid != true) }
+  scope :paid, where { paid == true }
+  scope :nonready, where { ready != true }
 
-  def self.calculating_order
-    Thread.current[:calculating_order]
-  end
+  class << self
+    def shown_to(role)
+      if role.waiter?
+        pending
+      elsif role.manager?
+        paid
+      elsif role.chef?
+        nonready
+      end
+    end
 
-  def self.calculating_order=(order)
-    Thread.current[:calculating_order] = order
+    def calculating_order
+      Thread.current[:calculating_order]
+    end
+
+    def calculating_order=(order)
+      Thread.current[:calculating_order] = order
+    end
   end
 
   def initialize(*args)
@@ -181,6 +195,10 @@ class Order < ActiveRecord::Base
       :order_mark_as_paid_visibility_style => mark_as_paid_visibility_style,
       :order_mark_as_served_visibility_style => mark_as_served_visibility_style,
       :order_total_price => total_price,
+      :shown_to => {
+        :waiter => !(ready && served),
+        :manager => paid
+      },
       :completed => completed?,
       :ready => ready
     }
