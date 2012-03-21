@@ -14,6 +14,21 @@ Feature: Viewing orders live updated
     Then I see "Order: Bàn số 2"
     But I do not see "Order: Bàn số 1"
 
+  Scenario: Viewing served and paid order live removed from the list
+    Given I'm on waiter page
+    When an order of table 1 is committed
+    Then I see "Order: Bàn số 1"
+    When the order is served
+    And the order is paid
+    Then I do not see "Order: Bàn số 1"
+
+  Scenario: Do not see the served and paid order when first open the waiter page
+    Given an order of table 1 is committed
+    And the order is served
+    And the order is paid
+    When I'm on waiter page
+    Then I do not see "Order: Bàn số 1"
+
   Scenario: View order ordered time
     Given an order is committed at 9:00 with these items:
       |category|name|

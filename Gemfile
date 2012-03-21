@@ -9,6 +9,7 @@ gem 'rails', '3.2.1'
 gem 'mysql2'
 gem 'settingslogic'
 gem 'thin'
+gem 'squeel'
 
 
 # Gems used only for assets and not required

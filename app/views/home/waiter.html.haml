@@ -7,7 +7,7 @@
   .content{ "data-role" => "content" }
     %ul#orders{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
       %li{"data-role" => "list-divider", :role => "heading"}= t("order.pending_header")
-      = render :partial => "orders/viewed_by_waiter", :collection => Order.all, :as => :order
+      = render :partial => "orders/viewed_by_waiter", :collection => Order.pending, :as => :order
 
 - order_template = capture do
   - Ajaxifier.enable do

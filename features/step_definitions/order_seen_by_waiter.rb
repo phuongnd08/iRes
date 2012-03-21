@@ -44,3 +44,6 @@ When /^I choose order of table (\d+)$/ do |table_number|
   end
 end
 
+When /^the order is (served|paid)$/ do |state|
+  DataBag.order.reload.update_attribute(state.to_sym, true)
+end

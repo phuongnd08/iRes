@@ -25,15 +25,18 @@ $(document).delegate '#navigator_page', "pageshow", ->
           $(this).remove()
         )
       else
-        if order.updated
-          $.toast order.order_name, I18n.t("states.ready") if order.ready
-          orderLI(order).replaceWith(orderTemplate.gsub order)
-        if order.created
-          $(orderTemplate.gsub order).appendTo('#orders')
-        $('#orders').listview('refresh').trigger('create')
-        orderLI(order).formatListItem()
-        highlightOrderLI orderLI(order)
-        orderLI(order).fadeOut('fast').fadeIn('slow')
+        if !order.completed
+          if order.updated
+            $.toast order.order_name, I18n.t("states.ready") if order.ready
+            orderLI(order).replaceWith(orderTemplate.gsub order)
+          if order.created
+            $(orderTemplate.gsub order).appendTo('#orders')
+          $('#orders').listview('refresh').trigger('create')
+          orderLI(order).formatListItem()
+          highlightOrderLI orderLI(order)
+          orderLI(order).fadeOut('fast').fadeIn('slow')
+        else
+          orderLI(order).fadeOutAndRemove()
 $(document).delegate '#navigator_page', "pagehide", ->
   if window.waiterPubSubClient
     window.waiterPubSubClient.unsubscribe ordersChannel

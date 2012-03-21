@@ -10,7 +10,7 @@ class Order < ActiveRecord::Base
   after_update :notify_order_updated
   after_save :stop_calculating
 
-  scope :pending, where(:ready => false)
+  scope :pending, where { (served != true) | (paid != true) }
 
   def self.calculating_order
     Thread.current[:calculating_order]
@@ -52,8 +52,8 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def paid?
-    state == STATE_PAID
+  def completed?
+    paid && served
   end
 
   def serve_icon
@@ -181,6 +181,7 @@ class Order < ActiveRecord::Base
       :order_mark_as_paid_visibility_style => mark_as_paid_visibility_style,
       :order_mark_as_served_visibility_style => mark_as_served_visibility_style,
       :order_total_price => total_price,
+      :completed => completed?,
       :ready => ready
     }
   end
