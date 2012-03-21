@@ -9,7 +9,15 @@ describe Order do
 
   describe "default" do
     it "is not ready" do
-      order.ready.should be_false
+      order.ready.should == false
+    end
+
+    it "is not paid" do
+      order.paid.should == false
+    end
+
+    it "is not served" do
+      order.served.should == false
     end
   end
 

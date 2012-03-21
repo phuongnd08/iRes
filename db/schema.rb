@@ -42,8 +42,8 @@ ActiveRecord::Schema.define(:version => 20120318100417) do
     t.datetime "updated_at",                      :null => false
     t.integer  "total_price",  :default => 0
     t.boolean  "ready",        :default => false
-    t.boolean  "paid"
-    t.boolean  "served"
+    t.boolean  "paid",         :default => false
+    t.boolean  "served",       :default => false
   end
 
 end
