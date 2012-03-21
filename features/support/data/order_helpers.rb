@@ -8,3 +8,12 @@ def create_order_items(order, item_hashes)
 
   order.save
 end
+
+def order_of_table(table_number)
+  if table_number.nil?
+    DataBag.order
+  else
+    Order.find_by_table_number(table_number)
+  end
+end
+

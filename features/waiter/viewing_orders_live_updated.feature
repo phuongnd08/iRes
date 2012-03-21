@@ -63,3 +63,17 @@ Feature: Viewing orders live updated
     And the order is ready
     Then I see toast of "Order: Bàn số 1" with text "Sẵn sàng"
     And I see the order as ready
+
+  Scenario: Viewing list of orders live updated after navigate away to ordering page
+    Given I'm on waiter page
+    When I choose "Đặt bàn"
+    And an order of table 1 is committed
+    And an order of table 2 is committed
+    And an order of table 3 is committed
+    And the order of table 1 is cancelled
+    And the order of table 2 is paid
+    And I choose "Quay lại"
+    Then I see "Order: Bàn số 2"
+    And I see "Order: Bàn số 3"
+    But I do not see "Order: Bàn số 1"
+    And I see the order of table 2 as paid

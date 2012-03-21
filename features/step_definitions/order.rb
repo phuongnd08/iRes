@@ -32,8 +32,13 @@ Then /^I (do not )?see "([^"]*)" in waiting list$/ do |negate, text|
   end
 end
 
-When /^the order of table (\d+) is cancelled$/ do |table_number|
-  Order.find_by_table_number(table_number).destroy
+When /^the order(?: of table (\d+))? is (cancelled|ready|served|paid)$/ do |table_number, state|
+  order = order_of_table(table_number)
+  if state == "cancelled"
+    order.destroy
+  else
+    order.update_attribute(state.to_sym, true)
+  end
 end
 
 When /^I mark order of table (\d+) as ready$/ do |table_number|
@@ -45,10 +50,6 @@ When /^I mark order of table (\d+) as ready$/ do |table_number|
       end
     end
   end
-end
-
-When /^the order is ready$/ do
-  DataBag.order.update_attribute(:ready, true)
 end
 
 When /^I see "([^"]*)" as the total price of order$/ do |total_price|

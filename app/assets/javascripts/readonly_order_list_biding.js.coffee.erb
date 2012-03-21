@@ -10,46 +10,63 @@ highlightOrderLI = (li) ->
 
 ordersChannel = <%= Order.channel.to_json %>
 
-$(document).delegate '.navigator_page', "pagecreate", ->
-  $(li).formatListItem() for li in $(this).find('#orders li[data-order-id]')
-
-roleVars = (role) ->
+pageVars = (role) ->
   window["$#{role}Vars"] ||= {}
 
-$(document).delegate '.navigator_page', "pageshow", ->
-  role = $(this).attr("data-viewer-role")
+viewerRole = (page) ->
+  $(page).attr("data-viewer-role")
 
-  orderUL = =>
+$(document).delegate '.navigator_page', "pagecreate", ->
+  role = viewerRole(this)
+  vars = pageVars(role)
+
+  ordersUL = =>
     $(this).find('#orders')
 
   orderLI = (order)->
-    orderUL().find('[data-order-id=' + order.order_id + ']')
+    ordersUL().find('[data-order-id=' + order.order_id + ']')
+
+  processOrders = (orders, withEffect = true) ->
+    removeFunction = if withEffect then "fadeOutAndRemove" else "remove"
+    lastAddedOrUpdatedOrder = null
+    for order in orders
+      if order.deleted || !order.shown_to[role]
+        orderLI(order)[removeFunction]()
+      else
+        addOrUpdate(lastAddedOrUpdatedOrder = order)
+
+    if lastAddedOrUpdatedOrder
+      ordersUL().listview('refresh').trigger('create')
+      formatAllListItems()
+      if withEffect
+        highlightOrderLI orderLI(lastAddedOrUpdatedOrder)
+        orderLI(order).blinkAndShow()
 
   addOrUpdate = (order) ->
-    if order.shown_to[role]
-      $.toast order.order_name, I18n.t("states.ready") if order.ready && !order.served
-      if (orderLI(order).exists())
-        orderLI(order).replaceWith(orderTemplate.gsub order)
-      else
-        $(orderTemplate.gsub order).appendTo(orderUL())
-      orderUL().listview('refresh').trigger('create')
-      repaintOrder(order)
+    $.toast order.order_name, I18n.t("states.ready") if order.ready && !order.served
+    if (orderLI(order).exists())
+      orderLI(order).replaceWith(orderTemplate.gsub order)
     else
-      orderLI(order).fadeOutAndRemove()
+      $(orderTemplate.gsub order).appendTo(ordersUL())
 
-  repaintOrder = (order) ->
-    orderLI(order).formatListItem()
-    highlightOrderLI orderLI(order)
-    orderLI(order).fadeOut('fast').fadeIn('slow')
+  formatAllListItems = ->
+    for li in ordersUL().find('li[data-order-id]')
+      $(li).formatListItem()
+
+  formatAllListItems()
 
   if window.Faye && Faye.Client
-    roleVars(role).pubSubClient = new Faye.Client(<%= ServicesSettings.pubsub.mount_point.to_json %>)
-    roleVars(role).pubSubClient.subscribe ordersChannel, (order) ->
-      if order.deleted
-        orderLI(order).fadeOutAndRemove()
+    vars.pubSubClient = new Faye.Client(<%= ServicesSettings.pubsub.mount_point.to_json %>)
+    vars.pubSubClient.subscribe ordersChannel, (order) ->
+      if vars.visible
+        processOrders([order])
       else
-        addOrUpdate(order)
+        vars.backlog.push order
 
-$(document).delegate '#navigator_page', "pagehide", ->
-  roleVars(role).pubSubClient.unsubscribe(ordersChannel) if roleVars(role).pubSubClient
+  $(this).bind "pageshow", ->
+    vars.visible = true
+    processOrders(vars.backlog, false) if vars.backlog
 
+  $(this).bind "pagehide", ->
+    vars.visible = false
+    vars.backlog = []
