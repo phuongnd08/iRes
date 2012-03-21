@@ -1,4 +1,4 @@
-.navigator_page{ :id => role + "_page", "data-role" => "page", :"data-viewer-role" => role }
+.navigator_page{ :id => role + "_page", "data-role" => "page", :"data-viewer-role" => role, :"data-url" => request.fullpath }
   %div{ "data-role" => "header" }
     %h1= t(role + ".header")
   - if role.waiter?
