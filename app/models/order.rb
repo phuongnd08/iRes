@@ -144,6 +144,14 @@ class Order < ActiveRecord::Base
     persisted? && order_items.none?(&:ready)
   end
 
+  def revenue_increment
+    if paid && paid_changed?
+      total_price
+    else
+      0
+    end
+  end
+
   private
 
   # before save callbacks, must never return false
@@ -195,6 +203,7 @@ class Order < ActiveRecord::Base
       :order_mark_as_paid_visibility_style => mark_as_paid_visibility_style,
       :order_mark_as_served_visibility_style => mark_as_served_visibility_style,
       :order_total_price => total_price,
+      :revenue_increment => revenue_increment,
       :shown_to => {
         :waiter => !(ready && served),
         :manager => paid

@@ -1,9 +1,12 @@
 .navigator_page{ :id => role + "_page", "data-role" => "page", :"data-viewer-role" => role, :"data-url" => request.fullpath }
   %div{ "data-role" => "header" }
     %h1= t(role + ".header")
-  - if role.waiter?
-    .content{ "data-role"  => "content" }
+  .content{ "data-role"  => "content" }
+    - if role.waiter?
       %a{ :href => new_order_path, "data-role" => "button" }= t("waiter.order")
+    - if role.manager?
+      = t("order.collected_revenue")
+      %span.collected_revenue= Order.paid.sum(:total_price)
   .content{ "data-role" => "content" }
     %ul#orders{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
       %li{"data-role" => "list-divider", :role => "heading"}= t("order.pending_header")

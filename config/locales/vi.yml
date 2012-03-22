@@ -20,6 +20,7 @@ vi:
     paid_confirmation: Đã thu tiền order này?
     served_confirmation: Đã phục vụ order này?
     cancelled_confirmation: Hủy order này?
+    collected_revenue: Tiền đã thu
 
   ordered_items:
     header: Những món đã được gọi
