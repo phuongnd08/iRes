@@ -14,6 +14,7 @@ class @Waiter
       item_name: name
       order_item_price: price
       child_index: (new Date).getTime()
+      serve_icon: <%= OrderItem.new.serve_icon.to_json %>
     itemLI = $(newOrderItemTemplate.gsub hash)
     itemLI.find('input[id$=item_id]').val(id)
     @getOrderedList().append(itemLI)

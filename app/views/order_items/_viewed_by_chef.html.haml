@@ -1,6 +1,8 @@
 %li{ "data-order-item-id" => order_item.order_item_id, "data-order-id" => order_item.order_id, "data-item-id" => order_item.item_id, "data-count-theme" => order_item.theme }
   %a
     %span= order_item.item_name
-    %span.ui-li-count &nbsp;
+    %span.ui-li-count
+      %img.ui-icon-ires{ :class => "ui-icon-" + order_item.serve_icon }
+      = order_item.ordered_time
   %a{ "data-role" => "button", "data-icon" => "star", "data-theme" => "c", "data-remote" => "true", "data-method" => :put, :href => mark_ready_order_item_path(order_item) }
     = t("buttons.mark_ready")

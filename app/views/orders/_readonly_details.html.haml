@@ -5,7 +5,7 @@
       %span.ui-li-count
         %img.ui-icon-ires{ :class => "ui-icon-" + order.serve_icon }
         %img.ui-icon-ires{ :class => "ui-icon-" + order.payment_icon }
-        %span.order_time= order.ordered_time
+        %span.order_time= order.timing
         \|
         %span.total_price= order.total_price
     - if role.waiter?

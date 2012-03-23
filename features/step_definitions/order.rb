@@ -1,5 +1,6 @@
-Given /^an order of table (\d+) is committed$/ do |table_number|
+Given /^an order of table (\d+) is committed(?: at (\d+):(\d+))?$/ do |table_number, hour, minute|
   DataBag.order = Order.make!(:table_number => table_number)
+  update_order_time(DataBag.order, :created_at, hour, minute) if (hour && minute)
 end
 
 Given /^an order of table (\d+) is committed with these items:$/ do |number, table|
@@ -8,12 +9,9 @@ Given /^an order of table (\d+) is committed with these items:$/ do |number, tab
 end
 
 Given /^an order is committed at (\d+):(\d+) with these items:$/ do |hour, minute, table|
-  Order.record_timestamps = false
-  now = Time.now
-  ordered_time = Time.new(now.year, now.month, now.day, hour.to_i, minute.to_i)
-  DataBag.order = Order.new(:created_at => ordered_time, :updated_at => ordered_time)
+  DataBag.order = Order.new
   create_order_items(DataBag.order, table.hashes)
-  Order.record_timestamps = true
+  update_order_time(DataBag.order, :created_at, hour, minute)
 end
 
 Then /^I see (\d+) orders in the waiting list$/ do |count|
@@ -68,3 +66,9 @@ When /^(?:this|these) items? is added to the order:$/ do |table|
   create_order_items(DataBag.order.reload, table.hashes)
 end
 
+When /^the order is paid at (\d+):(\d+)$/ do |hour, minute|
+  time = relative_time_of(hour, minute)
+  Time.stub(:now).and_return(time)
+  DataBag.order.update_attribute(:paid, true)
+  Time.rspec_reset
+end

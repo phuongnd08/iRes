@@ -3,8 +3,7 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :order_items, :allow_destroy => true
   before_save :update_total_price
   before_save :start_calculating
-  before_save :synchronize_ready
-  before_save :synchronize_served
+  before_save :synchronize_attributes
   after_create :notify_order_created
   after_destroy :notify_order_destroyed
   after_update :notify_order_updated
@@ -58,11 +57,13 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def ordered_time
+  def timing
     if use_placeholder?
-      "%{order_ordered_time}"
+      "%{timing}"
     else
-      updated_at.localtime.strftime("%H:%M")
+      created_at.localtime.strftime("%H:%M").tap do |timing|
+        timing << " (#{paid_at.localtime.strftime("%H:%M")})" if paid
+      end
     end
   end
 
@@ -159,13 +160,10 @@ class Order < ActiveRecord::Base
   private
 
   # before save callbacks, must never return false
-  def synchronize_ready
+  def synchronize_attributes
     self[:ready] = recalculate_ready
-    nil
-  end
-
-  def synchronize_served
     self.served = false unless ready
+    self.paid_at = Time.now if paid && paid_changed?
     nil
   end
 
@@ -200,7 +198,7 @@ class Order < ActiveRecord::Base
     {
       :order_id => order_id,
       :order_name => name,
-      :order_ordered_time => ordered_time,
+      :timing => timing,
       :order_serve_icon => serve_icon,
       :order_payment_icon => payment_icon,
       :order_theme => theme,

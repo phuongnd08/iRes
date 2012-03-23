@@ -17,3 +17,14 @@ def order_of_table(table_number)
   end
 end
 
+def update_order_time(order, field, hour, minute)
+  Order.record_timestamps = false
+  order.update_attribute(field, relative_time_of(hour, minute))
+  Order.record_timestamps = true
+end
+
+def relative_time_of(hour, minute)
+  now = Time.now
+  Time.new(now.year, now.month, now.day, hour.to_i, minute.to_i)
+end
+

@@ -56,3 +56,9 @@ end
 Then /^I cannot commit the order$/ do
   page.should have_no_button I18n.t("order.commit")
 end
+
+Then /^I see timing of order (\d+) reported as "([^"]*)"$/ do |table_number, time_string|
+  within_the_order_as_seen_by_waiter(Order.find_by_table_number(table_number)) do
+    page.should have_content time_string
+  end
+end

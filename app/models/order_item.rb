@@ -67,9 +67,17 @@ class OrderItem < ActiveRecord::Base
 
   def theme
     if use_placeholder?
-      "%{order_item_theme}"
+      "%{theme}"
     else
       ready ? Css::Theme::READY : Css::Theme::NEW
+    end
+  end
+
+  def ordered_time
+    if use_placeholder?
+      "%{ordered_time}"
+    else
+      created_at.localtime.strftime("%H:%M")
     end
   end
 
@@ -82,7 +90,11 @@ class OrderItem < ActiveRecord::Base
   end
 
   def serve_icon
-    ready ? Css::Icon::READY : Css::Icon::NEW
+    if use_placeholder?
+      "%{serve_icon}"
+    else
+      ready ? Css::Icon::READY : Css::Icon::NEW
+    end
   end
 
   def push_attributes
@@ -91,7 +103,9 @@ class OrderItem < ActiveRecord::Base
       :order_id => order_id,
       :item_id => item_id,
       :item_name => item_name,
-      :order_item_theme => theme
+      :theme => theme,
+      :serve_icon => serve_icon,
+      :ordered_time => ordered_time
     }
   end
 
