@@ -16,18 +16,21 @@
             %li
               %a.ui-btn-active{ :href => "#", "data-nav-to" => "#ordered" }= t("order.ordered")
       #ordering.subpage{ "data-role" => "content" }
-        %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
-          = render :partial => "categories/viewed_by_waiter", :collection => Category.all, :as => :category
-
+        - if @order.modifiable?
+          %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+            = render :partial => "categories/viewed_by_waiter", :collection => Category.all, :as => :category
+        - else
+          %div= t("order.not_modifiable")
       #ordered.subpage.hidden{ "data-role" => "content" }
         %div
           %ul.items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
             = f.fields_for :order_items do |builder|
               = render "order_items/viewed_by_waiter", :f => builder
-        %br
-        %div= f.submit t("order.commit"), {"data-role" => "button" }
-        - if @order.can_be_removed?
-          %div= link_to t("order.cancel"), order_path(@order), :method => :delete, :confirm => t("order.cancelled_confirmation"), "data-role" => "button", "data-icon" => "delete"
+        - if @order.modifiable?
+          %br
+          %div= f.submit t("order.commit"), {"data-role" => "button" }
+          - if @order.can_be_removed?
+            %div= link_to t("order.cancel"), order_path(@order), :method => :delete, :confirm => t("order.cancelled_confirmation"), "data-role" => "button", "data-icon" => "delete"
       - new_order_item_template = capture do
         - Ajaxifier.enable do
           = f.fields_for(:order_items, f.object.order_items.new, :child_index => "%{child_index}") do |builder|

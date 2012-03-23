@@ -46,3 +46,18 @@ Feature: Modifying existing order
     And I'm on waiter page
     When I choose order of table 1
     Then I cannot remove "Bún bò" from ordered list
+
+
+  Scenario: Cannot modify paid order
+    Given an order of table 1 is committed with these items:
+      |category|name|
+      |Đồ ăn|Bún bò|
+      |Đồ ăn|Hủ tiếu mì|
+    And the order is paid
+    And I'm on waiter page
+    When I choose order of table 1
+    Then I cannot remove "Bún bò" from ordered list
+    And I cannot remove "Hủ tiếu mì" from ordered list
+    And I cannot add item to the order
+    And I cannot delete the order
+    And I cannot commit the order

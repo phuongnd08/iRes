@@ -70,6 +70,10 @@ class Order < ActiveRecord::Base
     paid && served
   end
 
+  def modifiable?
+    !paid
+  end
+
   def serve_icon
     if use_placeholder?
       "%{order_serve_icon}"

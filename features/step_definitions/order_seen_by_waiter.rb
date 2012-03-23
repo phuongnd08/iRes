@@ -44,3 +44,15 @@ When /^I choose order of table (\d+)$/ do |table_number|
     find(".go-to-btn").click
   end
 end
+
+Then /^I cannot add item to the order$/ do
+  page.should have_content I18n.t("order.not_modifiable")
+end
+
+Then /^I cannot delete the order$/ do
+  page.should have_no_link I18n.t("order.cancel")
+end
+
+Then /^I cannot commit the order$/ do
+  page.should have_no_button I18n.t("order.commit")
+end

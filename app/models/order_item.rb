@@ -77,16 +77,12 @@ class OrderItem < ActiveRecord::Base
     if use_placeholder?
       "%{order_item_remove_visibility_style}"
     else
-      ready ? Css::Style::HIDDEN : Css::Style::VISIBLE
+      (ready || order.try(:paid)) ? Css::Style::HIDDEN : Css::Style::VISIBLE
     end
   end
 
-  def ready_visibility_style
-    if use_placeholder?
-      "%{order_item_ready_visibility_style}"
-    else
-      ready ? Css::Style::VISIBLE : Css::Style::HIDDEN
-    end
+  def serve_icon
+    ready ? Css::Icon::READY : Css::Icon::NEW
   end
 
   def push_attributes
