@@ -1,6 +1,6 @@
 IRes::Application.routes.draw do
 
-  [:waiter, :chef, :manager].each do |role|
+  [:waiter, :chef, :manager, :demo, :emulator].each do |role|
     get "/#{role}" => "home#" + role.to_s, :as => role
   end
 

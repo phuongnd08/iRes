@@ -1,0 +1,15 @@
+= javascript_include_tag "demo"
+%div{ "data-role" => "page" }
+  %div{ "data-role" => "content" }
+    - [:waiter, :chef, :manager].each do |role|
+      %div
+        = link_to role, emulator_path(:role => role), :class => "popup"
+        (
+        = link_to "bare", emulator_path(:role => role, :bare => true), :class => "popup"
+        )
+
+:javascript
+  $('a.popup[href]').bind("click", function(event){
+    event.preventDefault();
+    window.open($(this).attr('href'), "_blank", "width=600,height=600")
+  })

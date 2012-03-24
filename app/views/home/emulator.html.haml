@@ -1,0 +1,26 @@
+= stylesheet_link_tag "application"
+- case @role
+- when 'waiter'
+  - unless @bare
+    .waiter{ :style => "margin-left: 50px" }
+      = image_tag "waiter.jpg"
+  .smartphone.emulator{ :style => @bare ? "" : "margin-top: -430px" }
+    %iframe{ :src => waiter_path }
+
+- when 'chef'
+  - unless @bare
+    .chef.left
+      = image_tag "chef.jpg"
+
+  .tablet.emulator.left
+    %iframe{ :src => chef_path }
+
+  .clear
+
+- when 'manager'
+  - unless @bare
+    .manager{ :style => "margin-left: 50px" }
+      = image_tag "manager.jpg"
+
+  .smartphone.emulator{ :style => @bare ? "" : "margin-top: -400px" }
+    %iframe{ :src => manager_path }
