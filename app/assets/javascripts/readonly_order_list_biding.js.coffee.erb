@@ -51,7 +51,11 @@ $(document).delegate '.navigator_page', "pagecreate", ->
         orderLI(order).blinkAndShow()
 
   addOrUpdate = (order) ->
-    $.toast order.order_name, I18n.t("states.ready") if order.ready && !order.served
+    if order.paid
+      $.toast order.order_name, I18n.t("states.paid")
+    else
+      if order.ready && !order.served
+        $.toast order.order_name, I18n.t("states.ready")
     if (orderLI(order).exists())
       orderLI(order).replaceWith(orderTemplate.gsub order)
     else

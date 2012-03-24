@@ -207,10 +207,11 @@ class Order < ActiveRecord::Base
       :order_total_price => total_price,
       :revenue_increment => revenue_increment,
       :shown_to => {
-        :waiter => !(ready && served),
+        :waiter => !(paid && served),
         :manager => paid
       },
       :completed => completed?,
+      :paid => paid,
       :ready => ready
     }
   end

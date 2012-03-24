@@ -15,14 +15,7 @@ Feature: Marking an order as served
     And I see the order as unserved
     When I try to mark the order as served
     And I confirm the dialog with "Đúng"
-    Then I do not see "Order: Bàn số 1"
-    When these items is added to the order:
-      |category|name|
-      |Đồ uống|Cà phê|
-    Then I see "Order: Bàn số 1"
-    And I see the order as unserved
-    But I cannot mark the order as served
-
+    And I see the order as served
 
   Scenario: Cannot mark an unready order as served
     Given an order of table 1 is committed with these items:
