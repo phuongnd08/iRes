@@ -14,6 +14,7 @@ vi:
 
     cancel: Hủy
     pending_header: Những order đang chờ
+    paid_header: Những order đã thu tiền
     header: "Order: Bàn số %{table_no}"
     ordered: Đã gọi
     ordering: Gọi món
@@ -36,3 +37,4 @@ vi:
 
   states:
     ready: Sẵn sàng
+    paid: Đã thu tiền

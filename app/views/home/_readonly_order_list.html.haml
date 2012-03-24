@@ -9,7 +9,7 @@
       %span.collected_revenue= Order.paid.sum(:total_price)
   .content{ "data-role" => "content" }
     %ul#orders{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
-      %li{"data-role" => "list-divider", :role => "heading"}= t("order.pending_header")
+      %li{"data-role" => "list-divider", :role => "heading"}= role.manager? ? t("order.paid_header") : t("order.pending_header")
       = render :partial => "orders/readonly_details", :collection => Order.shown_to(role), :as => :order, :locals => { :role => role }
 
 - order_template = capture do
