@@ -5,11 +5,12 @@
       %span.ui-li-count
         %img.ui-icon-ires{ :class => "ui-icon-" + order.serve_icon }
         %img.ui-icon-ires{ :class => "ui-icon-" + order.payment_icon }
-        %span.order_time= order.timing
-        \|
-        %span.total_price= order.total_price
+    %div
+      %span.order_time= order.timing
+      \|
+      %span.total_price= order.total_price
     - if role.waiter?
-      %div
+      .tool-buttons
         - [:served, :paid].each do |state|
           %a{ :class => "mark-as-#{state}-btn", "data-role" => "button", "data-inline" => "true",
             "data-ajax" => false, "data-confirm" => t("order.#{state}_confirmation"),
