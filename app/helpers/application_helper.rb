@@ -16,7 +16,11 @@ module ApplicationHelper
 
   def dates_to_display
     dates = [focused_date - 1.day, focused_date]
-    dates << focused_date + 1.day if focused_date < Date.today
+    if focused_date < Date.today
+      dates << focused_date + 1.day
+    else
+      dates.unshift(focused_date - 2.day)
+    end
     dates.inject({}) do |hash, date|
       hash.merge! [date.strftime("%Y-%m-%d"), friendly_date_str(date)] => (date <=> focused_date)
     end
