@@ -12,6 +12,9 @@ Given /^I'm on (waiter|chef|manager) page$/ do |role|
   page.should have_content I18n.t("#{role}.header")
 end
 
+Given /^I am on the categories page$/ do
+  visit categories_path
+end
 
 When /^I confirm the dialog with "([^"]*)"$/ do |choice|
   begin

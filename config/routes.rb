@@ -16,6 +16,8 @@ IRes::Application.routes.draw do
     put :mark_ready, :on => :member
   end
 
+  resources :categories
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -10,6 +10,15 @@ vi:
     today: Hôm nay
     yesterday: Hôm qua
 
+  categories:
+    index:
+      header: Catalog
+      add: Thêm catalog
+    form:
+      edit: Sửa catalog
+      add: Thêm catalog
+      name: Tên
+
   order:
     table_no: Bàn số %{no}
     commit: Xác nhận
@@ -34,6 +43,7 @@ vi:
     mark_ready: Sẵn sàng
     mark_served: Đã phục vụ
     mark_paid: Đã thu tiền
+    save: Lưu
     confirm:
       "yes": Đúng
       "no": Không
