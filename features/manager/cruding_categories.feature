@@ -31,3 +31,27 @@ Feature: CRUD-ing categories
     And I choose "Lưu"
     Then I see "Food"
     But I do not see "Đồ ăn"
+
+  Scenario: Cancel editing a category
+    Given these categories exists:
+      |name|
+      |Đồ ăn|
+      |Đồ uống|
+    Given I am on the categories page
+    And I choose "Đồ ăn"
+    And I assign the category name to "Food"
+    And I choose "Quay lại"
+    Then I see "Đồ uống"
+    And I see "Đồ ăn"
+
+  Scenario: Destroy a category
+    Given these categories exists:
+      |name|
+      |Đồ ăn|
+      |Đồ uống|
+    And I am on the categories page
+    When I choose "Đồ ăn"
+    And I choose "Xóa"
+    And I confirm the dialog with "Đúng"
+    Then I see "Đồ uống"
+    But I do not see "Đồ ăn"

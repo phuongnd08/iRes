@@ -28,14 +28,14 @@
               = render "order_items/viewed_by_waiter", :f => builder
         - if @order.modifiable?
           %br
-          %div= f.submit t("order.commit"), {"data-role" => "button" }
+          %div= f.submit t("buttons.commit"), {"data-role" => "button" }
           - if @order.can_be_removed?
-            %div= link_to t("order.cancel"), order_path(@order), :method => :delete, :confirm => t("order.cancelled_confirmation"), "data-role" => "button", "data-icon" => "delete"
+            %div= link_to t("buttons.cancel"), order_path(@order), :method => :delete, :confirm => t("order.cancelled_confirmation"), "data-role" => "button", "data-icon" => "delete"
       - new_order_item_template = capture do
         - Ajaxifier.enable do
           = f.fields_for(:order_items, f.object.order_items.new, :child_index => "%{child_index}") do |builder|
             = render "order_items/viewed_by_waiter", :f => builder
       %div
-        %a#cancel_btn{ :href => "#", "data-role" => "button", "data-rel" => "back" }= t("order.back")
+        = link_to t("buttons.back"), "#", "data-role" => "button", "data-rel" => "back"
       :javascript
         var newOrderItemTemplate = #{new_order_item_template.to_json}

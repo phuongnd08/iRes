@@ -38,23 +38,23 @@ end
 
 When /^I commit the order$/ do
   within_ordered_section do
-    click_on I18n.t("order.commit")
+    click_on I18n.t("buttons.commit")
   end
 end
 
 When /^I stop committing the order$/ do
-  click_on I18n.t("order.back")
+  click_on I18n.t("buttons.back")
 end
 
 When /^I try to cancel the order$/ do
   within_ordered_section do
-    click_on I18n.t("order.cancel")
+    click_on I18n.t("buttons.cancel")
   end
 end
 
 Then /^I cannot cancel the order$/ do
   within_ordered_section do
-    page.should have_no_link(I18n.t("order.cancel"))
+    page.should have_no_link(I18n.t("buttons.cancel"))
   end
 end
 

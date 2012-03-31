@@ -18,13 +18,10 @@ vi:
       edit: Sửa catalog
       add: Thêm catalog
       name: Tên
+      delete_confirmation: Xóa catalog này?
 
   order:
     table_no: Bàn số %{no}
-    commit: Xác nhận
-    back: Quay lại
-
-    cancel: Hủy
     pending_header: Những order đang chờ
     paid_header: Những order đã thu tiền
     header: "Order: Bàn số %{table_no}"
@@ -44,6 +41,10 @@ vi:
     mark_served: Đã phục vụ
     mark_paid: Đã thu tiền
     save: Lưu
+    commit: Xác nhận
+    back: Quay lại
+    cancel: Hủy
+    delete: Xóa
     confirm:
       "yes": Đúng
       "no": Không

@@ -50,11 +50,11 @@ Then /^I cannot add item to the order$/ do
 end
 
 Then /^I cannot delete the order$/ do
-  page.should have_no_link I18n.t("order.cancel")
+  page.should have_no_link I18n.t("buttons.cancel")
 end
 
 Then /^I cannot commit the order$/ do
-  page.should have_no_button I18n.t("order.commit")
+  page.should have_no_button I18n.t("buttons.commit")
 end
 
 Then /^I see timing of order (\d+) reported as "([^"]*)"$/ do |table_number, time_string|
