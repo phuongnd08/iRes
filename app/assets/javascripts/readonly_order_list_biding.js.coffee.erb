@@ -26,22 +26,25 @@ $(document).delegate '.navigator_page', "pagecreate", ->
   orderLI = (order)->
     ordersUL().find('[data-order-id=' + order.order_id + ']')
 
-  revenueSpan = () => $(this).find('.collected_revenue')
+  focusedDate = $(this).attr('data-date')
+  revenueSpan = $(this).find('.collected_revenue')
+
   revenue = (newRevenue) ->
     if typeof newRevenue == "number"
-      revenueSpan().text(newRevenue.toString())
+      revenueSpan.text(newRevenue.toString())
     else
-      parseInt(revenueSpan().text())
+      parseInt(revenueSpan.text())
 
   processOrders = (orders, withEffect = true) ->
     removeFunction = if withEffect then "fadeOutAndRemove" else "remove"
     lastAddedOrUpdatedOrder = null
     for order in orders
-      if order.deleted || !order.shown_to[role]
-        orderLI(order)[removeFunction]()
-      else
-        addOrUpdate(lastAddedOrUpdatedOrder = order)
-        revenue(revenue() + order.revenue_increment)
+      if order.created_on == focusedDate
+        if order.deleted || !order.shown_to[role]
+          orderLI(order)[removeFunction]()
+        else
+          addOrUpdate(lastAddedOrUpdatedOrder = order)
+          revenue(revenue() + order.revenue_increment)
 
     if lastAddedOrUpdatedOrder
       ordersUL().listview('refresh').trigger('create')

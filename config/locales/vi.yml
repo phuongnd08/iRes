@@ -6,6 +6,9 @@ vi:
     header: Đầu bếp
   manager:
     header: Quản lí
+  dates:
+    today: Hôm nay
+    yesterday: Hôm qua
 
   order:
     table_no: Bàn số %{no}

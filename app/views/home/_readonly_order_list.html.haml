@@ -1,16 +1,27 @@
-.navigator_page{ :id => role + "_page", "data-role" => "page", :"data-viewer-role" => role, :"data-url" => request.fullpath }
+.navigator_page{ :id => role + "_page",
+:"data-role" => "page", :"data-viewer-role" => role,
+:"data-url" => request.fullpath,
+:"data-date" => focused_date.strftime(Order::DATE_FORMAT) }
   %div{ "data-role" => "header" }
     %h1= t(role + ".header")
+  %div{ "data-role" => "navbar", "data-theme" => "a" }
+    %ul
+      - dates_to_display.each do |(date, display_as), direction|
+        %li{ :"data-date" => date }
+          = link_to display_as, send(:"#{role}_path", :date => date),
+            :class => direction == 0 ? "ui-btn-active ui-state-persist" : "",
+            :"data-theme" => "a",
+            :"data-direction" => direction < 0 ? "reverse" : ""
   .content{ "data-role"  => "content" }
     - if role.waiter?
       %a{ :href => new_order_path, "data-role" => "button" }= t("waiter.order")
     - if role.manager?
       = t("order.collected_revenue")
-      %span.collected_revenue= Order.paid.sum(:total_price)
+      %span.collected_revenue= orders.sum(:total_price)
   .content{ "data-role" => "content" }
     %ul#orders{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
       %li{"data-role" => "list-divider", :role => "heading"}= role.manager? ? t("order.paid_header") : t("order.pending_header")
-      = render :partial => "orders/readonly_details", :collection => Order.shown_to(role), :as => :order, :locals => { :role => role }
+      = render :partial => "orders/readonly_details", :collection => orders, :as => :order, :locals => { :role => role }
 
 - order_template = capture do
   - Ajaxifier.enable do

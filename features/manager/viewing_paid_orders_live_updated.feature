@@ -15,3 +15,16 @@ Feature: Viewing paid orders live updated
     When the order is paid at 11:00
     Then I see "Order: Bàn số 2"
     And I see timing of order 2 reported as "9:00 (11:00)"
+
+  Scenario: View paid order of previous days
+    Given an order of table 1 is committed yesterday
+    And the order is paid
+    And I'm on manager page
+    Then I do not see "Order: Bàn số 1"
+    When I switch to yesterday statistics
+    Then I see "Order: Bàn số 1"
+    When an order of table 2 is committed
+    And the order is paid
+    Then I do not see "Order: Bàn số 2"
+    When I switch to today statistics
+    Then I see "Order: Bàn số 2"

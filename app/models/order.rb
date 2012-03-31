@@ -1,4 +1,6 @@
 class Order < ActiveRecord::Base
+  DATE_FORMAT = "%Y-%m-%d"
+  TIME_FORMAT = "%H:%M"
   has_many :order_items, :dependent => :destroy
   accepts_nested_attributes_for :order_items, :allow_destroy => true
   before_save :update_total_price
@@ -12,6 +14,7 @@ class Order < ActiveRecord::Base
   scope :pending, where { (served != true) | (paid != true) }
   scope :paid, where { paid == true }
   scope :nonready, where { ready != true }
+  scope :created_on, lambda { |date| where { (created_at >= date.beginning_of_day) & (created_at <= date.end_of_day) } }
 
   class << self
     def shown_to(role)
@@ -61,8 +64,8 @@ class Order < ActiveRecord::Base
     if use_placeholder?
       "%{timing}"
     else
-      created_at.localtime.strftime("%H:%M").tap do |timing|
-        timing << " (#{paid_at.localtime.strftime("%H:%M")})" if paid
+      created_at.localtime.strftime(TIME_FORMAT).tap do |timing|
+        timing << " (#{paid_at.localtime.strftime(TIME_FORMAT)})" if paid
       end
     end
   end
@@ -194,9 +197,19 @@ class Order < ActiveRecord::Base
     order_items.reject(&:marked_for_destruction?).all?(&:ready)
   end
 
-  def push_attributes
+  def created_on
+    created_at.strftime(Order::DATE_FORMAT)
+  end
+
+  def basic_push_attributes
     {
       :order_id => order_id,
+      :created_on => created_on,
+    }
+  end
+
+  def full_push_attributes
+    basic_push_attributes.merge!({
       :order_name => name,
       :timing => timing,
       :order_serve_icon => serve_icon,
@@ -213,21 +226,19 @@ class Order < ActiveRecord::Base
       :completed => completed?,
       :paid => paid,
       :ready => ready
-    }
+    })
   end
 
   def notify_order_created
-    PubSub.publish(Order.channel, push_attributes.merge({
-      :created => true
-    }))
+    PubSub.publish(Order.channel, full_push_attributes.merge(:created => true))
   end
 
   def notify_order_destroyed
-    PubSub.publish(Order.channel, { :order_id => order_id, :deleted => true })
+    PubSub.publish(Order.channel, basic_push_attributes.merge(:deleted => true))
   end
 
   def notify_order_updated
-    attributes = push_attributes.merge(:updated => true)
+    attributes = full_push_attributes.merge(:updated => true)
     attributes.merge!(:order_items => order_items.reject(&:marked_for_destruction?).map(&:push_attributes)) if !ready && ready_changed?
     PubSub.publish(Order.channel, attributes)
   end

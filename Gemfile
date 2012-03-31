@@ -46,6 +46,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'ruby-debug19', :require => 'ruby-debug'
   gem 'jasminerice', :git => 'git@github.com:phuongnd08/jasminerice.git'
+  gem 'chronic'
 end
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
