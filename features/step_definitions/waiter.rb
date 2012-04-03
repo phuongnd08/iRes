@@ -16,10 +16,6 @@ def within_ordering_section
   end
 end
 
-When /^I choose "([^"]*)"$/ do |text|
-  click_on text
-end
-
 When /^I choose item "([^"]*)"$/ do |text|
   within_ordering_section do
     click_on text

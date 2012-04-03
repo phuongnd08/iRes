@@ -1,0 +1,7 @@
+.content{ "data-role" => "content" }
+  %ul#items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
+    %li{ "data-role" => "list-divider" }= t(".items")
+    - @category.items.each do |item|
+      %li= link_to item.name, edit_item_path(item)
+.content{ "data-role" => "content" }
+  = link_to t(".add"), new_item_path(:category_id => @category.id), :"data-role" => "button"

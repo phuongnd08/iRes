@@ -1,3 +1,7 @@
+When /^I choose "([^"]*)"$/ do |text|
+  click_on text
+end
+
 Then /^I'm presented with the ([\w\s]+) page$/ do |path_name|
   expected_path = case path_name
                   when "new order" then new_order_path

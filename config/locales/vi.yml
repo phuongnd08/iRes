@@ -20,6 +20,16 @@ vi:
       name: Tên
       delete_confirmation: Xóa catalog này?
 
+  items:
+    index:
+      items: Danh sách món
+      add: Thêm món
+    form:
+      edit: Sửa món
+      add: Thêm món
+      name: Tên
+      delete_confirmation: Xóa món này?
+
   order:
     table_no: Bàn số %{no}
     pending_header: Những order đang chờ

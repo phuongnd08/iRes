@@ -1,4 +1,4 @@
-#categories_page{ :"data-role" => "page", :"data-url" => request.fullpath }
+#category_page{ :"data-role" => "page", :"data-url" => request.fullpath }
   %div{ "data-role" => "header" }
     %h1= @category.persisted? ? t(".edit") : t(".add")
   .content{ :"data-role" => "content" }
@@ -12,9 +12,11 @@
 
       .fields
         %div= f.text_field :name, :placeholder => t(".name")
-        .actions{"data-role" => "controlgroup"}
-      .actions
-        = link_to t("buttons.back"), "#", "data-role" => "button", "data-rel" => "back"
+      .actions{ :"data-role" => "controlgroup", :"data-type" => "horizontal" }
+        = link_to t("buttons.back"), "#", :"data-role" => "button", :"data-rel" => "back"
         = f.submit t("buttons.save")
         - if @category.persisted?
           = link_to t("buttons.delete"), category_path(@category), :method => :delete, :confirm => t(".delete_confirmation"), "data-role" => "button", "data-icon" => "delete"
+
+  .content{ :"data-role" => "content" }
+    = render "items/index", :category => @category

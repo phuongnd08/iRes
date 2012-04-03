@@ -17,6 +17,7 @@ IRes::Application.routes.draw do
   end
 
   resources :categories
+  resources :items
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

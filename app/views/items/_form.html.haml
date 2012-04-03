@@ -1,0 +1,23 @@
+#item_page{ :"data-role" => "page", :"data-url" => request.fullpath }
+  %div{ "data-role" => "header" }
+    %h1= @item.persisted? ? t(".edit") : t(".add")
+  .content{ :"data-role" => "content" }
+    = form_for @item do |f|
+      -if @item.errors.any?
+        #error_explanation
+          %h2= "#{pluralize(@item.errors.count, "error")} prohibited this item from being saved:"
+          %ul
+            - @item.errors.full_messages.each do |msg|
+              %li= msg
+
+      .fields
+        - unless @item.persisted?
+          %div= f.hidden_field :category_id
+        %div= f.text_field :name, :placeholder => t(".name")
+      .actions{ :"data-role" => "controlgroup", :"data-type" => "horizontal" }
+        = link_to t("buttons.back"), "#", :"data-role" => "button", :"data-rel" => "back"
+        = f.submit t("buttons.save")
+        - if @item.persisted?
+          = link_to t("buttons.delete"), item_path(@item), :method => :delete, :confirm => t(".delete_confirmation"), "data-role" => "button", "data-icon" => "delete"
+
+
