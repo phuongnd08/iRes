@@ -4,6 +4,9 @@
 :"data-date" => focused_date.strftime(Order::DATE_FORMAT) }
   %div{ "data-role" => "header" }
     %h1= t(role + ".header")
+    - if role.manager?
+      = link_to t("manager.categories_management"), categories_path,
+        :"data-icon" => "gear", :"data-iconpos" => "notext"
   %div{ "data-role" => "navbar", "data-theme" => "a" }
     %ul
       - dates_to_display.each do |(date, display_as), direction|
