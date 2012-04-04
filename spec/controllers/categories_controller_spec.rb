@@ -136,12 +136,12 @@ describe CategoriesController do
         assigns(:category).should eq(category)
       end
 
-      it "re-renders the 'edit' template" do
+      it "re-renders the 'show' template" do
         category = Category.create! valid_attributes
         # Trigger the behavior that occurs when invalid params are submitted
         Category.any_instance.stub(:save).and_return(false)
         put :update, {:id => category.to_param, :category => {}}, valid_session
-        response.should render_template("edit")
+        response.should render_template("show")
       end
     end
   end

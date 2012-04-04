@@ -1,6 +1,5 @@
 #item_page{ :"data-role" => "page", :"data-url" => request.fullpath }
-  %div{ "data-role" => "header" }
-    %h1= @item.persisted? ? t(".edit") : t(".add")
+  = backable_header(@item.persisted? ? t(".edit") : t(".add"))
   .content{ :"data-role" => "content" }
     = form_for @item do |f|
       -if @item.errors.any?

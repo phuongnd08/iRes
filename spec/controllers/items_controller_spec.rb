@@ -42,7 +42,7 @@ describe ItemsController do
 
       it "redirects to the category" do
         post :create, {:item => valid_attributes}
-        response.should redirect_to(edit_category_path(category))
+        response.should redirect_to(category)
       end
     end
 
@@ -71,7 +71,7 @@ describe ItemsController do
 
       it "redirects to the category page" do
         put :update, {:id => item.to_param, :item => valid_attributes}
-        response.should redirect_to(edit_category_path(category))
+        response.should redirect_to(category)
       end
     end
 
@@ -100,7 +100,7 @@ describe ItemsController do
 
     it "redirects to the category page" do
       delete :destroy, {:id => item.to_param}
-      response.should redirect_to(edit_category_path(category))
+      response.should redirect_to(category)
     end
   end
 

@@ -9,7 +9,8 @@ Feature: CRUD-ing categories
       |name|
       |Đồ ăn|
       |Đồ uống|
-    Given I am on the categories page
+    And I am on manager page
+    And I choose "Chỉnh sửa catalog"
     Then I see "Đồ ăn"
     And I see "Đồ uống"
 
@@ -27,6 +28,7 @@ Feature: CRUD-ing categories
       |Đồ ăn|
     Given I am on the categories page
     And I choose "Đồ ăn"
+    And I choose "Chỉnh sửa hoặc xóa"
     And I assign the category name to "Food"
     And I choose "Lưu"
     Then I see "Food"
@@ -39,6 +41,7 @@ Feature: CRUD-ing categories
       |Đồ uống|
     Given I am on the categories page
     And I choose "Đồ ăn"
+    And I choose "Chỉnh sửa hoặc xóa"
     And I assign the category name to "Food"
     And I choose "Quay lại"
     Then I see "Đồ uống"
@@ -51,6 +54,7 @@ Feature: CRUD-ing categories
       |Đồ uống|
     And I am on the categories page
     When I choose "Đồ ăn"
+    And I choose "Chỉnh sửa hoặc xóa"
     And I choose "Xóa"
     And I confirm the dialog with "Đúng"
     Then I see "Đồ uống"

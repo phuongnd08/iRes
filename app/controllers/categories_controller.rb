@@ -29,7 +29,7 @@ class CategoriesController < ApplicationController
     if @category.update_attributes(params[:category])
       redirect_to categories_path, notice: 'Category was successfully updated.'
     else
-      render action: "edit"
+      render action: "show"
     end
   end
 

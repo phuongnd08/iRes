@@ -6,6 +6,7 @@ vi:
     header: Đầu bếp
   manager:
     header: Quản lí
+    categories_management: Chỉnh sửa catalog
   dates:
     today: Hôm nay
     yesterday: Hôm qua
@@ -14,9 +15,11 @@ vi:
     index:
       header: Catalog
       add: Thêm catalog
+    new:
+      header: Thêm catalog
+    show:
+      edit: Chỉnh sửa hoặc xóa
     form:
-      edit: Sửa catalog
-      add: Thêm catalog
       name: Tên
       delete_confirmation: Xóa catalog này?
 

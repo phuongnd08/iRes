@@ -1,9 +1,8 @@
 #categories_page{ :"data-role" => "page", :"data-url" => request.fullpath }
-  %div{ "data-role" => "header" }
-    %h1= t(".header")
+  = backable_header t(".header")
   .content{ "data-role" => "content" }
     %ul#categories{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
       - @categories.each do |category|
-        %li= link_to category.name, edit_category_path(category)
+        %li= link_to category.name, category
   .content{ "data-role" => "content" }
     = link_to t(".add"), new_category_path, :"data-role" => "button"

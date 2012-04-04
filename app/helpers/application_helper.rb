@@ -25,4 +25,14 @@ module ApplicationHelper
       hash.merge! [date.strftime("%Y-%m-%d"), friendly_date_str(date)] => (date <=> focused_date)
     end
   end
+
+  def backable_header(title)
+    extra = if block_given?
+              yield
+            else
+              ""
+            end
+
+    render "shared/backable_header", :title => title, :extra => extra
+  end
 end

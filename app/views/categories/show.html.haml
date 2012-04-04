@@ -1,0 +1,7 @@
+#category_page{ :"data-role" => "page", :"data-url" => request.fullpath }
+  = backable_header(@category.name)
+  .content{ :"data-role" => "content" }
+    .content{ :"data-role" => "collapsible" }
+      %h3= t(".edit")
+      %p= render 'form'
+  = render "items/index", :category => @category
