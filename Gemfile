@@ -29,6 +29,7 @@ end
 
 gem 'jquery-rails'
 gem 'haml-rails'
+gem 'spreadsheet'
 
 group :test do
   gem 'capybara'
@@ -45,7 +46,7 @@ end
 group :development, :test do
   gem 'rspec-rails'
   gem 'ruby-debug19', :require => 'ruby-debug'
-  gem 'jasminerice', :git => 'git@github.com:phuongnd08/jasminerice.git'
+  gem 'jasminerice'
   gem 'chronic'
 end
 # To use ActiveModel has_secure_password

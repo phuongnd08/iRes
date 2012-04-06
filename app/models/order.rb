@@ -126,6 +126,10 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def created_on
+    created_at.strftime(Order::DATE_FORMAT)
+  end
+
   def ready=(ready)
     if ready != self.ready
       super
@@ -195,10 +199,6 @@ class Order < ActiveRecord::Base
 
   def recalculate_ready
     order_items.reject(&:marked_for_destruction?).all?(&:ready)
-  end
-
-  def created_on
-    created_at.strftime(Order::DATE_FORMAT)
   end
 
   def basic_push_attributes

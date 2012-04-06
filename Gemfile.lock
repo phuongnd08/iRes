@@ -1,10 +1,3 @@
-GIT
-  remote: git@github.com:phuongnd08/jasminerice.git
-  revision: 9e7890c3f3acdd23ae094d9a728864031b8cca62
-  specs:
-    jasminerice (0.0.8)
-      haml
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -101,6 +94,8 @@ GEM
     i18n (0.6.0)
     i18n-js (2.1.2)
       i18n
+    jasminerice (0.0.8)
+      haml
     journey (1.0.1)
     jquery-rails (2.0.0)
       railties (>= 3.2.0.beta, < 5.0)
@@ -166,6 +161,7 @@ GEM
       columnize (>= 0.3.1)
       linecache19 (>= 0.5.11)
       ruby-debug-base19 (>= 0.11.19)
+    ruby-ole (1.2.11.3)
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
     rubyzip (0.9.5)
@@ -181,6 +177,8 @@ GEM
       rubyzip
     settingslogic (2.0.8)
     spork (0.9.0)
+    spreadsheet (0.6.8)
+      ruby-ole (>= 1.0)
     sprockets (2.1.2)
       hike (~> 1.2)
       rack (~> 1.0)
@@ -223,7 +221,7 @@ DEPENDENCIES
   haml-rails
   haml_assets
   i18n-js
-  jasminerice!
+  jasminerice
   jquery-rails
   machinist (>= 2.0.0.beta2)
   mysql2
@@ -233,6 +231,7 @@ DEPENDENCIES
   sass-rails (~> 3.2.3)
   settingslogic
   spork (~> 0.9.0.rc9)
+  spreadsheet
   squeel
   thin
   uglifier (>= 1.0.3)

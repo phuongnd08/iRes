@@ -70,3 +70,7 @@ When /^the order is paid (at \d+:\d+)$/ do |time|
   DataBag.order.update_attribute(:paid, true)
   Time.rspec_reset
 end
+
+Then /^I am able export the order to excel$/ do
+  page.should have_link(I18n.t("buttons.export_to_excel"), :href => order_path(DataBag.order, :format => :xls))
+end

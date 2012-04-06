@@ -45,9 +45,17 @@ vi:
     cancelled_confirmation: Hủy order này?
     collected_revenue: Tiền đã thu
     not_modifiable: Không thể thay đổi order này (Đã thu tiền)
+    total_price: Tổng tính
 
   ordered_items:
     header: Những món đã được gọi
+
+  order_items:
+    category: Catalog
+    item: Món
+    price: Đơn giá
+    quantity: Số lượng
+    total: Thành tiền
 
   buttons:
     mark_ready: Sẵn sàng
@@ -61,6 +69,7 @@ vi:
     confirm:
       "yes": Đúng
       "no": Không
+    export_to_excel: Xuất ra Excel
 
   states:
     ready: Sẵn sàng

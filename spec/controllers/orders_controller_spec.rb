@@ -13,9 +13,32 @@ describe OrdersController do
   end
 
   describe "GET show" do
-    it "assigns the requested order as @order" do
-      get :show, {:id => order.to_param}
-      assigns(:order).should eq(order)
+    let(:order) { Order.make!(:order_items => order_items) }
+    let(:category) { Category.make! }
+    let(:items) { 2.times.map { |index| Item.make!(:category => category, :name => "item ##{index + 1}") } }
+    let(:order_items) { 2.times.map { |index| OrderItem.new(:item => items[index], :price => (index + 1)*10000) } }
+
+    context "html format" do
+      it "assigns the requested order as @order" do
+        get :show, {:id => order.to_param}
+        assigns(:order).should eq(order)
+      end
+    end
+
+    context "excel format" do
+      it "returns an excel file containing order details" do
+        get :show, :id => order.id, :format => :xls
+        io = StringIO.new
+        io.write(response.body)
+        io.seek 0
+        book = Spreadsheet.open(io)
+        rows = book.worksheets.first.map { |row| row.join(',') }.join("\n")
+        rows.should include(order.name)
+        rows.should include(category.name)
+        items.each { |item| rows.should include(item.name) }
+        order_items.each { |order_item| rows.should include(order_item.price.to_s) }
+        rows.should include(order_items.map(&:price).sum.to_s)
+      end
     end
   end
 

@@ -12,7 +12,36 @@ class OrdersController < ApplicationController
     end
   end
 
-  def show; end
+  def show
+    respond_to do |format|
+      format.html {}
+      format.xls do
+        Spreadsheet::Workbook.new.tap do |book|
+          book.create_worksheet.tap do |sheet|
+            row = 0
+            sheet[row, 0] = @order.name
+            sheet[row, 1] = @order.created_on
+            sheet[row += 1, 0] = t("order_items.category")
+            sheet[row, 1] = t("order_items.item")
+            sheet[row, 2] = t("order_items.price")
+            @order.order_items.each_with_index do |order_item, index|
+              sheet[row += 1, 0] = order_item.item.category.name
+              sheet[row, 1] = order_item.item_name
+              sheet[row, 2] = order_item.price
+            end
+            sheet[row += 1, 0] = t("order.total_price")
+            sheet[row, 2] = @order.total_price
+          end
+
+          StringIO.new.tap do |io|
+            book.write io
+            io.seek 0
+            send_data io.read, content_type: 'application/vnd.ms-excel', filename: "#{@order.id}.xls"
+          end
+        end
+      end
+    end
+  end
 
   # GET /orders/new
   # GET /orders/new.json
