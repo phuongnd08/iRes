@@ -18,6 +18,10 @@ When /^I assign the item name to "([^"]*)"$/ do |name|
   fill_in "item_name", :with => name
 end
 
+When /^I assign the item price to "(\d+)"$/ do |price|
+  fill_in "item_price", :with => price
+end
+
 Then /^category "([^"]*)" has item "([^"]*)"$/ do |category_name, item_name|
   Item.find_by_name(item_name).tap do |item|
     item.should_not be_nil

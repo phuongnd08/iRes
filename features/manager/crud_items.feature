@@ -15,15 +15,19 @@ Feature: CRUD-ing items
   Scenario: Add an item
     When I choose "Thêm món"
     And I assign the item name to "Mực nướng"
+    And I assign the item price to "10000"
     And I choose "Lưu"
     Then I see "Mực nướng"
+    And I see "10000"
     And category "Đồ ăn" has item "Mực nướng"
 
   Scenario: Edit an item
     When I choose "Bún bò"
     And I assign the item name to "Vermicelli"
+    And I assign the item price to "20000"
     And I choose "Lưu"
     Then I see "Vermicelli"
+    And I see "20000"
     But I do not see "Bún bò"
 
   Scenario: Cancel editing a category

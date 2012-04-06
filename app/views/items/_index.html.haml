@@ -2,6 +2,10 @@
   %ul#items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
     %li{ "data-role" => "list-divider" }= t(".items")
     - @category.items.each do |item|
-      %li= link_to item.name, edit_item_path(item)
+      %li
+        %a{ :href => edit_item_path(item) }
+          %span.name= item.name
+          %span.ui-li-count= item.price
+
 .content{ "data-role" => "content" }
   = link_to t(".add"), new_item_path(:category_id => @category.id), :"data-role" => "button"
