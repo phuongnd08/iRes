@@ -26,8 +26,8 @@
       %li{"data-role" => "list-divider", :role => "heading"}= role.manager? ? t("order.paid_header") : t("order.pending_header")
       = render :partial => "orders/readonly_details", :collection => orders, :as => :order, :locals => { :role => role }
 
-- order_template = capture do
-  - Ajaxifier.enable do
-    = render "orders/readonly_details", :order => Order.new, :role => role
-:javascript
-  var orderTemplate = #{order_template.to_json};
+  - order_template = capture do
+    - Ajaxifier.enable do
+      = render "orders/readonly_details", :order => Order.new, :role => role
+  :javascript
+    var orderTemplate = #{order_template.to_json};
