@@ -71,7 +71,8 @@ $(document).delegate '.navigator_page', "pagecreate", ->
   formatAllListItems()
 
   if window.Faye && Faye.Client
-    vars.pubSubClient = new Faye.Client(<%= ServicesSettings.pubsub.mount_point.to_json %>)
+    #reuse client to avoid memory leaks
+    vars.pubSubClient ||= new Faye.Client(pubsubMountpoint)
     vars.pubSubClient.subscribe ordersChannel, (order) ->
       if vars.visible
         processOrders([order])

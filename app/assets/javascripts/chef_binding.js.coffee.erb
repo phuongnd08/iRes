@@ -1,7 +1,7 @@
 $(document).delegate "#chef_orders_page", "pagecreate", ->
   orderItemsChannel = <%= OrderItem.channel.to_json %>
   ordersChannel = <%= Order.channel.to_json %>
-  pubsubClient = new Faye.Client("<%= ServicesSettings.pubsub.mount_point %>")
+  pubsubClient = new Faye.Client(pubsubMountpoint)
   backlog = {}
 
   $(li).formatListItem() for li in $('#chef_orders_page ul.order_items li[data-order-item-id]')
