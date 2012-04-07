@@ -20,7 +20,7 @@ describe "Waiter", ->
       it "puts item in ordered list", ->
         Waiter.addItem(1, "Drink1", 15000)
         expect($('#ordered li:first')).toExist()
-        expect($('#ordered li:first a span').text()).toEqual("Drink1")
+        expect($('#ordered li:first a:first span:first').text()).toEqual("Drink1")
 
       it "reupdates number of items indicator", ->
         Waiter.addItem(1, "Drink1", 15000)
