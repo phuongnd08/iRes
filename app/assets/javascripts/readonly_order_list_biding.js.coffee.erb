@@ -29,29 +29,25 @@ $(document).delegate '.navigator_page', "pagecreate", ->
   focusedDate = $(this).attr('data-date')
   revenueSpan = $(this).find('.collected_revenue')
 
+  for li in ordersUL().find('li[data-order-id]')
+    $(li).formatListItem()
+
   revenue = (newRevenue) ->
     if typeof newRevenue == "number"
       revenueSpan.text(newRevenue.toString())
     else
       parseInt(revenueSpan.text())
 
-  processOrders = (orders, withEffect = true) ->
-    removeFunction = if withEffect then "fadeOutAndRemove" else "remove"
-    lastAddedOrUpdatedOrder = null
-    for order in orders
-      if order.created_on == focusedDate
-        if order.deleted || !order.shown_to[role]
-          orderLI(order)[removeFunction]()
-        else
-          addOrUpdate(lastAddedOrUpdatedOrder = order)
-          revenue(revenue() + order.revenue_increment)
-
-    if lastAddedOrUpdatedOrder
-      ordersUL().listview('refresh').trigger('create')
-      formatAllListItems()
-      if withEffect
-        highlightOrderLI orderLI(lastAddedOrUpdatedOrder)
-        orderLI(order).blinkAndShow()
+  processOrder = (order) ->
+    if order.created_on == focusedDate
+      if order.deleted || !order.shown_to[role]
+        orderLI(order).fadeOutAndRemove()
+      else
+        addOrUpdate(order)
+        revenue(revenue() + order.revenue_increment)
+        ordersUL().listview('refresh').trigger('create')
+        highlightOrderLI orderLI(order)
+        orderLI(order).formatListItem().blinkAndShow()
 
   addOrUpdate = (order) ->
     if order.paid
@@ -64,17 +60,8 @@ $(document).delegate '.navigator_page', "pagecreate", ->
     else
       $(orderTemplate.gsub order).appendTo(ordersUL())
 
-  formatAllListItems = ->
-    for li in ordersUL().find('li[data-order-id]')
-      $(li).formatListItem()
-
-  formatAllListItems()
-
   if window.Faye && Faye.Client
     #reuse client to avoid memory leaks
     vars.pubSubClient ||= new Faye.Client(pubsubMountpoint)
     vars.pubSubClient.subscribe ordersChannel, (order) ->
-      processOrders([order])
-
-  $(this).bind "pageremove", ->
-    vars.pubSubClient.unsubscribe()
+      processOrder(order)
