@@ -38,22 +38,25 @@ describe Order do
       order.order_items[1].item.should == item2
     end
 
-    context "updated" do
-      it "notifys order is updated" do
-        OrderItem.any_instance.stub(:notify_order_item_updated)
-        PubSub.should_receive(:publish) do |channel, order_info|
-          channel.should == Order.channel
-          order_info[:order_id].should == order.id
-          order_info[:updated].should be_true
-          order_info[:ready].should be_true
-        end
+    it "notifys order is updated" do
+      OrderItem.any_instance.stub(:notify_order_item_updated)
+      PubSub.should_receive(:publish) do |channel, order_info|
+        channel.should == Order.channel
+        order_info[:order_id].should == order.id
+        order_info[:updated].should be_true
+        order_info[:ready].should be_true
+      end
+      order.update_attribute(:ready, true)
+    end
+
+    context "order is ready" do
+      before do
+        order.reload
         order.update_attribute(:ready, true)
       end
 
-      context "when ready changed to false" do
+      context "when new items added" do
         before do
-          order.reload
-          order.update_attribute(:ready, true)
           order.order_items_attributes = {
             1 => { :item_id => item3.id },
             2 => { :item_id => item4.id }
