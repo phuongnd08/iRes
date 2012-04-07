@@ -74,15 +74,7 @@ $(document).delegate '.navigator_page', "pagecreate", ->
     #reuse client to avoid memory leaks
     vars.pubSubClient ||= new Faye.Client(pubsubMountpoint)
     vars.pubSubClient.subscribe ordersChannel, (order) ->
-      if vars.visible
-        processOrders([order])
-      else
-        vars.backlog.push order
+      processOrders([order])
 
-  $(this).bind "pageshow", ->
-    vars.visible = true
-    processOrders(vars.backlog, false) if vars.backlog
-
-  $(this).bind "pagehide", ->
-    vars.visible = false
-    vars.backlog = []
+  $(this).bind "pageremove", ->
+    vars.pubSubClient.unsubscribe()
