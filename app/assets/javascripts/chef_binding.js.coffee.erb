@@ -1,7 +1,7 @@
 $(document).delegate "#chef_orders_page", "pagecreate", ->
   orderItemsChannel = <%= OrderItem.channel.to_json %>
   ordersChannel = <%= Order.channel.to_json %>
-  pubsubClient = new Faye.Client(pubsubMountpoint)
+  pubsubClient = null
   backlog = {}
 
   $(li).formatListItem() for li in $('#chef_orders_page ul.order_items li[data-order-item-id]')
@@ -32,8 +32,6 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
             orderUL(order.order_id).listview('refresh').blinkAndShow()
             $(li).formatListItem() for li in orderUL(order.order_id).find('li[data-order-item-id]')
 
-  pubsubClient.subscribe ordersChannel, processOrder
-
   orderItemLI = (orderItem) ->
     $("#chef_orders_page ul.order_items").find("[data-order-item-id=" + orderItem.order_item_id + "]")
 
@@ -59,4 +57,7 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
         backlog[orderItem.order_id] ||= []
         backlog[orderItem.order_id].push(orderItem)
 
-  pubsubClient.subscribe orderItemsChannel, processOrderItem
+  if window.Faye
+    pubsubClient = new Faye.Client(pubsubMountpoint)
+    pubsubClient.subscribe ordersChannel, processOrder
+    pubsubClient.subscribe orderItemsChannel, processOrderItem
