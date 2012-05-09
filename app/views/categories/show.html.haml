@@ -1,5 +1,5 @@
 #category_page{ :"data-role" => "page", :"data-url" => request.fullpath }
-  = backable_header(@category.name)
+  = backable_header @category.name, categories_path
   .content{ :"data-role" => "content" }
     .content{ :"data-role" => "collapsible" }
       %h3= t(".edit")

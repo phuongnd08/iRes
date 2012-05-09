@@ -1,5 +1,5 @@
 #categories_page{ :"data-role" => "page", :"data-url" => request.fullpath }
-  = backable_header t(".header")
+  = backable_header t(".header"), manager_path
   .content{ "data-role" => "content" }
     %ul#categories{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
       - @categories.each do |category|

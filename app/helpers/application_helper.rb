@@ -26,13 +26,13 @@ module ApplicationHelper
     end
   end
 
-  def backable_header(title)
+  def backable_header(title, path)
     extra = if block_given?
               yield
             else
               ""
             end
 
-    render "shared/backable_header", :title => title, :extra => extra
+    render "shared/backable_header", :title => title, :path => path, :extra => extra
   end
 end
