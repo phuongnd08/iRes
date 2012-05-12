@@ -1,0 +1,11 @@
+environment: production
+chdir: ./
+address: 0.0.0.0
+port: 3000
+pid: ./tmp/thin.pid
+rackup: ./config.ru
+log: ./log/thin.log
+max_conns: 1024
+timeout: 30
+max_persistent_conns: 512
+daemonize: true
