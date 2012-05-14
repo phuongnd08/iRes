@@ -1,3 +1,4 @@
+TOAST_SHOW_TIME = 3000
 $.fn.toast = ->
   this.addClass('ui-toast')
   $('body').trigger('showToast') # hide all active toasts
@@ -11,21 +12,19 @@ $.fn.toast = ->
 
     this.css('top', top+'px')
     this.css('left', left+'px')
-    this.fadeIn().delay(3000).fadeOut('slow')
-  handlers.hide = =>
-    this.stop(true).hide()
-    $('body').off('showToast', handlers.hide)
+    this.fadeIn().delay(TOAST_SHOW_TIME).fadeOut('slow', -> handlers.remove())
+  handlers.remove = =>
+    this.stop(true).remove()
+    $('body').off('showToast', handlers.remove)
     delete handlers.show
-    delete handlers.hide
+    delete handlers.remove
 
-  $('body').on('showToast', handlers.hide)
+  $('body').on('showToast', handlers.remove)
   handlers.show()
 
-toastContainer = null
-
 $.toast = (title, msg) ->
-  if !toastContainer
-    toastContainer = $('<div><h1 class="title"></h1><div class="msg"></div><div>').appendTo('body')
-  toastContainer.find('.title').text(title)
-  toastContainer.find('.msg').text(msg)
-  toastContainer.toast()
+  console.warn('toast', title, msg)
+  container = $('<div><h1 class="title"></h1><div class="msg"></div><div>').appendTo('body')
+  container.find('.title').text(title)
+  container.find('.msg').text(msg)
+  container.toast()

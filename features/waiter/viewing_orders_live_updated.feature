@@ -77,3 +77,20 @@ Feature: Viewing orders live updated
     And I see "Order: Bàn số 3"
     But I do not see "Order: Bàn số 1"
     And I see the order of table 2 as paid
+
+  Scenario: Viewing order live updated after a couple of switch back and forth
+    Given I'm on waiter page
+    When I try to order
+    And I choose "Bàn số 1" as table number
+    And I choose item "Bún bò"
+    And I commit the order
+    And I try to order
+    And I choose "Bàn số 2" as table number
+    And I choose item "Bún bò"
+    And I commit the order
+    #Wait for the commit to finish
+    Then I see the order of table 2 as unready
+    When the order of table 1 is ready
+    Then I see toast of "Order: Bàn số 1" with text "Sẵn sàng"
+    Then I see the order of table 1 as ready
+    And I can mark the order of table 1 as served

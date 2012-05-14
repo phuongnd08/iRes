@@ -13,8 +13,8 @@ def within_the_order_as_seen_by_waiter order
 end
 
 Then /^I see the order(?: of table (\d+))? as (un)?(paid|ready|served)$/ do |table_number, negate, state|
-  order = order_of_table(table_number)
   within_orders_as_seen_by_waiter do
+    order = order_of_table(table_number)
     order_css = "[data-order-id='#{order.id}']"
     icon_css =  order_css + " .ui-icon-#{state}"
     if negate
@@ -25,11 +25,16 @@ Then /^I see the order(?: of table (\d+))? as (un)?(paid|ready|served)$/ do |tab
   end
 end
 
-Then /^I cannot mark the order as (served|paid)$/ do |state|
+Then /^I can(not)? mark the order(?: of table (\d+))? as (served|paid)$/ do |negate, table_number, state|
   within_orders_as_seen_by_waiter do
-    order_css = "[data-order-id='#{DataBag.order.id}']"
-    button_css =  order_css + " .ui-icon-#{state}"
-    page.should have_no_css button_css
+    order = order_of_table(table_number)
+    order_css = "[data-order-id='#{order.id}']"
+    button_css =  order_css + " .mark-as-#{state}-btn"
+    if negate
+      page.find(button_css).should_not be_visible
+    else
+      page.find(button_css).should be_visible
+    end
   end
 end
 

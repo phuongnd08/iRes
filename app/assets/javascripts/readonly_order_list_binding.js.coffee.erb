@@ -16,7 +16,7 @@ pageVars = (role) ->
 viewerRole = (page) ->
   $(page).attr("data-viewer-role")
 
-$(document).delegate '.navigator_page', "pagecreate", ->
+$(document).delegate '.navigator_page', "pageinit", ->
   role = viewerRole(this)
   vars = pageVars(role)
 
@@ -49,6 +49,8 @@ $(document).delegate '.navigator_page', "pagecreate", ->
         highlightOrderLI orderLI(order)
         orderLI(order).formatListItem().blinkAndShow()
 
+  window.processOrder = processOrder
+
   addOrUpdate = (order) ->
     if order.paid
       $.toast order.order_name, I18n.t("states.paid")
@@ -61,7 +63,8 @@ $(document).delegate '.navigator_page', "pagecreate", ->
       $(orderTemplate.gsub order).appendTo(ordersUL())
 
   if window.Faye && Faye.Client
-    #reuse client to avoid memory leaks
-    vars.pubSubClient ||= new Faye.Client(pubsubMountpoint)
-    vars.pubSubClient.subscribe ordersChannel, (order) ->
+    pubSubClient = new Faye.Client(pubsubMountpoint)
+    pubSubClient.subscribe ordersChannel, (order) ->
       processOrder(order)
+    $(this).on 'pagehide', ->
+      pubSubClient.unsubscribe ordersChannel

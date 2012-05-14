@@ -1,10 +1,15 @@
 When /^I choose "([^"]*)"$/ do |text|
-  wait_for true do
-    find_link(text).visible?
-  end
-
   click_on text
 end
+
+When /^I try to order$/ do
+  wait_for true do
+    find_link(I18n.t("waiter.order")).visible?
+  end
+
+  find_link(I18n.t("waiter.order")).click
+end
+
 
 Then /^I'm presented with the ([\w\s]+) page$/ do |path_name|
   expected_path = case path_name
