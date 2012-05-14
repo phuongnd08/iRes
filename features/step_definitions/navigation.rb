@@ -1,4 +1,8 @@
 When /^I choose "([^"]*)"$/ do |text|
+  wait_for true do
+    find_link(text).visible?
+  end
+
   click_on text
 end
 
