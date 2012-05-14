@@ -30,13 +30,15 @@ role :web, target_server
 
 namespace :deploy do
   task :start, :roles => [:web, :app] do
+    run "cd #{current_path} && bundle exec thin -C thin/production.yml -R config.ru start"
   end
 
   task :stop, :roles => [:web, :app] do
+    run "cd #{current_path} && bundle exec thin -C thin/production.yml -R config.ru stop"
   end
 
   task :restart, :roles => [:web, :app] do
-    run "touch #{current_path}/tmp/restart.txt"
+    run "cd #{current_path} && bundle exec thin -C thin/production.yml -R config.ru restart"
   end
 end
 
