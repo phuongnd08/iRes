@@ -1,5 +1,9 @@
 require 'spec_helper'
 
 describe Item do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "#enabled" do
+    it "defaults to true" do
+      Item.new.should be_enabled
+    end
+  end
 end

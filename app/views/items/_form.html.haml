@@ -14,6 +14,9 @@
           %div= f.hidden_field :category_id
         %div= f.text_field :name, :placeholder => t(".name")
         %div= f.number_field :price, :placeholder => t(".price")
+        %div
+          = f.check_box :enabled
+          = f.label :enabled, t(".enabled")
       .actions{ :"data-role" => "controlgroup", :"data-type" => "horizontal" }
         = link_to t("buttons.back"), "#", :"data-role" => "button", :"data-rel" => "back"
         = f.submit t("buttons.save")

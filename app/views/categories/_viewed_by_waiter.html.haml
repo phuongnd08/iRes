@@ -1,2 +1,2 @@
 %li{ "data-role" => "list-divider" }= category.name
-= render :partial => "items/viewed_by_waiter", :collection => category.items, :as => :item
+= render :partial => "items/viewed_by_waiter", :collection => category.items.enabled, :as => :item

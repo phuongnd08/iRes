@@ -34,6 +34,7 @@ vi:
       name: Tên
       price: Đơn giá
       delete_confirmation: Xóa món này?
+      enabled: Sử dụng
 
   order:
     table_no: Bàn số %{no}
