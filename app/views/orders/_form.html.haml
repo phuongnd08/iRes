@@ -18,7 +18,7 @@
       #ordering.subpage{ "data-role" => "content", :class => @order.modifiable? ? "" : "hidden" }
         - if @order.modifiable?
           %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
-            = render :partial => "categories/viewed_by_waiter", :collection => Category.all, :as => :category
+            = render :partial => "categories/viewed_by_waiter", :collection => Category.enabled, :as => :category
         - else
           %div= t("order.not_modifiable")
       #ordered.subpage{ "data-role" => "content", :class => @order.modifiable? ? "hidden" : "" }

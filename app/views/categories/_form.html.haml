@@ -8,6 +8,9 @@
 
   .fields
     %div= f.text_field :name, :placeholder => t(".name")
+    %div
+      = f.check_box :enabled
+      = f.label :enabled, t(".enabled")
   .actions{ :"data-role" => "controlgroup", :"data-type" => "horizontal" }
     = f.submit t("buttons.save")
     - if @category.persisted?

@@ -1,5 +1,9 @@
 require 'spec_helper'
 
 describe Category do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "#enabled" do
+    it "defaults to true" do
+      Category.new.should be_enabled
+    end
+  end
 end

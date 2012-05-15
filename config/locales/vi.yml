@@ -22,6 +22,7 @@ vi:
     form:
       name: Tên
       delete_confirmation: Xóa catalog này?
+      enabled: Sử dụng
 
   items:
     index:
