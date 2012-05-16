@@ -40,7 +40,7 @@ end
 
 When /^I try to mark the order as (paid|served)$/ do |state|
   within_the_order_as_seen_by_waiter DataBag.order do
-    click_on I18n.t("buttons.mark_#{state}")
+    find(".mark-as-#{state}-btn").click
   end
 end
 

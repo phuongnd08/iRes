@@ -4,5 +4,5 @@
     %span.ui-li-count
       %img.ui-icon-ires{ :class => "ui-icon-" + order_item.serve_icon }
       = order_item.ordered_time
-  %a{ "data-role" => "button", "data-icon" => "star", "data-theme" => "c", "data-remote" => "true", "data-method" => :put, :href => mark_ready_order_item_path(order_item) }
+  %a.mark-as-ready-btn{ "data-role" => "button", "data-icon" => "star", "data-theme" => "c", "data-remote" => "true", "data-method" => :put, :"data-href" => mark_ready_order_item_path(order_item) }
     = t("buttons.mark_ready")

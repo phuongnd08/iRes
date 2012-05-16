@@ -2,6 +2,6 @@
   %a
     = order.name
     %span.ui-li-count= order.timing
-  %a{ "data-ajax" => "false", "data-icon" => "star", "data-theme" => "c", "data-remote" => "true", "data-method" => :put, :href => mark_ready_order_path(order) }
+  %a.mark-as-ready-btn{ "data-ajax" => "false", "data-icon" => "star", "data-theme" => "c", "data-remote" => "true", "data-method" => :put, :"data-href" => mark_ready_order_path(order) }
     = t("buttons.mark_ready")
 

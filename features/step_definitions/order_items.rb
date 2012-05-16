@@ -62,7 +62,7 @@ When /^I mark item "([^"]*)" as ready$/ do |item_name|
     item = Item.find_by_name(item_name)
     order_item = OrderItem.find_by_item_id(item.id)
     within "[data-order-item-id='#{order_item.id}']" do
-      click_on I18n.t("buttons.mark_ready")
+      find(".mark-as-ready-btn").click
     end
   end
 end

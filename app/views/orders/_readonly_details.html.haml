@@ -14,5 +14,6 @@
         - [:served, :paid].each do |state|
           %a{ :class => "mark-as-#{state}-btn", "data-role" => "button", "data-inline" => "true",
             "data-ajax" => false, "data-confirm" => t("order.#{state}_confirmation"),
-            "data-remote" => true, "data-method" => :put, :href => send(:"mark_#{state}_order_path", order),
+            "data-remote" => true, "data-method" => :put,
+            :"data-href" => send(:"mark_#{state}_order_path", order),
             :style => order.send(:"mark_as_#{state}_visibility_style") }= t("buttons.mark_#{state}")
