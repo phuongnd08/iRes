@@ -50,7 +50,7 @@ $.rails.handleRemote = (element) ->
     else
       method = element.data("method")
       url = element.data("href") || element.attr("href")
-      data = element.data("params") or null
+      data = element.data("params") || { timestamp: (new Date()).getTime() }
     options =
       type: method or "GET"
       data: data
