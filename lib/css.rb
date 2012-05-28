@@ -10,8 +10,8 @@ module Css
     READY = 'ready'
     SERVED = 'served'
   end
-  module Style
-    HIDDEN = 'display: none'
-    VISIBLE = 'display: '
+  module Class
+    HIDDEN = 'hidden'
+    VISIBLE = ''
   end
 end

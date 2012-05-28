@@ -1,0 +1,3 @@
+%ul.order_items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b", "data-order-id" => order.order_id }
+  = render 'orders/header', :order => order
+  = render :partial => "order_items/show", :collection => order.order_items, :as => :order_item

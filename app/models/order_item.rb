@@ -2,9 +2,6 @@ class OrderItem < ActiveRecord::Base
   belongs_to :item
   belongs_to :order
 
-  delegate :id, :name, :to => :item, :prefix => true
-  delegate :id, :to => :order, :prefix => true
-
   after_create :notify_order_item_created
   after_destroy :notify_order_item_destroyed
   after_update :notify_order_item_updated
@@ -12,14 +9,6 @@ class OrderItem < ActiveRecord::Base
 
   def self.channel
     "/order_items"
-  end
-
-  def item_id
-    if use_placeholder?
-      "%{item_id}"
-    else
-      super
-    end
   end
 
   def item=(*arg)
@@ -33,69 +22,59 @@ class OrderItem < ActiveRecord::Base
   end
 
   def item_name
-    if use_placeholder?
-      "%{item_name}"
-    else
-      item.try(:name)
-    end
-  end
-
-  def order_id
-    if use_placeholder?
-      "%{order_id}"
-    else
-      order.try(:id)
-    end
+    item.try(:name)
   end
 
   def order_item_id
-    if use_placeholder?
-      "%{order_item_id}"
-    else
-      id
-    end
+    id
   end
 
+  # Methods should already available from ActiveRecord. But for decoration to to work, we need to explicitly declare them
+  delegate :id, :name, :to => :item, :prefix => true
+  delegate :id, :to => :order, :prefix => true
   def price
-    if use_placeholder?
-      "%{order_item_price}"
-    else
-      super
-    end
+    self[:price]
   end
-
 
   def theme
-    if use_placeholder?
-      "%{theme}"
-    else
-      ready ? Css::Theme::READY : Css::Theme::NEW
-    end
+    ready ? Css::Theme::READY : Css::Theme::NEW
   end
 
   def ordered_time
-    if use_placeholder?
-      "%{ordered_time}"
-    else
       created_at.localtime.strftime("%H:%M")
-    end
   end
 
-  def remove_visibility_style
-    if use_placeholder?
-      "%{order_item_remove_visibility_style}"
-    else
-      (ready || order.try(:paid)) ? Css::Style::HIDDEN : Css::Style::VISIBLE
-    end
+  def remove_visibility_class
+    (ready || order.try(:paid)) ? Css::Class::HIDDEN : Css::Class::VISIBLE
   end
 
   def serve_icon
-    if use_placeholder?
-      "%{serve_icon}"
-    else
-      ready ? Css::Icon::READY : Css::Icon::NEW
-    end
+    ready ? Css::Icon::READY : Css::Icon::NEW
   end
+
+  DECORATED_ATTRS = [
+    :item_id, :item_name,
+    :order_id, :order_item_id,
+    :price,
+    :theme,
+    :ordered_time,
+    :remove_visibility_class,
+    :serve_icon
+  ]
+
+  DECORATED_ATTRS.each do |method|
+    define_method :"#{method}_with_placeholder_awareness" do
+      if use_placeholder?
+        "%{#{method}}"
+      else
+        send(:"#{method}_without_placeholder_awareness")
+      end
+    end
+
+    alias_method_chain method, :placeholder_awareness
+  end
+
+
 
   def push_attributes
     {

@@ -1,18 +1,19 @@
-#chef_orders_page{ "data-role" => "page" }
-  %div{ "data-role" => "header" }
+#orders_page{ "data-role" => "page" }
+  %div{ :"data-role" => "header" }
     %h1= t("chef.header")
-  = render :partial => "orders/viewed_by_chef", :collection => Order.shown_to("chef".to_inquirer), :as => :order
-- chef_order_template = capture do
-  - Ajaxifier.enable do
-    = render "orders/viewed_by_chef", :order => Order.new
-- chef_order_header_template = capture do
-  - Ajaxifier.enable do
-    = render "orders/viewed_by_chef_header", :order => Order.new
-- chef_order_item_template = capture do
-  - Ajaxifier.enable do
-    = render "order_items/viewed_by_chef", :order_item => OrderItem.new
+  = render :partial => "orders/show", :collection => Order.shown_to("chef".to_inquirer), :as => :order
+  %div{ :"data-role" => "content" }
+    - order_template = capture do
+      - Ajaxifier.enable do
+        = render "orders/show", :order => Order.new
+    - order_header_template = capture do
+      - Ajaxifier.enable do
+        = render "orders/header", :order => Order.new
+    - order_item_template = capture do
+      - Ajaxifier.enable do
+        = render "order_items/show", :order_item => OrderItem.new
 
 :javascript
-  var chefOrderTemplate = #{chef_order_template.to_json};
-  var chefOrderHeaderTemplate = #{chef_order_header_template.to_json};
-  var chefOrderItemTemplate = #{chef_order_item_template.to_json};
+  var orderTemplate = #{order_template.to_json};
+  var orderHeaderTemplate = #{order_header_template.to_json};
+  var orderItemTemplate = #{order_item_template.to_json};

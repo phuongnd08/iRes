@@ -1,13 +1,13 @@
-$(document).delegate "#chef_orders_page", "pagecreate", ->
+$(document).delegate "#orders_page", "pagecreate", ->
   orderItemsChannel = <%= OrderItem.channel.to_json %>
   ordersChannel = <%= Order.channel.to_json %>
   pubsubClient = null
   backlog = {}
 
-  $(li).formatListItem() for li in $('#chef_orders_page ul.order_items li[data-order-item-id]')
+  $(li).formatListItem() for li in $('#orders_page ul.order_items li[data-order-item-id]')
 
   orderUL = (orderId) ->
-    $("#chef_orders_page ul.order_items[data-order-id=" + orderId + "]")
+    $("#orders_page ul.order_items[data-order-id=" + orderId + "]")
   orderHeaderLI = (orderId) ->
     orderUL(orderId).find('[role=heading]')
 
@@ -16,7 +16,7 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
       orderUL(order.order_id).fadeOutAndRemove()
     else
       if order.created && !order.ready
-        $(chefOrderTemplate.gsub(order)).appendTo("#chef_orders_page").listview().blinkAndShow()
+        $(orderTemplate.gsub(order)).appendTo("#orders_page").listview().trigger('create').blinkAndShow()
         if (backlog[order.order_id])
           processOrderItem orderItem for orderItem in backlog[order.order_id]
       else
@@ -25,18 +25,18 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
             orderUL(order.order_id).fadeOutAndRemove()
           else
             if orderUL(order.order_id).exists()
-              orderHeaderLI(order.order_id).replaceWith(chefOrderHeaderTemplate.gsub(order))
+              orderHeaderLI(order.order_id).replaceWith(orderHeaderTemplate.gsub(order))
             else
-              $(chefOrderTemplate.gsub(order)).appendTo("#chef_orders_page").listview().blinkAndShow()
+              $(orderTemplate.gsub(order)).appendTo("#orders_page").listview().blinkAndShow()
               addOrderItem(orderItem) for orderItem in order.order_items
-            orderUL(order.order_id).listview('refresh').blinkAndShow()
+            orderUL(order.order_id).listview('refresh').trigger('create').blinkAndShow()
             $(li).formatListItem() for li in orderUL(order.order_id).find('li[data-order-item-id]')
 
   orderItemLI = (orderItem) ->
-    $("#chef_orders_page ul.order_items").find("[data-order-item-id=" + orderItem.order_item_id + "]")
+    $("#orders_page ul.order_items").find("[data-order-item-id=" + orderItem.order_item_id + "]")
 
   addOrderItem = (orderItem) ->
-    orderItemLIHtml = chefOrderItemTemplate.gsub(orderItem)
+    orderItemLIHtml = orderItemTemplate.gsub(orderItem)
     orderUL(orderItem.order_id).append(orderItemLIHtml)
 
   processOrderItem = (orderItem) ->
@@ -49,7 +49,7 @@ $(document).delegate "#chef_orders_page", "pagecreate", ->
           addOrderItem(orderItem)
         else
           if orderItem.updated
-            orderItemLIHtml = chefOrderItemTemplate.gsub(orderItem)
+            orderItemLIHtml = orderItemTemplate.gsub(orderItem)
             orderItemLI(orderItem).replaceWith(orderItemLIHtml)
         ul.listview "refresh"
         orderItemLI(orderItem).formatListItem()

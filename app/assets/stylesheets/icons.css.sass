@@ -1,20 +1,57 @@
-.ui-icon-ires
+=ui-icon-ires
   background: image-url('ires_icons.png') no-repeat top left
   width: 18px
   height: 18px
   vertical-align: middle
   border: none
   display: inline-block
-.ui-icon-new
-  background-position: 0 0
-.ui-icon-paid
-  background-position: -18px 0
-.ui-icon-ready
-  background-position: -36px 0
-.ui-icon-served
-  background-position: -54px 0
-.ui-icon-unpaid
-  background-position: -72px 0
-.ui-icon-warning
-  background-position: -90px 0
+ul
+  li
+    .ui-icon-mark-as-ready
+      background: image-url('new.gif') no-repeat top left
+      background-position: 0 0
+    .ui-icon-ready
+      +ui-icon-ires
+      background-position: -36px 0
+    .ui-icon-mark-as-served
+      +ui-icon-ires
+      background-position: -54px 0
+    .ui-icon-mark-as-paid
+      +ui-icon-ires
+      background-position: 0px 0
+    .ui-icon-paid
+      +ui-icon-ires
+      background-position: -18px 0
+    .ui-icon-warning
+      +ui-icon-ires
+      background-position: -72px 0
 
+    .ui-btn
+      display: inline-block
+
+    .ui-mini
+      margin-left: 1px
+      margin-right: 1px
+
+  .ui-btn-icon-right
+    span.ires-icon
+      .ui-btn-inner
+        padding-right: 0
+        padding-left: 13px
+        border-top: none
+      .ui-icon
+        right: auto
+
+  li[data-role=list-divider]
+    .ui-btn-inner
+      .ui-link-inherit
+        padding: 0px
+        .ui-li-heading
+          margin-left: .2em
+
+  a[data-role=button]
+    .ui-btn-text
+      padding-right: 0
+    .ui-btn-inner
+      padding-right: 5px
+      padding-left: 25px

@@ -1,4 +1,6 @@
 class Order < ActiveRecord::Base
+  include Css::Class
+
   DATE_FORMAT = "%Y-%m-%d"
   TIME_FORMAT = "%H:%M"
   has_many :order_items, :dependent => :destroy
@@ -45,84 +47,81 @@ class Order < ActiveRecord::Base
   end
 
   def order_id
-    if use_placeholder?
-      "%{order_id}"
-    else
-      id
-    end
+    id
   end
 
   def name
-    if use_placeholder?
-      "%{order_name}"
-    else
-      "Order: #{I18n.t("order.table_no", :no => table_number)}"
-    end
+    "Order: #{I18n.t("order.table_no", :no => table_number)}"
   end
 
   def timing
-    if use_placeholder?
-      "%{timing}"
-    else
-      created_at.localtime.strftime(TIME_FORMAT).tap do |timing|
-        timing << " (#{paid_at.localtime.strftime(TIME_FORMAT)})" if paid
-      end
+    created_at.localtime.strftime(TIME_FORMAT).tap do |timing|
+      timing << " (#{paid_at.localtime.strftime(TIME_FORMAT)})" if paid
     end
   end
 
-  def completed?
+  def completed
     paid && served
   end
 
-  def modifiable?
+  def modifiable
     !paid
   end
 
-  def serve_icon
-    if use_placeholder?
-      "%{order_serve_icon}"
-    else
-      served ? Css::Icon::SERVED : (ready ? Css::Icon::READY : Css::Icon::NEW)
-    end
+  def ready_icon_visibility_class
+    ready ? VISIBLE : HIDDEN
   end
 
-  def payment_icon
-    if use_placeholder?
-      "%{order_payment_icon}"
-    else
-      paid ? Css::Icon::PAID : Css::Icon::UNPAID
-    end
+  def served_icon_visibility_class
+    served ? VISIBLE : HIDDEN
   end
 
-  def theme
-    if use_placeholder?
-      "%{order_theme}"
-    else
-      ready ? Css::Theme::READY : Css::Theme::NEW
-    end
+  def paid_icon_visibility_class
+    paid ? VISIBLE : HIDDEN
   end
 
-  def mark_as_paid_visibility_style
-    if use_placeholder?
-      "%{order_mark_as_paid_visibility_style}"
-    else
-      paid ? Css::Style::HIDDEN : Css::Style::VISIBLE
-    end
+  def order_theme
+    ready ? Css::Theme::READY : Css::Theme::NEW
   end
 
-  def mark_as_served_visibility_style
-    if use_placeholder?
-      "%{order_mark_as_served_visibility_style}"
-    else
-      ready && !served ? Css::Style::VISIBLE : Css::Style::HIDDEN
-    end
+  def mark_as_ready_visibility_class
+    ready ? HIDDEN : VISIBLE
   end
 
-  def total_price
+  def mark_as_paid_visibility_class
+    paid ? HIDDEN : VISIBLE
+  end
+
+  def mark_as_served_visibility_class
+    ready && !served ? VISIBLE : HIDDEN
+  end
+
+  DECORATED_ATTRS = [
+    :order_id, :name,
+    :order_theme,
+    :timing,
+    :ready_icon_visibility_class, :served_icon_visibility_class, :paid_icon_visibility_class,
+    :mark_as_ready_visibility_class, :mark_as_served_visibility_class,
+    :mark_as_paid_visibility_class
+  ]
+
+  DECORATED_ATTRS.each do |method|
+    define_method :"#{method}_with_placeholder_awareness" do
+      if use_placeholder?
+        "%{#{method}}"
+      else
+        send(:"#{method}_without_placeholder_awareness")
+      end
+    end
+
+    alias_method_chain method, :placeholder_awareness
+  end
+
+  def order_total_price
     if use_placeholder?
       "%{order_total_price}"
     else
-      super
+      total_price
     end
   end
 
@@ -201,32 +200,37 @@ class Order < ActiveRecord::Base
     order_items.reject(&:marked_for_destruction?).all?(&:ready)
   end
 
+  BASIC_ATTRS = [
+    :order_id, :created_on
+  ]
+
+  def keys_to_push_attributes(keys)
+    keys.inject({}) do |hash, key|
+      hash[key] = send(key)
+      hash
+    end
+  end
+
   def basic_push_attributes
+    keys_to_push_attributes(BASIC_ATTRS)
+  end
+
+  def shown_to
     {
-      :order_id => order_id,
-      :created_on => created_on,
+      :waiter => !(paid && served),
+      :manager => paid
     }
   end
 
+  FULL_ATTRS = BASIC_ATTRS + DECORATED_ATTRS + [
+    :order_total_price, :revenue_increment,
+    :order_theme,
+    :shown_to,
+    :completed, :ready, :paid
+  ]
+
   def full_push_attributes
-    basic_push_attributes.merge!({
-      :order_name => name,
-      :timing => timing,
-      :order_serve_icon => serve_icon,
-      :order_payment_icon => payment_icon,
-      :order_theme => theme,
-      :order_mark_as_paid_visibility_style => mark_as_paid_visibility_style,
-      :order_mark_as_served_visibility_style => mark_as_served_visibility_style,
-      :order_total_price => total_price,
-      :revenue_increment => revenue_increment,
-      :shown_to => {
-        :waiter => !(paid && served),
-        :manager => paid
-      },
-      :completed => completed?,
-      :paid => paid,
-      :ready => ready
-    })
+    keys_to_push_attributes(FULL_ATTRS)
   end
 
   def notify_order_created
