@@ -1,19 +1,15 @@
-%li{ "data-order-id" => order.order_id, "data-count-theme" => order.theme }
+%li{ "data-order-id" => order.order_id, "data-count-theme" => order.order_theme }
   %a.go-to-btn{ :href => edit_order_path(order) }
     .relative
       %h3= order.name
-      %span.ui-li-count
-        %img.ui-icon-ires{ :class => "ui-icon-" + order.serve_icon }
-        %img.ui-icon-ires{ :class => "ui-icon-" + order.payment_icon }
     %div
       %span.order_time= order.timing
       \|
-      %span.total_price= order.total_price
+      %span.total_price= order.order_total_price
     - if role.waiter?
       .tool-buttons
         - [:served, :paid].each do |state|
-          %a{ :class => "mark-as-#{state}-btn", "data-role" => "button", "data-inline" => "true",
+          %a{ :class => "mark-as-#{state}-btn #{order.send(:"mark_as_#{state}_visibility_class")}", "data-role" => "button", "data-inline" => "true",
             "data-ajax" => false, "data-confirm" => t("order.#{state}_confirmation"),
             "data-remote" => true, "data-method" => :put,
-            :"data-href" => send(:"mark_#{state}_order_path", order),
-            :style => order.send(:"mark_as_#{state}_visibility_style") }= t("buttons.mark_#{state}")
+            :"data-href" => send(:"mark_#{state}_order_path", order) }= t("buttons.mark_#{state}")

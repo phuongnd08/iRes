@@ -15,20 +15,20 @@
               %a{ :href => "#order_page", "data-nav-to" => "#ordering", "data-direction" => "reverse" }= t("order.ordering")
             %li
               %a{ :href => "#", "data-nav-to" => "#ordered" }= t("order.ordered")
-      #ordering.subpage{ "data-role" => "content", :class => @order.modifiable? ? "" : "hidden" }
-        - if @order.modifiable?
+      #ordering.subpage{ "data-role" => "content", :class => @order.modifiable ? "" : "hidden" }
+        - if @order.modifiable
           %ul{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
             = render :partial => "categories/viewed_by_waiter", :collection => Category.enabled, :as => :category
         - else
           %div= t("order.not_modifiable")
-      #ordered.subpage{ "data-role" => "content", :class => @order.modifiable? ? "hidden" : "" }
+      #ordered.subpage{ "data-role" => "content", :class => @order.modifiable ? "hidden" : "" }
         %div
           %ul.items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
             = f.fields_for :order_items do |builder|
               = render "order_items/viewed_by_waiter", :f => builder
         .centered{ :"data-role" => "content" }
           %div{ :"data-role" => "controlgroup", :"data-type" => "horizontal" }
-            - if @order.modifiable?
+            - if @order.modifiable
               = f.submit t("buttons.commit"), {"data-role" => "button" }
               - if @order.can_be_removed?
                 = link_to t("buttons.cancel"), order_path(@order), :method => :delete, :confirm => t("order.cancelled_confirmation"), "data-role" => "button", "data-icon" => "delete"

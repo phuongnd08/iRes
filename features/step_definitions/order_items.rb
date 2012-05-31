@@ -42,7 +42,7 @@ end
 Then /^I see (\d+) items in the waiting list being marked as ready$/ do |count|
   within ".order_items" do
     wait_for count.to_i do
-      page.all("li[data-order-item-id] span.ui-btn-up-" + Css::Theme::READY).count
+      page.all("li[data-order-item-id] .ui-icon-" + Css::Icon::READY).count
     end
   end
 end

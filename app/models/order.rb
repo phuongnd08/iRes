@@ -54,6 +54,10 @@ class Order < ActiveRecord::Base
     "Order: #{I18n.t("order.table_no", :no => table_number)}"
   end
 
+  def created_on
+    created_at.strftime(Order::DATE_FORMAT)
+  end
+
   def timing
     created_at.localtime.strftime(TIME_FORMAT).tap do |timing|
       timing << " (#{paid_at.localtime.strftime(TIME_FORMAT)})" if paid
@@ -96,9 +100,13 @@ class Order < ActiveRecord::Base
     ready && !served ? VISIBLE : HIDDEN
   end
 
+  def total_price
+    self[:total_price]
+  end
+
   DECORATED_ATTRS = [
     :order_id, :name,
-    :order_theme,
+    :order_theme, :total_price,
     :timing,
     :ready_icon_visibility_class, :served_icon_visibility_class, :paid_icon_visibility_class,
     :mark_as_ready_visibility_class, :mark_as_served_visibility_class,
@@ -115,18 +123,6 @@ class Order < ActiveRecord::Base
     end
 
     alias_method_chain method, :placeholder_awareness
-  end
-
-  def order_total_price
-    if use_placeholder?
-      "%{order_total_price}"
-    else
-      total_price
-    end
-  end
-
-  def created_on
-    created_at.strftime(Order::DATE_FORMAT)
   end
 
   def ready=(ready)
@@ -218,19 +214,20 @@ class Order < ActiveRecord::Base
   def shown_to
     {
       :waiter => !(paid && served),
-      :manager => paid
+      :manager => paid,
+      :chef => !ready
     }
   end
 
   FULL_ATTRS = BASIC_ATTRS + DECORATED_ATTRS + [
-    :order_total_price, :revenue_increment,
+    :total_price, :revenue_increment,
     :order_theme,
     :shown_to,
     :completed, :ready, :paid
   ]
 
   def full_push_attributes
-    keys_to_push_attributes(FULL_ATTRS)
+    keys_to_push_attributes(FULL_ATTRS).merge!(:order_items => order_items.map(&:push_attributes))
   end
 
   def notify_order_created

@@ -1,5 +1,0 @@
-%div{ :id => "order_#{@order.id}", "data-role" => "page" }
-  %div{ "data-role" => "header" }
-    %h1= t("order.header", :table_no => @order.table_number)
-  %div{ "data-role" => "content" }
-    = render "order_items/list", :order_items => @order.order_items

@@ -1,5 +1,5 @@
 def within_waiting_list
-  within "#orders_page" do
+  within "#orders" do
     yield
   end
 end

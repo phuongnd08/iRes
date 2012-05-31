@@ -56,7 +56,7 @@ end
 
 Then /^I see no orders$/ do
   within "#orders" do
-    page.all('li').length.should == 1 #For the list divider
+    page.all('li').length.should == 0
   end
 end
 

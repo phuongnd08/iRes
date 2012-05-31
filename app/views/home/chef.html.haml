@@ -1,1 +1,1 @@
-= render "/chef/orders"
+= render "orders", :role => @role, :orders => Order.shown_to(@role).created_on(focused_date)

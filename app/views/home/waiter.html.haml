@@ -1,1 +1,1 @@
-= render "readonly_order_list", :role => @role, :orders => Order.shown_to(@role).created_on(focused_date)
+= render "orders", :role => @role, :orders => Order.shown_to(@role).created_on(focused_date)

@@ -1,7 +1,10 @@
 %li.ui-li-has-count{"data-role" => "list-divider", :role => "heading", "data-theme" => "b"}
   %a.go-to-btn{ :href => edit_order_path(order) }
     %h3= order.name
-    %span.ui-li-count= order.timing
+    %span.ui-li-count
+      = order.timing
+      \-
+      = order.total_price
   .subtle.padded{"data-type" => "horizontal"}
     - [:ready, :served, :paid].each do |state|
       - anchor_extra_attributes = (state == :ready) ? {} : { :"data-confirm" => t("order.#{state}_confirmation") }

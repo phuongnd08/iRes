@@ -12,7 +12,7 @@ class @Waiter
     hash =
       item_id: id
       item_name: name
-      order_item_price: price
+      price: price
       child_index: (new Date).getTime()
       serve_icon: <%= Css::Icon::NEW.to_json %>
     itemLI = $(newOrderItemTemplate.gsub hash)
