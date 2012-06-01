@@ -52,7 +52,7 @@ $(document).delegate "#orders_page", "pagecreate", ->
     if (!orderUL(orderId).exists())
       $(orderTemplate.gsub(order)).appendTo(ordersDIV()).listview().trigger('create').blinkAndShow()
       if order.order_items
-        addOrderItem(orderItem) for orderItem in order.order_items
+        addOrUpdateOrderItem(orderItem) for orderItem in order.order_items
     else
       orderHeaderLI(orderId).replaceWith(orderHeaderTemplate.gsub(order))
       orderUL(orderId).listview('refresh').trigger('create').blinkAndShow()
@@ -68,28 +68,25 @@ $(document).delegate "#orders_page", "pagecreate", ->
         orderUL(order.id).listview('refresh').trigger('create')
         highlightOrderUL orderUL(order)
 
-  orderItemLI = (orderItem) ->
-    $("#orders_page ul.order_items").find("[data-order-item-id=" + orderItem.order_item_id + "]")
+  orderItemLI = (orderItemId) ->
+    $("#orders_page ul.order_items").find("[data-order-item-id=" + orderItemId + "]")
 
-  addOrderItem = (orderItem) ->
-    orderItemLIHtml = orderItemTemplate.gsub(orderItem)
-    orderUL(orderItem.order_id).append(orderItemLIHtml)
+  addOrUpdateOrderItem = (orderItem) ->
+    if !orderItemLI(orderItem.order_item_id).exists()
+      orderItemLIHtml = orderItemTemplate.gsub(orderItem)
+      orderUL(orderItem.order_id).append(orderItemLIHtml)
+    else
+      orderItemLIHtml = orderItemTemplate.gsub(orderItem)
+      orderItemLI(orderItem.order_item_id).replaceWith(orderItemLIHtml)
+    orderUL(orderItem.order_id).listview "refresh"
     orderItemLI(orderItem.order_item_id).formatListItem()
 
   processOrderItem = (orderItem) ->
     if orderItem.deleted
-      orderItemLI(orderItem).remove()
+      orderItemLI(orderItem.order_item_id).remove()
     else
-      ul = orderUL(orderItem.order_id)
-      if ul.exists()
-        if orderItem.created
-          addOrderItem(orderItem)
-        else
-          if orderItem.updated
-            orderItemLIHtml = orderItemTemplate.gsub(orderItem)
-            orderItemLI(orderItem).replaceWith(orderItemLIHtml)
-        ul.listview "refresh"
-        orderItemLI(orderItem).formatListItem()
+      if orderUL(orderItem.order_id).exists()
+        addOrUpdateOrderItem(orderItem)
       else
         backlog[orderItem.order_id] ||= []
         backlog[orderItem.order_id].push(orderItem)
