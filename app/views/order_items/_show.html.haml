@@ -1,8 +1,7 @@
 %li{ "data-order-item-id" => order_item.order_item_id, "data-order-id" => order_item.order_id, "data-item-id" => order_item.item_id, "data-count-theme" => order_item.theme }
-  %a
+  %a{ :href => "#" }
     %span= order_item.item_name
     %span.ui-li-count
       %img.ui-icon-ires{ :class => "ui-icon-" + order_item.serve_icon }
       = order_item.ordered_time
-  %a.mark-as-ready-btn{ "data-role" => "button", "data-icon" => "star", "data-theme" => "c", "data-remote" => "true", "data-method" => :put, :"data-href" => mark_ready_order_item_path(order_item) }
-    = t("buttons.mark_ready")
+  %a.mark-as-ready-btn{ :"data-icon" => "mark-as-ready", :"data-theme" => "c", :"data-remote" => "true", :"data-method" => :put, :href => "#", :"data-href" => mark_ready_order_item_path(order_item) }
