@@ -18,13 +18,6 @@ describe OrdersController do
     let(:items) { 2.times.map { |index| Item.make!(:category => category, :name => "item ##{index + 1}") } }
     let(:order_items) { 2.times.map { |index| OrderItem.new(:item => items[index], :price => (index + 1)*10000) } }
 
-    context "html format" do
-      it "assigns the requested order as @order" do
-        get :show, {:id => order.to_param}
-        assigns(:order).should eq(order)
-      end
-    end
-
     context "excel format" do
       it "returns an excel file containing order details" do
         get :show, :id => order.id, :format => :xls

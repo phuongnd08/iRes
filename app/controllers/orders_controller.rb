@@ -14,7 +14,6 @@ class OrdersController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html {}
       format.xls do
         Spreadsheet::Workbook.new.tap do |book|
           book.create_worksheet.tap do |sheet|
