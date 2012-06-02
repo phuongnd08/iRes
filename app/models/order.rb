@@ -55,7 +55,7 @@ class Order < ActiveRecord::Base
   end
 
   def created_on
-    created_at.strftime(Order::DATE_FORMAT)
+    created_at.localtime.strftime(Order::DATE_FORMAT)
   end
 
   def timing
