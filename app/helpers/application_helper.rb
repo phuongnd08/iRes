@@ -2,7 +2,7 @@ module ApplicationHelper
   def friendly_date_str(date)
     case date
     when Date.today then t("dates.today")
-    when Date.yesterday then t("dates.yesterday")
+    when 1.day.ago.localtime.to_date then t("dates.yesterday")
     else date.strftime("%d/%m")
     end
   end
