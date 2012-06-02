@@ -16,7 +16,7 @@ class Order < ActiveRecord::Base
   scope :pending, where { (served != true) | (paid != true) }
   scope :paid, where { paid == true }
   scope :nonready, where { ready != true }
-  scope :created_on, lambda { |date| where { (created_at >= date.beginning_of_day) & (created_at <= date.end_of_day) } }
+  scope :created_on, lambda { |date| where { (created_at >= date.to_time.beginning_of_day.utc) & (created_at <= date.to_time.end_of_day.utc) } }
 
   class << self
     def shown_to(role)
