@@ -6,7 +6,9 @@ describe ItemsController do
   let(:item) { Item.make!(:category => category) }
   let(:valid_attributes) do
     {
-      :category_id => category.id
+      :category_id => category.id,
+      :name => "Item",
+      :price => 10000
     }
   end
 

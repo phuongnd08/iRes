@@ -5,10 +5,11 @@ Order.blueprint do
 end
 
 Item.blueprint do
-  name { |sn| "Item #{sn}" }
+  name { "Item #{sn}" }
+  price { 10000 }
   category
 end
 
 Category.blueprint do
-  name { |sn| "Category #{sn}" }
+  name { "Category #{sn}" }
 end
