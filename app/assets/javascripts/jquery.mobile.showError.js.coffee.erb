@@ -1,0 +1,4 @@
+DIALOG_SHOW_TIME = <%= Rails.env.test? ? 5000 : 1500 %>
+$.mobile.showError = (msg) ->
+  $.mobile.showPageLoadingMsg $.mobile.pageLoadErrorMessageTheme, msg, true
+  setTimeout $.mobile.hidePageLoadingMsg, DIALOG_SHOW_TIME
