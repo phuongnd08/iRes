@@ -17,11 +17,7 @@ Then /^I see the order(?: of table (\d+))? as (un)?(paid|ready|served)$/ do |tab
     order = order_of_table(table_number)
     order_css = "ul[data-order-id='#{order.id}']"
     icon_css =  order_css + " span[data-icon='#{state}']"
-    if negate
-      page.find(icon_css).should_not be_visible
-    else
-      page.find(icon_css).should be_visible
-    end
+    wait_for(negate ? false : true, 10) { page.find(icon_css).visible? }
   end
 end
 
