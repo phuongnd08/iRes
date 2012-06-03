@@ -30,6 +30,20 @@ Feature: CRUD-ing items
     And I see "20000"
     But I do not see "Bún bò"
 
+ Scenario Outline: Use inappropriate name and price for item
+    When I choose "Thêm món"
+    And I assign the item name to <name>
+    And I assign the item price to <price>
+    And I choose "Lưu"
+    Then I see notice "<error>"
+
+    Examples:
+      |name|price|error|
+      |blank|"10000"|Tên không thể để trống|
+      |"Bún bò"|"10000"|Tên không được trùng với catalog khác|
+      |blank|""|Giá không thể để trống|
+      |blank|"abc"|Giá phải là một số|
+
   Scenario: Cancel editing a category
     When I choose "Bún bò"
     And I assign the item name to "Vermicelli"

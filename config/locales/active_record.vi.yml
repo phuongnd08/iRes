@@ -5,7 +5,11 @@ vi:
     attributes:
       category:
         name: Tên
+      item:
+        name: Tên
+        price: Giá
     errors:
       messages:
         blank: không thể để trống
         taken: không được trùng với catalog khác
+        not_a_number: phải là một số

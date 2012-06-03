@@ -10,15 +10,23 @@ end
 Given /^these items exists:$/ do |table|
   table.hashes.each do |hash|
     category = Category.find_or_create_by_name(hash["category"])
-    Item.find_or_create_by_name_and_category_id(hash["name"], category.id)
+    Item.find_or_create_by_name_and_category_id(hash["name"], category.id, :price => 10000)
   end
+end
+
+When /^I assign the item name to blank$/ do
+  fill_in "item_name", :with => ""
 end
 
 When /^I assign the item name to "([^"]*)"$/ do |name|
   fill_in "item_name", :with => name
 end
 
-When /^I assign the item price to "(\d+)"$/ do |price|
+When /^I assign the item price to blank$/ do
+  fill_in "item_price", :with => ""
+end
+
+When /^I assign the item price to "([^"]*)"$/ do |price|
   fill_in "item_price", :with => price
 end
 
