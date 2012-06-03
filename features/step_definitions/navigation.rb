@@ -34,6 +34,7 @@ When /^I confirm the dialog with "([^"]*)"$/ do |choice|
   within ".ui-simpledialog-container" do
     link = find_link(choice)
     wait_for(true) { link.visible? }
+    sleep 0.5
     link.click
   end
 
