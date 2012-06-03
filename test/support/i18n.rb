@@ -15,3 +15,5 @@ class TestExceptionLocalizationHandler
 end
 
 I18n.exception_handler = TestExceptionLocalizationHandler.new
+
+I18n.reload!
