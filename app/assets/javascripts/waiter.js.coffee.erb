@@ -14,8 +14,7 @@ class @Waiter
       item_name: name
       price: price
       child_index: (new Date).getTime()
-      serve_icon: <%= Css::Icon::NEW.to_json %>
-    itemLI = $(newOrderItemTemplate.gsub hash)
+    itemLI = $(newOrderItemTemplate.gsub $.extend({}, newOrderItemAttributes, hash))
     itemLI.find('input[id$=item_id]').val(id)
     @getOrderedList().append(itemLI)
     @getOrderedList().listview("refresh")

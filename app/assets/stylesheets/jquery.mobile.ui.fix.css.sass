@@ -11,6 +11,11 @@
     .ui-li-count
       right: 0px
 
+li.ui-li[data-order-item]
+  .relative
+    .ui-li-count
+      right: 10px
+
 .tool-buttons
   .ui-btn-inner
     padding: .6em 10px
@@ -21,5 +26,20 @@
 .padded.subtle
   padding-left: 5px
 
-ul li .ui-btn.hidden
-  display: none
+ul
+  li .ui-btn.hidden
+    display: none
+
+  li[data-role=list-divider]
+    .ui-btn-inner
+      .ui-link-inherit
+        padding: 0px
+        .ui-li-heading
+          margin-left: .2em
+
+    a[data-role=button]
+      .ui-btn-text
+        padding-right: 0
+      .ui-btn-inner
+        padding-right: 5px
+        padding-left: 25px

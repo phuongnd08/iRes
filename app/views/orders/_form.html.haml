@@ -43,3 +43,4 @@
         = link_to t("buttons.back"), request.referrer || waiter_path, :"data-role" => "button", :rel => "external"
       :javascript
         var newOrderItemTemplate = #{new_order_item_template.to_json}
+        var newOrderItemAttributes = #{OrderItem.new.push_attributes.to_json}

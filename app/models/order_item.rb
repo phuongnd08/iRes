@@ -30,8 +30,18 @@ class OrderItem < ActiveRecord::Base
   end
 
   # Methods should already available from ActiveRecord. But for decoration to to work, we need to explicitly declare them
-  delegate :id, :name, :to => :item, :prefix => true
-  delegate :id, :to => :order, :prefix => true
+  def item_id
+    self[:item_id]
+  end
+
+  def item_name
+    item.try(:name)
+  end
+
+  def order_id
+    self[:order_id]
+  end
+
   def price
     self[:price]
   end
@@ -49,18 +59,19 @@ class OrderItem < ActiveRecord::Base
   end
 
   def serve_icon
-    ready ? Css::Icon::READY : Css::Icon::NEW
+    ready ? "ready" : "mark-as-ready"
   end
 
-  DECORATED_ATTRS = [
+  NEW_ATTRS = [
     :item_id, :item_name,
     :order_id, :order_item_id,
     :price,
     :theme,
-    :ordered_time,
     :remove_visibility_class,
     :serve_icon
   ]
+
+  DECORATED_ATTRS = NEW_ATTRS + [:ordered_time]
 
   DECORATED_ATTRS.each do |method|
     define_method :"#{method}_with_placeholder_awareness" do
@@ -74,18 +85,13 @@ class OrderItem < ActiveRecord::Base
     alias_method_chain method, :placeholder_awareness
   end
 
-
+  PUSH_ATTRIBUTES = DECORATED_ATTRS
 
   def push_attributes
-    {
-      :order_item_id => order_item_id,
-      :order_id => order_id,
-      :item_id => item_id,
-      :item_name => item_name,
-      :theme => theme,
-      :serve_icon => serve_icon,
-      :ordered_time => ordered_time
-    }
+    (self.persisted? ? PUSH_ATTRIBUTES : NEW_ATTRS).inject({}) do |hash, attr|
+      hash[attr] = send(attr)
+      hash
+    end
   end
 
   private
