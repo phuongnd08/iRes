@@ -59,6 +59,7 @@ vi:
     price: Đơn giá
     quantity: Số lượng
     total: Thành tiền
+    notes: Ghi chú
 
   buttons:
     mark_ready: Sẵn sàng

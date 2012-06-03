@@ -2,6 +2,7 @@
   %a{ :href => "#" }
     %span= order_item.item_name
     %span.ui-li-count
+      = order_item.notes
       %img.ui-icon-ires{ :class => "ui-icon-" + order_item.serve_icon }
       = order_item.ordered_time
   %a.mark-as-ready-btn{ :"data-icon" => "mark-as-ready", :"data-theme" => "c", :"data-remote" => "true", :"data-method" => :put, :href => "#", :"data-href" => mark_ready_order_item_path(order_item) }

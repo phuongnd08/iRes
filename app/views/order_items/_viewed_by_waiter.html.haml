@@ -1,10 +1,12 @@
 %li{ "data-order-item" => true, "data-item-id" => f.object.item_id, "data-order-item-price" => f.object.price }
-  %a
+  %a.set-notes-btn
     .relative
       %span= f.object.item_name
       %span.ui-li-count
+        %span.notes= f.object.notes
         %img.ui-icon-ires{ :class => "ui-icon-" + f.object.serve_icon }
   %a.remove{ "data-inline" => "true", "data-icon" => "delete", :class => f.object.remove_visibility_class }
   %div
     = f.hidden_field :_destroy
     = f.hidden_field :item_id
+    = f.hidden_field :notes

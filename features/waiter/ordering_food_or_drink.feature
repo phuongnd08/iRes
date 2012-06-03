@@ -4,10 +4,12 @@ Feature: Order food or drink
   I want to order a food/drink
   So I can serve my customer
 
-  Scenario: Order original food/drink
+  Background:
     Given I'm on waiter page
     When I choose "Đặt bàn"
-    And I choose "Bàn số 4" as table number
+
+  Scenario: Order original food/drink
+    When I choose "Bàn số 4" as table number
     And I choose item "Cam vắt"
     Then I see "Cam vắt" in ordered list
     And I see "1" as number of items of order
@@ -24,9 +26,17 @@ Feature: Order food or drink
     Then I see 1 items being ordered
     And I see "Cam vắt" in the ordered list
 
+  Scenario: Order food/drink with extra request
+    And I choose item "Cam vắt"
+    Then I see "Cam vắt" in ordered list
+    When I set notes of "Cam vắt" to "Ít đá"
+    Then I see "Ít đá"
+    When I commit the order
+    Then I see "Order: Bàn số 1"
+    And I see "Cam vắt"
+    And I see "Ít đá"
+
   Scenario: Not commiting an order
-    Given I'm on waiter page
-    When I choose "Đặt bàn"
     Then I'm presented with the new order page
     And I stop committing the order
     Then I see no orders

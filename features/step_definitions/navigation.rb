@@ -36,4 +36,6 @@ When /^I confirm the dialog with "([^"]*)"$/ do |choice|
     wait_for(true) { link.visible? }
     link.click
   end
+
+  page.should have_no_css(".ui-simpledialog-screen")
 end

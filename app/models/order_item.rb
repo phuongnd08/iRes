@@ -46,6 +46,10 @@ class OrderItem < ActiveRecord::Base
     self[:price]
   end
 
+  def notes
+    self[:notes] || ""
+  end
+
   def theme
     ready ? Css::Theme::READY : Css::Theme::NEW
   end
@@ -67,8 +71,9 @@ class OrderItem < ActiveRecord::Base
     :order_id, :order_item_id,
     :price,
     :theme,
-    :remove_visibility_class,
-    :serve_icon
+    :serve_icon,
+    :notes,
+    :remove_visibility_class
   ]
 
   DECORATED_ATTRS = NEW_ATTRS + [:ordered_time]

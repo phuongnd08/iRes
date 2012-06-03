@@ -92,3 +92,17 @@ When /^I remove "([^"]*)" from ordered list$/ do |item_name|
   end
 end
 
+When /^I set notes of "([^"]*)" to "([^"]*)"$/ do |item_name, notes|
+  item = Item.find_by_name(item_name)
+  within "li[data-item-id='#{item.id}']" do
+    find(".set-notes-btn").click
+  end
+  page.should have_css(".ui-simpledialog-container")
+  within(".ui-simpledialog-container") do
+    wait_for(true) { find('input').visible? }
+    find('input').set notes
+    find_link("OK").click
+  end
+
+  page.should have_no_css(".ui-simpledialog-screen")
+end

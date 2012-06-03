@@ -22,3 +22,23 @@ $(document).delegate "#order_page", "pagecreate", ->
   $("#commit_btn").click (event) ->
     event.preventDefault()
     Waiter.commitOrder this
+
+  $(this).on 'click', 'li[data-order-item] a.set-notes-btn', (event)->
+    parentLI = $(this).closest('li')
+    notesINPUT = parentLI.find('input[id$=notes]')
+    notesSPAN = parentLI.find('span.notes')
+    $(document).simpledialog2
+      mode: "button"
+      headerText: I18n.t("order_items.notes")
+      headerClose: true
+      buttonInput: true
+      buttons:
+        OK:
+          click: ->
+            notesINPUT.val($.mobile.sdLastInput)
+            notesSPAN.text($.mobile.sdLastInput)
+    setTimeout ( ->
+      input = $('.ui-simpledialog-container').find('input[type=text]')
+      input.val(notesINPUT.val())
+      input.trigger('change')
+    ), 0
