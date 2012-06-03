@@ -4,7 +4,7 @@
       %span= f.object.item_name
       %span.ui-li-count
         %img.ui-icon-ires{ :class => "ui-icon-" + f.object.serve_icon }
-  %a.remove{ "data-role" => "button", "data-inline" => "true", "data-icon" => "delete", :class => f.object.remove_visibility_class }
+  %a.remove{ "data-inline" => "true", "data-icon" => "delete", :class => f.object.remove_visibility_class }
   %div
     = f.hidden_field :_destroy
     = f.hidden_field :item_id
