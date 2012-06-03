@@ -30,9 +30,10 @@ Given /^I am on the categories page$/ do
 end
 
 When /^I confirm the dialog with "([^"]*)"$/ do |choice|
-  begin
-    within ".ui-simpledialog-container" do
-      click_on choice
-    end
-  end while !page.has_no_css?(".ui-simpledialog-container")
+  page.should have_css(".ui-simpledialog-container")
+  within ".ui-simpledialog-container" do
+    link = find_link(choice)
+    wait_for(true) { link.visible? }
+    link.click
+  end
 end
