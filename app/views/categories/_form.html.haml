@@ -1,10 +1,12 @@
 = form_for @category do |f|
   -if @category.errors.any?
-    #error_explanation
-      %h2= "#{pluralize(@category.errors.count, "error")} prohibited this category from being saved:"
-      %ul
-        - @category.errors.full_messages.each do |msg|
-          %li= msg
+    - alert_msg = @category.errors.full_messages.join("<br/>")
+    :javascript
+      $(document).one('pageinit', function(){
+        setTimeout(function(){
+          $.mobile.showError(#{alert_msg.to_json})
+        }, 0);
+      })
 
   .fields
     %div= f.text_field :name, :placeholder => t(".name")

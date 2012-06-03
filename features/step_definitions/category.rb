@@ -4,6 +4,10 @@ Given /^these categories exists:$/ do |table|
   end
 end
 
+When /^I assign the category name to blank$/ do
+  fill_in "category_name", :with => ""
+end
+
 When /^I assign the category name to "([^"]*)"$/ do |name|
   fill_in "category_name", :with => name
 end

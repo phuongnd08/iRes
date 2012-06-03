@@ -1,0 +1,11 @@
+vi:
+  activerecord:
+    models:
+      category: Catalog
+    attributes:
+      category:
+        name: Tên
+    errors:
+      messages:
+        blank: không thể để trống
+        taken: không được trùng với catalog khác

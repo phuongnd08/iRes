@@ -34,6 +34,21 @@ Feature: CRUD-ing categories
     Then I see "Food"
     But I do not see "Đồ ăn"
 
+  Scenario Outline: Use inappropriate name for category
+    Given these categories exists:
+      |name|
+      |Food|
+    And I am on the categories page
+    When I choose "Thêm catalog"
+    And I assign the category name to <name>
+    And I choose "Lưu"
+    Then I see notice "<error>"
+
+    Examples:
+      |name|error|
+      |blank|Tên không thể để trống|
+      |"Food"|Tên không được trùng với catalog khác|
+
   Scenario: Cancel editing a category
     Given these categories exists:
       |name|
