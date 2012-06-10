@@ -85,6 +85,7 @@ end
 
 group :demo do
   guard 'rails', :port => 8080, :server => :thin, :environment => :production
+  guard 'faye'
 end
 
 group :drb do
