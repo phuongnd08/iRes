@@ -7,8 +7,8 @@
     = csrf_meta_tags
     %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}
     :javascript
-      var pubsubMountpoint = #{ServicesSettings.pubsub.mount_point.to_json}
-    = javascript_include_tag "#{ServicesSettings.pubsub.mount_point}.js"
+      var pubsubMountpoint = #{PubSub.mount_url.to_json}
+    = javascript_include_tag "#{PubSub.mount_url}.js"
 
   %body
     = yield

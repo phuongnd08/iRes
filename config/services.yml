@@ -1,14 +1,5 @@
-pubsub: &pubsub
-  mount_point: "http://<%= NetworkHelper.ip_on_interface('wlan0') %>:3500/pubsub"
-
 development:
-  pubsub:
-    <<: *pubsub
 
 test:
-  pubsub:
-    <<: *pubsub
 
 production:
-  pubsub:
-    mount_point: "http://<%= NetworkHelper.ip_on_interface('eth0') %>:3500/pubsub"

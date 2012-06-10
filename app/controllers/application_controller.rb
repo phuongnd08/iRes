@@ -3,6 +3,8 @@ class ApplicationController < ActionController::Base
 
   before_filter :set_layout
 
+  before_filter :store_pubsub_server_address
+
   if Rails.env.development?
     prepend_before_filter lambda { I18n.reload! }
   end
@@ -14,6 +16,10 @@ class ApplicationController < ActionController::Base
     else
       self.class.layout 'application'
     end
+  end
+
+  def store_pubsub_server_address
+    PubSub.current_host = request.host
   end
 
 end
