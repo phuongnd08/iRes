@@ -83,6 +83,10 @@ group :default do
   guard 'faye'
 end
 
+group :demo do
+  guard 'rails', :port => 8080, :server => :thin, :environment => :production
+end
+
 group :drb do
   guard 'spork' do
     watch('config/application.rb')
