@@ -1,7 +1,9 @@
 module Css
   module Theme
-    READY = 'e'
-    NEW = 'c'
+    PAID = 'blue'
+    SERVED = 'green'
+    READY = 'yellow'
+    NEW = 'red'
   end
   module Icon
     PAID = 'paid'

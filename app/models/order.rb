@@ -84,8 +84,16 @@ class Order < ActiveRecord::Base
     paid ? VISIBLE : HIDDEN
   end
 
-  def order_theme
-    ready ? Css::Theme::READY : Css::Theme::NEW
+  def theme
+    if paid && served && ready
+      Css::Theme::PAID
+    elsif served && ready
+      Css::Theme::SERVED
+    elsif ready
+      Css::Theme::READY
+    else
+      Css::Theme::NEW
+    end
   end
 
   def mark_as_ready_visibility_class
@@ -106,7 +114,7 @@ class Order < ActiveRecord::Base
 
   DECORATED_ATTRS = [
     :order_id, :name,
-    :order_theme, :total_price,
+    :theme, :total_price,
     :timing,
     :ready_icon_visibility_class, :served_icon_visibility_class, :paid_icon_visibility_class,
     :mark_as_ready_visibility_class, :mark_as_served_visibility_class,
@@ -221,7 +229,6 @@ class Order < ActiveRecord::Base
 
   FULL_ATTRS = BASIC_ATTRS + DECORATED_ATTRS + [
     :total_price, :revenue_increment,
-    :order_theme,
     :shown_to,
     :completed, :ready, :paid
   ]
