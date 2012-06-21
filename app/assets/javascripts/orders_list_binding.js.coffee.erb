@@ -19,7 +19,9 @@ $(document).delegate "#orders_page", "pagecreate", ->
   backlog = {}
   role = viewerRole(this)
 
-  $(li).formatListItem() for li in $('#orders_page ul.order_items li[data-order-item-id]')
+  setTimeout (->
+    $(li).formatListItem() for li in $('#orders_page ul.order_items li[data-order-item-id]')
+  ), 0
 
   ordersDIV = =>
     $(this).find('#orders')

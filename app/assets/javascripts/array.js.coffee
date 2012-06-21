@@ -29,6 +29,7 @@ Array::removeIf = (callback) ->
     if callback @[index]
       @splice(index, 1)
     index -= 1
+  @
 
 Array::map = (callback = reflect) ->
   callback(item) for item in @
