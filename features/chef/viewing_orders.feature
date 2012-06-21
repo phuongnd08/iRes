@@ -72,7 +72,7 @@ Feature: Viewing orders
       |Đồ ăn|Bún bò|
     When I'm on chef page
     And I see "Order: Bàn số 1"
-    When I mark order of table 1 as ready
+    When the order of table 1 is ready
     Then I do not see "Order: Bàn số 1"
     When this items is added to the order:
       |category|name|

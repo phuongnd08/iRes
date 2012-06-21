@@ -7,8 +7,9 @@
       = order.total_price
   .subtle.padded{"data-type" => "horizontal"}
     - [:ready, :served, :paid].each do |state|
-      - anchor_extra_attributes = (state == :ready) ? {} : { :"data-confirm" => t("order.#{state}_confirmation") }
       %span.ires-icon{ :"data-role" => "button", :"data-icon" => state, :"data-mini" => "true", :class => order.send(:"#{state}_icon_visibility_class") }
-      %a{ get_order_mark_state_button_attributes(order, state), anchor_extra_attributes }
-        = t("buttons.mark_#{state}")
+      - unless state == :ready
+        - anchor_extra_attributes = { :"data-confirm" => t("order.#{state}_confirmation") }
+        %a{ get_order_mark_state_button_attributes(order, state), anchor_extra_attributes }
+          = t("buttons.mark_#{state}")
   .clear

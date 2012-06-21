@@ -96,10 +96,6 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def mark_as_ready_visibility_class
-    ready ? HIDDEN : VISIBLE
-  end
-
   def mark_as_paid_visibility_class
     paid ? HIDDEN : VISIBLE
   end
@@ -117,8 +113,7 @@ class Order < ActiveRecord::Base
     :theme, :total_price,
     :timing,
     :ready_icon_visibility_class, :served_icon_visibility_class, :paid_icon_visibility_class,
-    :mark_as_ready_visibility_class, :mark_as_served_visibility_class,
-    :mark_as_paid_visibility_class
+    :mark_as_served_visibility_class, :mark_as_paid_visibility_class
   ]
 
   DECORATED_ATTRS.each do |method|
