@@ -7,6 +7,7 @@ IRes::Application.routes.draw do
   resources :orders do
     member do
       put :change_state
+      post :print
     end
   end
 

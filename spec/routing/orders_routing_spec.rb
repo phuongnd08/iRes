@@ -34,5 +34,9 @@ describe OrdersController do
     it "routes to #change_state" do
       put("/orders/1/change_state").should route_to("orders#change_state", :id => "1")
     end
+
+    it "routes to #print" do
+      post("/orders/1/print").should route_to("orders#print", :id => "1")
+    end
   end
 end

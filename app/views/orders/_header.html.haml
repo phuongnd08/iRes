@@ -10,4 +10,7 @@
       - anchor_extra_attributes = { :"data-confirm" => t("order.#{state}_confirmation") }
       %a{ mark_state_button_attributes(order, state), anchor_extra_attributes }
         = t("buttons.mark_#{state}")
+    %a.print-btn{ ajax_mini_button_settings, :href => "#",
+      :"data-method" => :post, :"data-href" => print_order_path(order) }
+      = t("buttons.print")
   .clear

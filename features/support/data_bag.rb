@@ -4,7 +4,7 @@ class DataBag < Hash
       @bag = nil
     end
 
-    [:order].each do |name|
+    [:order, :printing].each do |name|
       define_method :"#{name}=" do |value|
         bag[name] = value
       end

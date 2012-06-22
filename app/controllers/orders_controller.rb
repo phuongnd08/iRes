@@ -1,6 +1,16 @@
 class OrdersController < ApplicationController
   before_filter :load_order, :except => [:index, :new, :create]
 
+  class << self
+    MAX_PRINT_SLOT = 10
+    attr_accessor :print_slot
+    def next_print_slot
+      print_slot = print_slot.to_i + 1
+      print_slot = 1 if print_slot > MAX_PRINT_SLOT
+      print_slot
+    end
+  end
+
   # GET /orders
   # GET /orders.json
   def index
@@ -90,6 +100,15 @@ class OrdersController < ApplicationController
     if params[:state]
       @order.update_attribute(params[:state], true)
     end
+    render :nothing => true
+  end
+
+  def print
+    Rails.root.join("tmp/#{OrdersController.next_print_slot}.pdf").tap do |path|
+      @order.write_pdf_file(path.to_s)
+      Printer.print(path.to_s)
+    end
+
     render :nothing => true
   end
 

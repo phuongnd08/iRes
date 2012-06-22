@@ -65,6 +65,7 @@ vi:
     mark_ready: Sẵn sàng
     mark_served: Đã phục vụ
     mark_paid: Đã thu tiền
+    print: In
     save: Lưu
     commit: Xác nhận
     back: Quay lại
