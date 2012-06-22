@@ -40,3 +40,25 @@ When /^I confirm the dialog with "([^"]*)"$/ do |choice|
 
   page.should have_no_css(".ui-simpledialog-screen")
 end
+
+Given /^I observe if the page is reloaded$/ do
+  page.execute_script(%{
+    $.mobile.changePage = function (to, options) {
+      window.changePageTo = to;
+      window.changePageOptions = options;
+    }
+  })
+end
+
+When /^I pull the page down$/ do
+  sleep 1
+  within_active_page do
+    page.execute_script("window.focus()")
+    page.find(".ui-header").drag_to(page.find(".ui-content"))
+  end
+end
+
+Then /^the page is reloaded$/ do
+  wait_for("/waiter") { page.evaluate_script("window.changePageTo") }
+  wait_for(true) { page.evaluate_script("window.changePageOptions.reloadPage") }
+end

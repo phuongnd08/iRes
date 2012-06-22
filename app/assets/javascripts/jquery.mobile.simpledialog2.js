@@ -8,7 +8,7 @@
 (function($, undefined ) {
   $.widget( "mobile.simpledialog2", $.mobile.widget, {
 	options: {
-		version: '1.0.1-2012022700', // jQueryMobile-YrMoDaySerial
+		version: '1.0.1-2012061300', // jQueryMobile-YrMoDaySerial
 		mode: 'blank', // or 'button'
 		themeDialog: 'b',
 		themeInput: false,
@@ -24,8 +24,10 @@
 		headerClose: false,
 		buttonPrompt: false,
 		buttonInput: false,
+		buttonInputDefault: false,
 		buttonPassword: false,
 		blankContent: false,
+		blankContentAdopt: false,
 		
 		resizeListener: true,
 		safeNuke: true,
@@ -73,8 +75,9 @@
 		if ( typeof $.mobile.sdLastInput !== 'undefined' ) { delete $.mobile.sdLastInput; }
 		self.internalID = initDate.getTime();
 		self.displayAnchor = $.mobile.activePage.children('.ui-content').first();
+		if ( self.displayAnchor.length === 0 ) { self.displayAnchor = $.mobile.activePage; }
 		
-		self.dialogPage = $("<div data-role='dialog' class='ui-simpledialog-dialog' data-theme='" + o.themeDialog + "'><div data-role='header'></div><div data-role='content'></div></div>");
+		self.dialogPage = $("<div data-role='dialog' data-theme='" + o.themeDialog + "'><div data-role='header'></div><div data-role='content'></div></div>");
 		self.sdAllContent = self.dialogPage.find('[data-role=content]');
 		
 		content.appendTo(self.sdAllContent);
@@ -93,7 +96,11 @@
 		
 		if ( o.mode === 'blank' ) {
 			if ( o.blankContent === true ) {
-				o.blankContent = self.element.html();
+				if ( o.blankContentAdopt === true ) {
+					o.blankContent = self.element.children();
+				} else {
+					o.blankContent = self.element.html();
+				}
 			}
 			$(o.blankContent).appendTo(self.sdIntContent);
 		} else if ( o.mode === 'button' ) {
@@ -125,7 +132,7 @@
 		var self = this,
 			o = self.options,
 			buttonHTML = $('<div></div>'),
-			pickerInput = $("<div class='ui-simpledialog-controls'><input class='ui-simpledialog-input ui-input-text ui-shadow-inset ui-corner-all ui-body-"+o.themeInput+"' type='"+((o.buttonPassword===true)?"password":"text")+"' name='pickin' /></div>"),
+			pickerInput = $("<div class='ui-simpledialog-controls'><input class='ui-simpledialog-input ui-input-text ui-shadow-inset ui-corner-all ui-body-"+o.themeInput+"' type='"+((o.buttonPassword===true)?"password":"text")+"' value='"+((o.buttonInputDefault!==false)?o.buttonInputDefault.replace( '"', "&#34;" ).replace( "'", "&#39;" ):"")+"' name='pickin' /></div>"),
 			pickerChoice = $("<div>", { "class":'ui-simpledialog-controls' });
 			
 		
@@ -172,7 +179,6 @@
 				}).unbind("vclick click")
 				.bind(o.clickEvent, function() {
 					if ( o.buttonInput ) { self.sdIntContent.find('input [name=pickin]').trigger('change'); }
-					//var returnValue = props.click.apply(self.element[0], arguments);
 					var returnValue = props.click.apply(self, $.merge(arguments, props.args));
 					if ( returnValue !== false && props.close === true ) {
 						self.close();
@@ -286,7 +292,7 @@
 		}
 	},
 	close: function() {
-		var self = this, retty;
+		var self = this, o = this.options, retty;
 		
 		if ( $.isFunction(self.options.callbackClose) ) {
 			retty = self.options.callbackClose.apply(self, self.options.callbackCloseArgs);
@@ -297,7 +303,7 @@
 			$(self.dialogPage).dialog('close');
 			self.sdIntContent.addClass('ui-simpledialog-hidden');
 			self.sdIntContent.appendTo(self.displayAnchor.parent());
-			if ( $.mobile.activePage.jqmData("page").options.domCache != true ) {
+			if ( $.mobile.activePage.jqmData("page").options.domCache != true && $.mobile.activePage.is(":jqmData(external-page='true')") ) {
 				$.mobile.activePage.bind("pagehide.remove", function () {
 					$(this).remove();
 				});
@@ -313,10 +319,13 @@
 			if ( self.options.resizeListener === true ) { $(window).unbind('resize.simpledialog'); }
 		}
 		
-		$.mobile.activePage.find('.ui-btn-active').removeClass('ui-btn-active');
+		if ( o.mode === 'blank' && o.blankContent !== false && o.blankContentAdopt === true ) {
+			self.element.append(o.blankContent);
+			o.blankContent = true;
+		}
 		
 		if ( self.isDialog === true || self.options.animate === true ) {
-			setTimeout("$.mobile.sdCurrentDialog.destroy();", 1000);
+			setTimeout(function(that) { return function () { that.destroy(); };}(self), 1000);
 		} else {
 			self.destroy();
 		}

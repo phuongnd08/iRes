@@ -53,6 +53,7 @@ $(document).delegate "#orders_page", "pagecreate", ->
   renderOrderUL = (orderId) =>
     orderUL(orderId).listview('refresh').trigger('create')
     orderUL(orderId).find('li[data-order-item-id]').forceCountSpanColor()
+    Scroller.refresh(page)
 
   addOrUpdateOrder = (order) ->
     orderId = order.order_id
@@ -109,4 +110,6 @@ $(document).delegate "#orders_page", "pagecreate", ->
   page.on 'pageshow', ->
     scrollOptions =
       pullTrackingEnabled: true
+      onPulledDown: ->
+        $.mobile.changePage page.data('url'), { reloadPage: true }
     Scroller.setUp(page, scrollOptions)
