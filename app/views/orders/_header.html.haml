@@ -6,7 +6,7 @@
       \-
       = order.total_price
   .subtle.padded{"data-type" => "horizontal"}
-    - [:served, :paid].each do |state|
+    - [:paid].each do |state|
       - anchor_extra_attributes = { :"data-confirm" => t("order.#{state}_confirmation") }
       %a{ mark_state_button_attributes(order, state), anchor_extra_attributes }
         = t("buttons.mark_#{state}")

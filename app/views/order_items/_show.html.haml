@@ -6,5 +6,5 @@
     %span.ui-li-count
       &nbsp;
   .right.floated{"data-type" => "horizontal"}
-    - [:ready, :served, :paid].each do |state|
+    - [:ready, :served].each do |state|
       %a{ mark_state_button_attributes(order_item, state) }
