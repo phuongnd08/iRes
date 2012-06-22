@@ -12,6 +12,7 @@ unhighlightOrder = (ul) ->
 highlightOrderUL = (ul) ->
   unhighlightOrder(highlightedOrderUL) if highlightedOrderUL
   $(ul).attr('style', 'border: 2px solid yellow')
+  $(ul).blinkAndShow()
   highlightedOrderUL = ul
 
 $(document).delegate "#orders_page", "pagecreate", ->
@@ -48,6 +49,10 @@ $(document).delegate "#orders_page", "pagecreate", ->
       if order.ready && !order.served
         $.toast order.name, I18n.t("states.ready")
 
+  renderOrderUL = (orderId) =>
+    orderUL(orderId).listview('refresh').trigger('create')
+    orderUL(orderId).find('li[data-order-item-id]').forceCountSpanColor()
+
   addOrUpdateOrder = (order) ->
     orderId = order.order_id
 
@@ -57,8 +62,8 @@ $(document).delegate "#orders_page", "pagecreate", ->
         addOrUpdateOrderItem(orderItem) for orderItem in order.order_items
     else
       orderHeaderLI(orderId).replaceWith(orderHeaderTemplate.gsub(order))
-      orderUL(orderId).listview('refresh').trigger('create').blinkAndShow()
-      enforceAllOrderItemsCountSpanColor(order)
+      renderOrderUL(orderId)
+    highlightOrderUL orderUL(order)
 
   processOrder = (order) ->
     if order.created_on == focusedDate
@@ -68,17 +73,9 @@ $(document).delegate "#orders_page", "pagecreate", ->
         showToast(order)
         addOrUpdateOrder(order)
         revenue(revenue() + order.revenue_increment)
-        orderUL(order.id).listview('refresh').trigger('create')
-        highlightOrderUL orderUL(order)
-
-  orderItemsUL = (orderId) ->
-    $("#orders_page ul.order_items[data-order-id='#{orderId}']")
 
   orderItemLI = (orderItemId) ->
     $("#orders_page ul.order_items").find("[data-order-item-id='#{orderItemId}']")
-
-  enforceAllOrderItemsCountSpanColor = (order) ->
-    orderItemsUL(order.order_id).find('li[data-order-item-id]').forceCountSpanColor()
 
   addOrUpdateOrderItem = (orderItem) ->
     if !orderItemLI(orderItem.order_item_id).exists()
@@ -87,8 +84,7 @@ $(document).delegate "#orders_page", "pagecreate", ->
     else
       orderItemLIHtml = orderItemTemplate.gsub(orderItem)
       orderItemLI(orderItem.order_item_id).replaceWith(orderItemLIHtml)
-    orderUL(orderItem.order_id).listview "refresh"
-    orderItemLI(orderItem.order_item_id).forceCountSpanColor()
+    renderOrderUL(orderItem.order_id)
 
   processOrderItem = (orderItem) ->
     if orderItem.deleted

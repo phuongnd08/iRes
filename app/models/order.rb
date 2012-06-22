@@ -132,7 +132,7 @@ class Order < ActiveRecord::Base
     unless Order.calculating_order
       self[:ready] = recalculate_ready
       self[:served] = recalculate_served
-      self.save
+      save if changed?
     end
   end
 

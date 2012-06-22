@@ -141,4 +141,14 @@ describe Order do
       order.order_items.all?(&:paid).should be_true
     end
   end
+
+  describe "recalculation" do
+    let!(:order) { Order.make!(:with_order_items) }
+    context "no changes happened" do
+      it "doesn't send out a notification" do
+        PubSub.should_not_receive(:publish)
+        order.recalculate
+      end
+    end
+  end
 end
