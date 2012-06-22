@@ -21,9 +21,9 @@ $.fn.toast = ->
 
   $('body').on('showToast', handlers.remove)
   handlers.show()
+  this.on 'click', handlers.remove
 
 $.toast = (title, msg) ->
-  console.warn('toast', title, msg)
   container = $('<div><h1 class="title"></h1><div class="msg"></div><div>').appendTo('body')
   container.find('.title').text(title)
   container.find('.msg').text(msg)
