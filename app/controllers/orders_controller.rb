@@ -86,18 +86,10 @@ class OrdersController < ApplicationController
     redirect_to "/waiter"
   end
 
-  def mark_ready
-    @order.update_attribute(:ready, true)
-    render :nothing => true
-  end
-
-  def mark_paid
-    @order.update_attribute(:paid, true)
-    render :nothing => true
-  end
-
-  def mark_served
-    @order.update_attribute(:served, true)
+  def change_state
+    if params[:state]
+      @order.update_attribute(params[:state], true)
+    end
     render :nothing => true
   end
 

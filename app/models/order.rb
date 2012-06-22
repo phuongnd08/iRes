@@ -1,4 +1,5 @@
 class Order < ActiveRecord::Base
+  include Ajaxifier::Helpers
   include OrderStateMethods
   include Css::Class
 

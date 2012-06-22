@@ -79,4 +79,6 @@ Feature: Viewing orders
       |Đồ uống|Cà phê|
     Then I see "Order: Bàn số 1"
     And I see 3 items in the waiting list
-    And I see 2 items in the waiting list being marked as ready
+    And I see order item "Cam vắt" as ready
+    And I see order item "Bún bò" as ready
+    And I see order item "Cà phê" as unready

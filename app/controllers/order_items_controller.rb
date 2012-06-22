@@ -1,6 +1,8 @@
 class OrderItemsController < ApplicationController
-  def mark_ready
-    OrderItem.find(params[:id]).update_attribute(:ready, true)
+  def change_state
+    if params[:state]
+      OrderItem.find(params[:id]).update_attribute(params[:state], true)
+    end
     render :nothing => true
   end
 end

@@ -1,6 +1,7 @@
 module OrdersHelper
   def mark_state_button_attributes(order_or_order_item, state)
-    path = send(:"mark_#{state}_#{order_or_order_item.class.name.underscore}_path", order_or_order_item)
+    model_name = order_or_order_item.class.name.underscore
+    path = send(:"change_state_#{model_name}_path", order_or_order_item, :state => state)
     {
       :class => "mark-as-#{state}-btn #{order_or_order_item.send(:"mark_as_#{state}_visibility_class")}",
       :"data-role" => "button",

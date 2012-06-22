@@ -6,17 +6,13 @@ IRes::Application.routes.draw do
 
   resources :orders do
     member do
-      put :mark_ready
-      put :mark_paid
-      put :mark_served
+      put :change_state
     end
   end
 
   resources :order_items, :only => [] do
     member do
-      put :mark_ready
-      put :mark_paid
-      put :mark_served
+      put :change_state
     end
   end
 

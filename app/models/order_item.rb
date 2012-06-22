@@ -1,4 +1,5 @@
 class OrderItem < ActiveRecord::Base
+  include Ajaxifier::Helpers
   include Css::Class
   include OrderStateMethods
 
@@ -80,7 +81,10 @@ class OrderItem < ActiveRecord::Base
     :theme,
     :serve_icon,
     :descriptive_notes,
-    :remove_visibility_class
+    :remove_visibility_class,
+    :mark_as_ready_visibility_class,
+    :mark_as_served_visibility_class,
+    :mark_as_paid_visibility_class
   ]
 
   DECORATED_ATTRS = NEW_ATTRS + [:ordered_time]

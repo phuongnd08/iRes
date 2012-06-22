@@ -106,3 +106,25 @@ When /^I set notes of "([^"]*)" to "([^"]*)"$/ do |item_name, notes|
 
   page.should have_no_css(".ui-simpledialog-screen")
 end
+
+Then /^I see order item "([^"]*)" as (unready|ready|served|paid)$/ do |name, state|
+  within_ordered_item(name) do
+    color_hash = {
+      :unready => "red",
+      :ready => "yellow",
+      :served => "green",
+      :paid => "blue"
+    }
+
+    color = color_hash[state.to_sym]
+
+    page.should have_css("span.ui-li-count.ui-btn-up-#{color}")
+  end
+end
+
+When /^I mark order item "([^"]*)" as (served|paid|ready)$/ do |name, state|
+  within_ordered_item(name) do
+    page.find(".mark-as-#{state}-btn").click
+  end
+end
+
