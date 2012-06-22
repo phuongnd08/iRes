@@ -1,0 +1,4 @@
+vi:
+  pulling:
+    release_to_refresh: Thả tay ra để tải lại các order
+    pulldown_to_refresh: Kéo xuống để tải lại các order

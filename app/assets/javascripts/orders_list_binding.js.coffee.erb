@@ -2,7 +2,7 @@ orderItemsChannel = <%= OrderItem.channel.to_json %>
 ordersChannel = <%= Order.channel.to_json %>
 
 viewerRole = (page) ->
-  $(page).attr("data-viewer-role")
+  page.attr("data-viewer-role")
 
 highlightedOrderUL = null
 
@@ -16,16 +16,17 @@ highlightOrderUL = (ul) ->
   highlightedOrderUL = ul
 
 $(document).delegate "#orders_page", "pagecreate", ->
+  page = $(this)
   pubsubClient = null
   backlog = {}
-  role = viewerRole(this)
+  role = viewerRole(page)
 
   setTimeout (->
     $(li).forceCountSpanColor() for li in $('#orders_page ul.order_items li[data-order-item-id]')
   ), 0
 
-  ordersDIV = =>
-    $(this).find('#orders')
+  ordersDIV = ->
+    page.find('#orders')
 
   orderUL = (orderId) ->
     ordersDIV().find("ul.order_items[data-order-id=" + orderId + "]")
@@ -33,8 +34,8 @@ $(document).delegate "#orders_page", "pagecreate", ->
   orderHeaderLI = (orderId) ->
     orderUL(orderId).find('[role=heading]')
 
-  focusedDate = $(this).attr('data-date')
-  revenueSpan = $(this).find('.collected_revenue')
+  focusedDate = page.attr('data-date')
+  revenueSpan = page.find('.collected_revenue')
 
   revenue = (newRevenue) ->
     if typeof newRevenue == "number"
@@ -101,6 +102,11 @@ $(document).delegate "#orders_page", "pagecreate", ->
     pubSubClient = new Faye.Client(pubsubMountpoint)
     pubSubClient.subscribe ordersChannel, processOrder
     pubSubClient.subscribe orderItemsChannel, processOrderItem
-    $(this).on 'pagehide', ->
+    page.on 'pagehide', ->
       pubSubClient.unsubscribe ordersChannel
       pubSubClient.unsubscribe orderItemsChannel
+
+  page.on 'pageshow', ->
+    scrollOptions =
+      pullTrackingEnabled: true
+    Scroller.setUp(page, scrollOptions)
