@@ -1,4 +1,4 @@
 vi:
   pulling:
-    release_to_refresh: Thả tay ra để tải lại các order
-    pulldown_to_refresh: Kéo xuống để tải lại các order
+    release_to_refresh: Thả tay ra để cập nhập lại các order
+    pulldown_to_refresh: Kéo xuống để cập nhập lại các order
