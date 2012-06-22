@@ -26,14 +26,17 @@
           %ul.items{ "data-role" => "listview", "data-theme" => "c", "data-dividertheme" => "b" }
             = f.fields_for :order_items do |builder|
               = render "order_items/viewed_by_waiter", :f => builder
-        .centered{ :"data-role" => "content" }
-          %div{ :"data-role" => "controlgroup", :"data-type" => "horizontal" }
+        .centered.pushed.down.top.bordered{ :"data-role" => "content" }
+          %div{ :"data-type" => "horizontal" }
             - if @order.modifiable
-              = f.submit t("buttons.commit"), {"data-role" => "button" }
+              = f.submit t("buttons.commit"), mini_button_settings
               - if @order.can_be_removed?
-                = link_to t("buttons.cancel"), order_path(@order), :method => :delete, :confirm => t("order.cancelled_confirmation"), "data-role" => "button", "data-icon" => "delete"
+                = link_to t("buttons.cancel"), order_path(@order),
+                  mini_button_settings.merge(:method => :delete,
+                  :confirm => t("order.cancelled_confirmation"), :"data-icon" => "delete")
             - if @order.persisted?
-              = link_to t("buttons.export_to_excel"), order_path(@order, :format => :xls), :"data-role" => "button", :"data-ajax" => "false"
+              = link_to t("buttons.export_to_excel"), order_path(@order, :format => :xls),
+                mini_button_settings.merge(:"data-ajax" => "false")
 
       - new_order_item_template = capture do
         - Ajaxifier.enable do
