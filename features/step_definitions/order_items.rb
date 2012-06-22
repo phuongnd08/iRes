@@ -128,3 +128,8 @@ When /^I mark order item "([^"]*)" as (served|paid|ready)$/ do |name, state|
   end
 end
 
+Then /^I cannot mark order item "([^"]*)" as (ready|served|paid)$/ do |name, state|
+  within_ordered_item(name) do
+    wait_for(false) { page.find(".mark-as-#{state}-btn").visible? }
+  end
+end
