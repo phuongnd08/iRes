@@ -51,6 +51,10 @@
       %tr
         %th{ :colspan => 5 } Nhà hàng bún bò Đà Nẵng
       %tr
+        %td.aright{ :colspan => 5 }= order.name
+      %tr
+        %td.aright{ :colspan => 5 }= Time.now.localtime.to_s
+      %tr
         %th.aleft.w4= t("orders.item.name")
         %th.aright.w2= t("orders.item.price")
         %th.aright.w1= t("orders.item.quantity")
