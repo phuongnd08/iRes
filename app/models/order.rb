@@ -1,4 +1,5 @@
 class Order < ActiveRecord::Base
+  include OrderStateMethods
   include Css::Class
 
   DATE_FORMAT = "%Y-%m-%d"
@@ -72,18 +73,6 @@ class Order < ActiveRecord::Base
     !paid
   end
 
-  def ready_icon_visibility_class
-    ready ? VISIBLE : HIDDEN
-  end
-
-  def served_icon_visibility_class
-    served ? VISIBLE : HIDDEN
-  end
-
-  def paid_icon_visibility_class
-    paid ? VISIBLE : HIDDEN
-  end
-
   def theme
     if paid && served && ready
       Css::Theme::PAID
@@ -94,14 +83,6 @@ class Order < ActiveRecord::Base
     else
       Css::Theme::NEW
     end
-  end
-
-  def mark_as_paid_visibility_class
-    paid ? HIDDEN : VISIBLE
-  end
-
-  def mark_as_served_visibility_class
-    ready && !served ? VISIBLE : HIDDEN
   end
 
   def total_price

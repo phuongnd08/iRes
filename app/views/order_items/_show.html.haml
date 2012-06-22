@@ -1,8 +1,10 @@
-%li{ "data-order-item-id" => order_item.order_item_id, "data-order-id" => order_item.order_id, "data-item-id" => order_item.item_id, "data-count-theme" => order_item.theme }
+%li.order_item{ "data-order-item-id" => order_item.order_item_id, "data-order-id" => order_item.order_id, "data-item-id" => order_item.item_id, "data-count-theme" => order_item.theme }
   %a{ :href => "#" }
-    %span= order_item.item_name
+    %span
+      = order_item.item_name
+      %em= order_item.descriptive_notes
     %span.ui-li-count
-      = order_item.notes
-      %img.ui-icon-ires{ :class => "ui-icon-" + order_item.serve_icon }
-      = order_item.ordered_time
-  %a.mark-as-ready-btn{ :"data-icon" => "mark-as-ready", :"data-theme" => "c", :"data-remote" => "true", :"data-method" => :put, :href => "#", :"data-href" => mark_ready_order_item_path(order_item) }
+      &nbsp;
+  .right.floated{"data-type" => "horizontal"}
+    - [:ready, :served, :paid].each do |state|
+      %a{ mark_state_button_attributes(order_item, state) }

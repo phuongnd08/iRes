@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120603161322) do
+ActiveRecord::Schema.define(:version => 20120621083429) do
 
   create_table "categories", :force => true do |t|
     t.string   "name"
@@ -37,6 +37,8 @@ ActiveRecord::Schema.define(:version => 20120603161322) do
     t.integer  "price"
     t.boolean  "ready",      :default => false
     t.string   "notes"
+    t.boolean  "served"
+    t.boolean  "paid"
   end
 
   create_table "orders", :force => true do |t|

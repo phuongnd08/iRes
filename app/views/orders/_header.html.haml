@@ -10,6 +10,6 @@
       %span.ires-icon{ :"data-role" => "button", :"data-icon" => state, :"data-mini" => "true", :class => order.send(:"#{state}_icon_visibility_class") }
       - unless state == :ready
         - anchor_extra_attributes = { :"data-confirm" => t("order.#{state}_confirmation") }
-        %a{ get_order_mark_state_button_attributes(order, state), anchor_extra_attributes }
+        %a{ mark_state_button_attributes(order, state), anchor_extra_attributes }
           = t("buttons.mark_#{state}")
   .clear

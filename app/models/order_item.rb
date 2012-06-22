@@ -1,4 +1,7 @@
 class OrderItem < ActiveRecord::Base
+  include Css::Class
+  include OrderStateMethods
+
   belongs_to :item
   belongs_to :order
 
@@ -46,8 +49,12 @@ class OrderItem < ActiveRecord::Base
     self[:price]
   end
 
-  def notes
-    self[:notes] || ""
+  def descriptive_notes
+    if notes.present?
+      " (#{notes})"
+    else
+      ""
+    end
   end
 
   def theme
@@ -59,7 +66,7 @@ class OrderItem < ActiveRecord::Base
   end
 
   def remove_visibility_class
-    (ready || order.try(:paid)) ? Css::Class::HIDDEN : Css::Class::VISIBLE
+    (ready || order.try(:paid)) ? HIDDEN : VISIBLE
   end
 
   def serve_icon
@@ -72,7 +79,7 @@ class OrderItem < ActiveRecord::Base
     :price,
     :theme,
     :serve_icon,
-    :notes,
+    :descriptive_notes,
     :remove_visibility_class
   ]
 
