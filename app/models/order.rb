@@ -144,6 +144,17 @@ class Order < ActiveRecord::Base
     end
   end
 
+
+  def to_pdf
+    WickedPdf.new.pdf_from_string(TemplateRenderer.render("orders/pdf", :order => self))
+  end
+
+  def write_pdf_file(path)
+    File.open(path, "wb") do |f|
+      f.write to_pdf
+    end
+  end
+
   private
 
   # before save callbacks, must never return false

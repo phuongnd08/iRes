@@ -1,0 +1,8 @@
+vi:
+  orders:
+    item:
+      name: Món
+      price: Đ.giá
+      quantity: SL
+      product: T.tiền
+    total_price: Tổng cộng

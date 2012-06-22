@@ -30,6 +30,7 @@ end
 gem 'jquery-rails'
 gem 'haml-rails'
 gem 'spreadsheet'
+gem 'wicked_pdf'
 
 group :test do
   gem 'capybara'

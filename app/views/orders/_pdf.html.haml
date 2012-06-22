@@ -1,0 +1,79 @@
+!!!
+%html
+  %head
+    %meta{ :"http-equiv" => "content-type", :content => "text/html; charset=utf-8" }
+    :css
+      * {
+        font-family: Arial;
+        font-size: 12px;
+      }
+
+      .aright {
+        text-align: right
+      }
+
+      .aleft {
+        text-align: left
+      }
+
+      .w1 {
+        width: 30px;
+      }
+
+      .w2 {
+        width: 50px;
+      }
+
+      .w3 {
+        width: 80px;
+      }
+
+      .w4 {
+        width: 120px;
+      }
+
+      .padded {
+        padding-left: 10px
+      }
+
+      table td, table th {
+        border-bottom: solid 1px
+      }
+
+      .submissive {
+        color: gray;
+        font-size: 90%;
+        font-style: italic;
+      }
+
+  %body
+    %table
+      %tr
+        %th{ :colspan => 5 } Nhà hàng bún bò Đà Nẵng
+      %tr
+        %th.aleft.w4= t("orders.item.name")
+        %th.aright.w2= t("orders.item.price")
+        %th.aright.w1= t("orders.item.quantity")
+        %th.aright.w2= t("orders.item.product")
+        %th.aleft.w1
+      - order.order_items.each do |order_item|
+        %tr
+          %td= order_item.item_name
+          %td.aright= order_item.price
+          %td.aright= 1
+          %td.aright= order_item.price
+          %td.padded
+            - if order_item.paid
+              \$
+            - if order_item.served
+              X
+            - elsif order_item.ready
+              O
+            - else
+              ?
+      %tr
+        %td{ :colspan => 3 }= t("orders.total_price")
+        %td.aright= order.total_price
+        %td
+      %tr
+        %td.aright.submissive{ :colspan => 5 } orderdientu.com
