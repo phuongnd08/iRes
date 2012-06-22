@@ -71,12 +71,12 @@ Feature: Viewing orders live updated
     And an order of table 2 is committed
     And an order of table 3 is committed
     And the order of table 1 is cancelled
-    And the order of table 2 is paid
+    And the order of table 2 is ready
     And I choose "Quay lại"
     Then I see "Order: Bàn số 2"
     And I see "Order: Bàn số 3"
     But I do not see "Order: Bàn số 1"
-    And I see the order of table 2 as paid
+    And I see the order of table 2 as ready
 
   Scenario: Viewing order live updated after a couple of switch back and forth
     Given I'm on waiter page
@@ -93,4 +93,3 @@ Feature: Viewing orders live updated
     When the order of table 1 is ready
     Then I see toast of "Order: Bàn số 1" with text "Sẵn sàng"
     Then I see the order of table 1 as ready
-    And I can mark the order of table 1 as served

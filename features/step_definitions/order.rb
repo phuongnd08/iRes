@@ -33,6 +33,7 @@ When /^the order(?: of table (\d+))? is (cancelled|ready|served|paid)$/ do |tabl
   if state == "cancelled"
     order.destroy
   else
+    sleep 0.1
     order.update_attribute(state.to_sym, true)
   end
 end

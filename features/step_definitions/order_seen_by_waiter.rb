@@ -15,9 +15,12 @@ end
 Then /^I see the order(?: of table (\d+))? as (un)?(paid|ready|served)$/ do |table_number, negate, state|
   within_orders_as_seen_by_waiter do
     order = order_of_table(table_number)
-    order_css = "ul[data-order-id='#{order.id}']"
-    icon_css =  order_css + " span[data-icon='#{state}']"
-    wait_for(negate ? false : true, 10) { page.find(icon_css).visible? }
+    css = "ul[data-order-id='#{order.id}'] li[data-role='list-divider'][data-theme='#{order_color_for(state)}']"
+    if negate
+      page.should have_no_css css
+    else
+      page.should have_css css
+    end
   end
 end
 

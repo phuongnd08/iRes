@@ -109,21 +109,13 @@ end
 
 Then /^I see order item "([^"]*)" as (unready|ready|served|paid)$/ do |name, state|
   within_ordered_item(name) do
-    color_hash = {
-      :unready => "red",
-      :ready => "yellow",
-      :served => "green",
-      :paid => "blue"
-    }
-
-    color = color_hash[state.to_sym]
-
-    page.should have_css("span.ui-li-count.ui-btn-up-#{color}")
+    page.should have_css("span.ui-li-count.ui-btn-up-#{order_color_for(state)}")
   end
 end
 
 When /^I mark order item "([^"]*)" as (served|paid|ready)$/ do |name, state|
   within_ordered_item(name) do
+    sleep 0.1
     page.find(".mark-as-#{state}-btn").click
   end
 end

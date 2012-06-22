@@ -116,6 +116,7 @@ class Order < ActiveRecord::Base
   def recalculate
     unless Order.calculating_order
       self[:ready] = recalculate_ready
+      self[:served] = recalculate_served
       self.save
     end
   end
@@ -167,6 +168,10 @@ class Order < ActiveRecord::Base
 
   def recalculate_ready
     order_items.reject(&:marked_for_destruction?).all?(&:ready)
+  end
+
+  def recalculate_served
+    order_items.reject(&:marked_for_destruction?).all?(&:served)
   end
 
   BASIC_ATTRS = [
