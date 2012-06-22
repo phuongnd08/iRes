@@ -26,7 +26,7 @@ $(document).delegate "#order_page", "pagecreate", ->
   $(this).on 'click', 'li[data-order-item] a.set-notes-btn', (event)->
     parentLI = $(this).closest('li')
     notesINPUT = parentLI.find('input[id$=notes]')
-    notesSPAN = parentLI.find('span.notes')
+    notesSPAN = parentLI.find('.notes')
     $(document).simpledialog2
       mode: "button"
       headerText: I18n.t("order_items.notes")
@@ -35,8 +35,10 @@ $(document).delegate "#order_page", "pagecreate", ->
       buttons:
         OK:
           click: ->
-            notesINPUT.val($.mobile.sdLastInput)
-            notesSPAN.text($.mobile.sdLastInput)
+            notes = $.mobile.sdLastInput
+            notesINPUT.val(notes)
+            descriptive_notes = if notes.blank() then "" else "(#{notes})"
+            notesSPAN.text(descriptive_notes)
     setTimeout ( ->
       input = $('.ui-simpledialog-container').find('input[type=text]')
       input.val(notesINPUT.val())
