@@ -10,4 +10,12 @@ module OrdersHelper
       :href => '#', :"data-href" => path
     }
   end
+
+  def mini_button_settings
+    {
+      :"data-role" => "button",
+      :"data-inline" => "true",
+      :"data-mini" => "true"
+    }
+  end
 end
