@@ -1,9 +1,11 @@
 $(document).delegate "#order_page", "pagecreate", ->
+  page = $(this)
   showPage = (selector) ->
     $(".subpage").hide()
     $(selector).show()
     $("#order_page [data-role=navbar] li a").setHeaderInactive()
     $("#order_page [data-nav-to=\"" + selector + "}\"] li a").setHeaderActive()
+    Scroller.refresh(page)
 
   $("#order_page [data-role=navbar] li a").click (event) ->
     event.preventDefault()
@@ -18,12 +20,13 @@ $(document).delegate "#order_page", "pagecreate", ->
 
   $('#ordered').on 'click', '.remove', ->
     Waiter.removeItem $(this).closest('li')
+    Scroller.refresh(page)
 
   $("#commit_btn").click (event) ->
     event.preventDefault()
     Waiter.commitOrder this
 
-  $(this).on 'click', 'li[data-order-item] a.set-notes-btn', (event)->
+  page.on 'click', 'li[data-order-item] a.set-notes-btn', (event)->
     parentLI = $(this).closest('li')
     notesINPUT = parentLI.find('input[id$=notes]')
     notesSPAN = parentLI.find('.notes')
@@ -44,3 +47,6 @@ $(document).delegate "#order_page", "pagecreate", ->
       input.val(notesINPUT.val())
       input.trigger('change')
     ), 0
+
+  page.on "pageshow", ->
+    Scroller.setUp(page)
