@@ -100,7 +100,7 @@ class OrdersController < ApplicationController
     if params[:state]
       @order.update_attribute(params[:state], true)
     end
-    render :nothing => true
+    render :text => "OK"
   end
 
   def print
@@ -109,7 +109,7 @@ class OrdersController < ApplicationController
       Printer.print(path.to_s)
     end
 
-    render :nothing => true
+    render :text => "OK"
   end
 
   private
