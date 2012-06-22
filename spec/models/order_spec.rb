@@ -63,15 +63,17 @@ describe Order do
           }
         end
 
-        it "includes order_items info" do
-          OrderItem.any_instance.stub(:notify_order_item_created)
-          PubSub.should_receive(:publish) do |channel, order_info|
-            channel.should == Order.channel
-            order_info[:order_id].should == order.id
-            order_info[:order_items].should have(4).items
-            order_info[:ready].should be_false
+        describe "notification" do
+          it "includes order_items info" do
+            OrderItem.any_instance.stub(:notify_order_item_created)
+            PubSub.should_receive(:publish) do |channel, order_info|
+              channel.should == Order.channel
+              order_info[:order_id].should == order.id
+              order_info[:order_items].should have(4).items
+              order_info[:ready].should be_false
+            end
+            order.save
           end
-          order.save
         end
 
         it "does not affect ready state of existing item" do
