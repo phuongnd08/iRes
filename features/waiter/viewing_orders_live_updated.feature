@@ -61,7 +61,7 @@ Feature: Viewing orders live updated
       |category|name|
       |Đò uống|Cà phê|
     And the order is ready
-    Then I see toast of "Order: Bàn số 1" with text "Sẵn sàng"
+    Then I see toast of "Order: Bàn số 1" with text "Đã sẵn sàng"
     And I see the order as ready
 
   Scenario: Viewing list of orders live updated after navigate away to ordering page
@@ -91,5 +91,5 @@ Feature: Viewing orders live updated
     #Wait for the commit to finish
     Then I see the order of table 2 as unready
     When the order of table 1 is ready
-    Then I see toast of "Order: Bàn số 1" with text "Sẵn sàng"
+    Then I see toast of "Order: Bàn số 1" with text "Đã sẵn sàng"
     Then I see the order of table 1 as ready

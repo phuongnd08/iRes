@@ -45,9 +45,10 @@ $(document).delegate "#orders_page", "pagecreate", ->
   showToast = (order) ->
     if order.paid
       $.toast order.name, I18n.t("states.paid")
-    else
-      if order.ready && !order.served
-        $.toast order.name, I18n.t("states.ready")
+    else if order.served
+      $.toast order.name, I18n.t("states.served")
+    else if order.ready
+      $.toast order.name, I18n.t("states.ready")
 
   renderOrderUL = (orderId) =>
     orderUL(orderId).listview('refresh').trigger('create')

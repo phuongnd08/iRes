@@ -66,10 +66,6 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def completed
-    paid && served
-  end
-
   def modifiable
     !paid
   end
@@ -215,7 +211,7 @@ class Order < ActiveRecord::Base
   FULL_ATTRS = BASIC_ATTRS + DECORATED_ATTRS + [
     :total_price, :revenue_increment,
     :shown_to,
-    :completed, :ready, :paid
+    :ready, :served, :paid
   ]
 
   def full_push_attributes

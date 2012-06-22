@@ -76,5 +76,6 @@ vi:
     export_to_excel: Xuất ra Excel
 
   states:
-    ready: Sẵn sàng
+    ready: Đã sẵn sàng
+    served: Đã phục vụ
     paid: Đã thu tiền
