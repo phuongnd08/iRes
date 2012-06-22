@@ -74,18 +74,6 @@ class Order < ActiveRecord::Base
     !paid
   end
 
-  def theme
-    if paid && served && ready
-      Css::Theme::PAID
-    elsif served && ready
-      Css::Theme::SERVED
-    elsif ready
-      Css::Theme::READY
-    else
-      Css::Theme::NEW
-    end
-  end
-
   def total_price
     self[:total_price]
   end

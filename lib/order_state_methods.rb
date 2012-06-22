@@ -24,4 +24,16 @@ module OrderStateMethods
   def paid_icon_visibility_class
     paid ? VISIBLE : HIDDEN
   end
+
+  def theme
+    if paid && served && ready
+      Css::Theme::PAID
+    elsif served && ready
+      Css::Theme::SERVED
+    elsif ready
+      Css::Theme::READY
+    else
+      Css::Theme::NEW
+    end
+  end
 end

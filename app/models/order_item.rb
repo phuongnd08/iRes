@@ -1,6 +1,7 @@
 class OrderItem < ActiveRecord::Base
   include Ajaxifier::Helpers
   include Css::Class
+  include Css::Theme
   include OrderStateMethods
 
   belongs_to :item
@@ -58,10 +59,6 @@ class OrderItem < ActiveRecord::Base
     end
   end
 
-  def theme
-    ready ? Css::Theme::READY : Css::Theme::NEW
-  end
-
   def ordered_time
       created_at.localtime.strftime("%H:%M")
   end
@@ -70,16 +67,11 @@ class OrderItem < ActiveRecord::Base
     (ready || order.try(:paid)) ? HIDDEN : VISIBLE
   end
 
-  def serve_icon
-    ready ? "ready" : "mark-as-ready"
-  end
-
   NEW_ATTRS = [
     :item_id, :item_name,
     :order_id, :order_item_id,
     :price,
     :theme,
-    :serve_icon,
     :descriptive_notes,
     :remove_visibility_class,
     :mark_as_ready_visibility_class,

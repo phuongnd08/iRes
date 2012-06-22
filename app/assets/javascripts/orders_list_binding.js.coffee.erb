@@ -7,7 +7,7 @@ viewerRole = (page) ->
 highlightedOrderUL = null
 
 unhighlightOrder = (ul) ->
-  $(ul).attr('style', '')
+  $(ul).removeAttr('style')
 
 highlightOrderUL = (ul) ->
   unhighlightOrder(highlightedOrderUL) if highlightedOrderUL
@@ -20,7 +20,7 @@ $(document).delegate "#orders_page", "pagecreate", ->
   role = viewerRole(this)
 
   setTimeout (->
-    $(li).formatListItem() for li in $('#orders_page ul.order_items li[data-order-item-id]')
+    $(li).forceCountSpanColor() for li in $('#orders_page ul.order_items li[data-order-item-id]')
   ), 0
 
   ordersDIV = =>
@@ -58,6 +58,7 @@ $(document).delegate "#orders_page", "pagecreate", ->
     else
       orderHeaderLI(orderId).replaceWith(orderHeaderTemplate.gsub(order))
       orderUL(orderId).listview('refresh').trigger('create').blinkAndShow()
+      enforceAllOrderItemsCountSpanColor(order)
 
   processOrder = (order) ->
     if order.created_on == focusedDate
@@ -70,8 +71,14 @@ $(document).delegate "#orders_page", "pagecreate", ->
         orderUL(order.id).listview('refresh').trigger('create')
         highlightOrderUL orderUL(order)
 
+  orderItemsUL = (orderId) ->
+    $("#orders_page ul.order_items[data-order-id='#{orderId}']")
+
   orderItemLI = (orderItemId) ->
-    $("#orders_page ul.order_items").find("[data-order-item-id=" + orderItemId + "]")
+    $("#orders_page ul.order_items").find("[data-order-item-id='#{orderItemId}']")
+
+  enforceAllOrderItemsCountSpanColor = (order) ->
+    orderItemsUL(order.order_id).find('li[data-order-item-id]').forceCountSpanColor()
 
   addOrUpdateOrderItem = (orderItem) ->
     if !orderItemLI(orderItem.order_item_id).exists()
@@ -81,7 +88,7 @@ $(document).delegate "#orders_page", "pagecreate", ->
       orderItemLIHtml = orderItemTemplate.gsub(orderItem)
       orderItemLI(orderItem.order_item_id).replaceWith(orderItemLIHtml)
     orderUL(orderItem.order_id).listview "refresh"
-    orderItemLI(orderItem.order_item_id).formatListItem()
+    orderItemLI(orderItem.order_item_id).forceCountSpanColor()
 
   processOrderItem = (orderItem) ->
     if orderItem.deleted
