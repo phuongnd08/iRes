@@ -113,6 +113,21 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def paid=(paid)
+    if paid != self.paid
+      super
+      do_if_no_calculating_order do
+        order_items.each do |order_item|
+          if order_item.persisted?
+            order_item.update_attribute(:paid, paid)
+          else
+            order_item.paid = paid
+          end
+        end
+      end
+    end
+  end
+
   def recalculate
     unless Order.calculating_order
       self[:ready] = recalculate_ready

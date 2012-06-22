@@ -109,7 +109,7 @@ describe OrdersController do
 
   describe "PUT change_state" do
     let(:order) { Order.make!(:with_order_items) }
-    [:ready, :served, :paid].each do |state|
+    [:ready, :paid].each do |state|
       it "change the order #{state} to true" do
         order.send(state.to_sym).should be_false
         put :change_state, :id => order.id, :state => state

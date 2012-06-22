@@ -131,4 +131,12 @@ describe Order do
       order.total_price.should == 25000
     end
   end
+
+  describe "marked as paid" do
+    let!(:order) { Order.make!(:with_order_items) }
+    it "marks all order items as paid" do
+      order.update_attribute(:paid, true)
+      order.order_items.all?(&:paid).should be_true
+    end
+  end
 end

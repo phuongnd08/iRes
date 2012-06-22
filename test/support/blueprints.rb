@@ -15,7 +15,6 @@ Item.blueprint do
 end
 
 OrderItem.blueprint do
-  order
   item
 end
 
