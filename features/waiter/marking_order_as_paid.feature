@@ -12,7 +12,7 @@ Feature: Marking an order as paid
     And the order is ready
     And the order is served
     And I'm on waiter page
-    Then I see the order as unpaid
+    Then I see the order as served
 
   Scenario: Marking an order as paid
     When I try to mark the order as paid
@@ -23,4 +23,4 @@ Feature: Marking an order as paid
   Scenario: Cancel marking an order as paid
     When I try to mark the order as paid
     And I confirm the dialog with "Không"
-    Then I see the order as unpaid
+    Then I see the order as served

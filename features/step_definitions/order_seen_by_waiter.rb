@@ -12,15 +12,10 @@ def within_the_order_as_seen_by_waiter order
   end
 end
 
-Then /^I see the order(?: of table (\d+))? as (un)?(paid|ready|served)$/ do |table_number, negate, state|
+Then /^I see the order(?: of table (\d+))? as (unready|ready|served|paid)$/ do |table_number, state|
   within_orders_as_seen_by_waiter do
     order = order_of_table(table_number)
-    css = "ul[data-order-id='#{order.id}'] li[data-role='list-divider'][data-theme='#{order_color_for(state)}']"
-    if negate
-      page.should have_no_css css
-    else
-      page.should have_css css
-    end
+    page.should have_css "ul[data-order-id='#{order.id}'] li[data-role='list-divider'][data-theme='#{order_color_for(state)}']"
   end
 end
 
