@@ -4,8 +4,8 @@ $.fn.toast = ->
   $('body').trigger('showToast') # hide all active toasts
   handlers = {}
   handlers.show = =>
-    bw = $('body').width()
-    bh = $('body').height()
+    bw = $(window).width()
+    bh = $(window).height()
 
     top = (bh*3/4) - this.height()/2
     left = bw/2 - this.width()/2
