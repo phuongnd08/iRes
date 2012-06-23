@@ -12,3 +12,14 @@
 
   %body
     = yield
+    #audio
+      - [:new, :ready, :served, :paid].each do |state|
+        %audio{ :class => state, :src => asset_path("bb-#{state}.mp3"), :preloading => true }
+    :javascript
+      var Player = {
+        play: function (state) {
+          var player = $('#audio .' + state)[0];
+          player.currentTime = 0;
+          player.play()
+        }
+      }

@@ -50,6 +50,16 @@ $(document).delegate "#orders_page", "pagecreate", ->
     else if order.ready
       $.toast order.name, I18n.t("states.ready")
 
+  playSound = (order) ->
+    if order.paid
+      Player.play('paid')
+    else if order.served
+      Player.play('served')
+    else if order.ready
+      Player.play('ready')
+    else
+      Player.play('new')
+
   renderOrderUL = (orderId) =>
     orderUL(orderId).listview('refresh').trigger('create')
     orderUL(orderId).find('li[data-order-item-id]').forceCountSpanColor()
@@ -68,6 +78,7 @@ $(document).delegate "#orders_page", "pagecreate", ->
 
   processOrder = (order) ->
     if order.created_on == focusedDate
+      playSound(order)
       if order.deleted || !order.shown_to[role]
         orderUL(order.order_id).fadeOutAndRemove()
       else
@@ -96,7 +107,6 @@ $(document).delegate "#orders_page", "pagecreate", ->
       else
         backlog[orderItem.order_id] ||= []
         backlog[orderItem.order_id].push(orderItem)
-
 
   if window.Faye && Faye.Client
     pubSubClient = new Faye.Client(pubsubMountpoint)
