@@ -9,6 +9,18 @@ class ApplicationController < ActionController::Base
     prepend_before_filter lambda { I18n.reload! }
   end
 
+  def view_scale
+    if params[:noscale].present?
+      session[:scale] = nil
+    elsif params[:scale].present?
+      session[:scale] = params[:scale]
+    end
+
+    session[:scale]
+  end
+
+  helper_method :view_scale
+
   private
   def set_layout
     if request.get? && request.xhr?
