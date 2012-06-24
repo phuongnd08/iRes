@@ -16,7 +16,7 @@
   %body
     = yield
     #audio
-      - [:new, :ready, :served, :paid].each do |state|
+      - [:new, :ready, :served, :paid, :"item-added"].each do |state|
         %audio{ :class => state, :src => asset_path("bb-#{state}.mp3"), :preloading => true }
     :javascript
       var Player = {

@@ -15,6 +15,7 @@ $(document).delegate "#order_page", "pagecreate", ->
     item_name = $(this).find('a .name').text()
     item_price = $(this).attr("data-item-price")
     Waiter.addItem item_id, item_name, item_price
+    Player.play('item-added')
 
   $('#ordered').on 'click', '.remove', ->
     Waiter.removeItem $(this).closest('li')
