@@ -5,8 +5,8 @@ class OrdersController < ApplicationController
     MAX_PRINT_SLOT = 10
     attr_accessor :print_slot
     def next_print_slot
-      print_slot = print_slot.to_i + 1
-      print_slot = 1 if print_slot > MAX_PRINT_SLOT
+      self.print_slot = print_slot.to_i + 1
+      self.print_slot = 1 if print_slot > MAX_PRINT_SLOT
       print_slot
     end
   end
@@ -104,9 +104,10 @@ class OrdersController < ApplicationController
   end
 
   def print
-    Rails.root.join("tmp/#{OrdersController.next_print_slot}.pdf").tap do |path|
+    Rails.root.join("tmp/#{Time.now.to_i}-#{rand(1000)}.pdf").tap do |path|
       @order.write_pdf_file(path.to_s)
       Printer.print(path.to_s)
+      path.delete
     end
 
     render :text => "OK"

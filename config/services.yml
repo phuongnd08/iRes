@@ -1,5 +1,8 @@
 development:
+  printer: PDF
 
 test:
+  printer: PDF
 
 production:
+  printer: PDF
