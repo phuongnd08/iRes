@@ -35,4 +35,14 @@ module ApplicationHelper
 
     render "shared/backable_header", :title => title, :path => path, :extra => extra
   end
+
+  def view_scale
+    if params[:noscale].present?
+      session[:scale] = 1
+    elsif params[:scale].present?
+      session[:scale] = params[:scale]
+    end
+
+    session[:scale] || 1
+  end
 end

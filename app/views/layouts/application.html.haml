@@ -5,10 +5,7 @@
     = stylesheet_link_tag    "application", :media => "all"
     = javascript_include_tag "application"
     = csrf_meta_tags
-    - if view_scale
-      %meta{:content => "width=device-width, initial-scale=#{view_scale}, maximum-scale=#{view_scale},target-densitydpi=device-dpi", :name => "viewport"}/
-    - else
-      %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}
+    %meta{:content => "width=device-width; initial-scale=#{view_scale}; maximum-scale=#{view_scale}; minimum-scale=#{view_scale}; target-densitydpi=device-dpi", :name => "viewport"}/
     :javascript
       var pubsubMountpoint = #{PubSub.mount_url.to_json}
     = javascript_include_tag "#{PubSub.mount_url}.js"
